@@ -1,7 +1,8 @@
+package LexicalAnalysis;
+import static LexicalAnalysis.Tokens.*;
 %%
-
-%standalone
-%class Compilador
+%public
+%class LexicalAnalyzer
 %type Tokens
 %line
 %column
