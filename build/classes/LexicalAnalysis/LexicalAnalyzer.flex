@@ -48,7 +48,7 @@ PARENTESES_DIR = ")"
 SIMBOLO_DOIS_PONTOS = ":"
 SIMBOLO_VIRGULA =  ","
 SIMBOLO_PONTO_E_VIRGULA = ";"
-SIMBOLO_PONTO = "."
+SIMBOLO_TERMINACAO = "end."
 
 /* Números e Identificadores */
 IDENTIFICADOR = {LETRA}({LETRA}|{DIGITO})*
@@ -77,6 +77,11 @@ ERRO_SIMBOLO_INVALIDO = [^]
     public int line;
     public int column;
     public int endColumn;
+
+
+    public long getOffset(){
+        return this.yychar;
+    }
 %}
 %%
 {DELIMITADOR}                               {}
@@ -115,7 +120,7 @@ ERRO_SIMBOLO_INVALIDO = [^]
 {SIMBOLO_DOIS_PONTOS}                       {token="SIMBOLO_DOIS_PONTOS"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return SIMBOLO_DOIS_PONTOS; /*System.out.println(yytext()+" -> SIMBOLO_DOIS_PONTOS");*/}
 {SIMBOLO_VIRGULA}                           {token="SIMBOLO_VIRGULA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return SIMBOLO_VIRGULA; /*System.out.println(yytext()+" -> SIMBOLO_VIRGULA");*/}
 {SIMBOLO_PONTO_E_VIRGULA}                   {token="SIMBOLO_PONTO_E_VIRGULA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return SIMBOLO_PONTO_E_VIRGULA; /*System.out.println(yytext()+" -> SIMBOLO_PONTO_E_VIRGULA");*/}
-{SIMBOLO_PONTO}                             {token="SIMBOLO_PONTO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return SIMBOLO_PONTO; /*System.out.println(yytext()+" -> SIMBOLO_PONTO");*/}
+{SIMBOLO_TERMINACAO}                        {token="SIMBOLO_TERMINACAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return SIMBOLO_TERMINACAO; /*System.out.println(yytext()+" -> SIMBOLO_TERMINACAO");*/}
 {IDENTIFICADOR}                             {
                                                 if(yylength() <= 15){
                                                     token="IDENTIFICADOR";
