@@ -47,7 +47,7 @@ public enum Tokens {
     SIMBOLO_DOIS_PONTOS,
     SIMBOLO_VIRGULA,
     SIMBOLO_PONTO_E_VIRGULA,
-    SIMBOLO_PONTO,
+    SIMBOLO_TERMINACAO,
     /* Números e Identificadores */
     IDENTIFICADOR,
     NUMERO_INTEIRO,

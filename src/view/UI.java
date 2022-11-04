@@ -5,6 +5,7 @@
  */
 package view;
 
+import LexicalAnalysis.LexicalAnalyzer;
 import LexicalAnalysis.Tokens;
 import java.awt.Color;
 import java.io.File;
@@ -30,6 +31,7 @@ import javax.swing.text.DocumentFilter;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
+import jflex.exceptions.SilentExit;
 
 /**
  *
@@ -294,10 +296,13 @@ public class UI extends javax.swing.JFrame {
 
     }
 
-    /**
+/**
      * @param args the command line arguments
+   * @throws jflex.exceptions.SilentExit
+   * @throws java.lang.InterruptedException
+   * @throws java.io.IOException
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws SilentExit, InterruptedException, IOException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -323,13 +328,22 @@ public class UI extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        String rootPath = Paths.get("").toAbsolutePath().toString();
+        String subPath = "\\src\\LexicalAnalysis\\";
+        String completePath = rootPath + subPath;
+        String[] caminhoLexico = {completePath + "LexicalAnalyzer.flex"};
+        jflex.Main.generate(caminhoLexico);
+        /*Runtime r = Runtime.getRuntime();
+        Process p;
+        p = r.exec(new String[]{"java", "-jar", rootPath+"\\lib\\CopyLibs\\jflex-full-1.8.2.jar", rootPath+"\\src\\LexicalAnalysis\\LexicalAnalyzer.flex"}, null, new File(rootPath+"\\src\\"));
+        System.out.println(p.waitFor());
+        
+        p = r.exec(new String[]{"java", "-jar", rootPath+"\\lib\\CopyLibs\\java-cup-11b.jar", "-parser", rootPath+"\\src\\LexicalAnalysis\\Parser.java", "-symbols", rootPath+"\\src\\LexicalAnalysis\\Tokens.java", rootPath+"\\src\\SintexAnalysis\\parser.cup"}, null, new File(rootPath+"\\src\\"));
+        System.out.println(p.waitFor());*/
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UI().setVisible(true);
-
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+          new UI().setVisible(true);
         });
     }
 

@@ -1,0 +1,15 @@
+/*Documentação: http://www2.cs.tum.edu/projects/cup/*/
+import java_cup.runtime.*;
+
+parser code {:
+    // conectar esse parser ao scanner!
+    Scanner s;
+    Parser(Scanner s){ this.s=s; }
+
+    // tabela de símbolos
+    java.util.Map<String, Integer> simbolos = new java.util.HashMap<String, Integer>();
+:}
+
+/* conectar esse parser ao scanner! */
+init with {:  :};
+scan with {: return s.next_token(); :};
