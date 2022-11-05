@@ -5,8 +5,8 @@
  */
 package view;
 
-import LexicalAnalysis.LexicalAnalyzer;
-import LexicalAnalysis.Tokens;
+//import LexicalAnalysis.LexicalAnalyzer;
+import java_cup.runtime.Symbol;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -217,7 +217,7 @@ public class UI extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         this.reloadTable(0);
-        try {
+        /*try {
             Reader lector = new StringReader(fonteBox.getText());
             LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
             DefaultTableModel dtm = (DefaultTableModel) jTable2.getModel();
@@ -246,7 +246,7 @@ public class UI extends javax.swing.JFrame {
 
         } catch (IOException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void fonteBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fonteBoxKeyTyped
@@ -302,7 +302,7 @@ public class UI extends javax.swing.JFrame {
    * @throws java.lang.InterruptedException
    * @throws java.io.IOException
      */
-    public static void main(String args[]) throws SilentExit, InterruptedException, IOException {
+    public static void main(String args[]) throws SilentExit, InterruptedException, IOException, Exception {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -329,10 +329,14 @@ public class UI extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         String rootPath = Paths.get("").toAbsolutePath().toString();
-        String subPath = "\\src\\LexicalAnalysis\\";
+        String subPath = "\\src\\SintexAnalysis\\";
         String completePath = rootPath + subPath;
-        String[] caminhoLexico = {completePath + "LexicalAnalyzer.flex"};
+        String[] caminhoSintaxe = {"-parser", "Parser", "-symbols", "Tokens", "-destdir", completePath, "-package", "SintexAnalysis", completePath + "parser.cup"};
+        String subPathL = "\\src\\LexicalAnalysis\\";
+        String completePathL = rootPath + subPathL;
+        String[] caminhoLexico = {completePathL + "LexicalAnalyzer.flex"};
         jflex.Main.generate(caminhoLexico);
+        //java_cup.Main.main(caminhoSintaxe);
         /*Runtime r = Runtime.getRuntime();
         Process p;
         p = r.exec(new String[]{"java", "-jar", rootPath+"\\lib\\CopyLibs\\jflex-full-1.8.2.jar", rootPath+"\\src\\LexicalAnalysis\\LexicalAnalyzer.flex"}, null, new File(rootPath+"\\src\\"));
