@@ -55,10 +55,10 @@ SIMBOLO_PONTO_E_VIRGULA = ";"
 SIMBOLO_TERMINACAO = "end."
 
 /* Números e Identificadores */
-IDENTIFICADOR = {LETRA}({LETRA}|{DIGITO})*
-NUMERO_INTEIRO = {DIGITO}{DIGITO}*
-LETRA = [_a-zA-Z]
-DIGITO = [0-9]
+IDENTIFICADOR = {LETRA}({LETRA}|{DIGITO})* // type String
+NUMERO_INTEIRO = {DIGITO}{DIGITO}* // type Integer
+LETRA = [_a-zA-Z] // type String
+DIGITO = [0-9] // type Integer
 
 /* Comentários */
 COMENTARIO_UMA_LINHA = "//"[^\n]*\n?
@@ -132,7 +132,7 @@ ERRO_SIMBOLO_INVALIDO = [^]
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    return new Symbol(Tokens.IDENTIFICADOR, yytext());
+                                                    return new Symbol(Tokens.IDENTIFICADOR, new String(yytext()));
                                                     /*System.out.println(yytext()+" -> IDENTIFICADOR");*/
                                                 }
                                                 else{
@@ -153,7 +153,7 @@ ERRO_SIMBOLO_INVALIDO = [^]
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    return new Symbol(Tokens.NUMERO_INTEIRO, yytext());
+                                                    return new Symbol(Tokens.NUMERO_INTEIRO, new Integer(yytext()));
                                                     /*System.out.println(yytext()+" -> NUMERO_INTEIRO");*/
                                                 }
                                                 else{

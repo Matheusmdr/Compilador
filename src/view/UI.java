@@ -335,8 +335,8 @@ public class UI extends javax.swing.JFrame {
         String subPathL = "\\src\\LexicalAnalysis\\";
         String completePathL = rootPath + subPathL;
         String[] caminhoLexico = {completePathL + "LexicalAnalyzer.flex"};
+        java_cup.Main.main(caminhoSintaxe);
         jflex.Main.generate(caminhoLexico);
-        //java_cup.Main.main(caminhoSintaxe);
         /*Runtime r = Runtime.getRuntime();
         Process p;
         p = r.exec(new String[]{"java", "-jar", rootPath+"\\lib\\CopyLibs\\jflex-full-1.8.2.jar", rootPath+"\\src\\LexicalAnalysis\\LexicalAnalyzer.flex"}, null, new File(rootPath+"\\src\\"));

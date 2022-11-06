@@ -32,7 +32,10 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\002\000\002\002\003\000\002\002\004" });
+    "\000\013\000\002\002\004\000\002\002\004\000\002\007" +
+    "\004\000\002\006\003\000\002\006\002\000\002\003\004" +
+    "\000\002\003\004\000\002\003\003\000\002\004\004\000" +
+    "\002\005\004\000\002\005\002" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -40,9 +43,15 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\004\000\004\004\004\001\002\000\004\002\001\001" +
-    "\002\000\004\002\006\001\002\000\004\002\000\001\002" +
-    "" });
+    "\000\021\000\010\003\005\022\010\023\004\001\002\000" +
+    "\004\064\012\001\002\000\004\046\ufffa\001\002\000\004" +
+    "\002\022\001\002\000\004\046\017\001\002\000\004\064" +
+    "\012\001\002\000\004\046\ufffb\001\002\000\006\045\014" +
+    "\046\ufff7\001\002\000\004\046\ufff9\001\002\000\004\064" +
+    "\012\001\002\000\004\046\ufff8\001\002\000\004\002\001" +
+    "\001\002\000\012\002\ufffd\003\005\022\010\023\004\001" +
+    "\002\000\004\002\ufffe\001\002\000\004\002\uffff\001\002" +
+    "\000\004\002\000\001\002\000\004\046\ufffc\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -50,8 +59,13 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\004\000\004\002\004\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001" });
+    "\000\021\000\006\002\005\003\006\001\001\000\004\004" +
+    "\022\001\001\000\002\001\001\000\002\001\001\000\004" +
+    "\007\015\001\001\000\004\004\010\001\001\000\002\001" +
+    "\001\000\004\005\012\001\001\000\002\001\001\000\004" +
+    "\004\014\001\001\000\002\001\001\000\002\001\001\000" +
+    "\010\002\017\003\006\006\020\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -136,16 +150,16 @@ class CUP$Parser$actions {
       switch (CUP$Parser$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // inicio ::= RSV_PROGRAMA 
+          case 0: // parteDV ::= DV parteDV1 
             {
               Object RESULT =null;
-		 System.out.println(RSV_PROGRAMA); 
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("inicio",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+		 System.out.println("parteDV"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("parteDV",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // $START ::= inicio EOF 
+          case 1: // $START ::= parteDV EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
@@ -156,6 +170,87 @@ class CUP$Parser$actions {
             }
           /* ACCEPT */
           CUP$Parser$parser.done_parsing();
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 2: // parteDV1 ::= SIMBOLO_PONTO_E_VIRGULA parteDV2 
+            {
+              Object RESULT =null;
+		 System.out.println("parteDV1"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("parteDV1",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 3: // parteDV2 ::= parteDV 
+            {
+              Object RESULT =null;
+		 System.out.println("parteDV2"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("parteDV2",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 4: // parteDV2 ::= 
+            {
+              Object RESULT =null;
+		 System.out.println("parteDV2 FIM"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("parteDV2",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 5: // DV ::= TIPO_BOOLEAN listaID 
+            {
+              Object RESULT =null;
+		 System.out.println("DV booleano"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("DV",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 6: // DV ::= TIPO_INT listaID 
+            {
+              Object RESULT =null;
+		 System.out.println("DV int"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("DV",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 7: // DV ::= error 
+            {
+              Object RESULT =null;
+		 System.out.println("DV ERRO: tipo indefinido"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("DV",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 8: // listaID ::= IDENTIFICADOR listaID1 
+            {
+              Object RESULT =null;
+		 System.out.println("listaID"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("listaID",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 9: // listaID1 ::= SIMBOLO_VIRGULA listaID 
+            {
+              Object RESULT =null;
+		 System.out.println("listaID1"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("listaID1",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 10: // listaID1 ::= 
+            {
+              Object RESULT =null;
+		 System.out.println("listaID1 FIM"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("listaID1",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
           return CUP$Parser$result;
 
           /* . . . . . .*/

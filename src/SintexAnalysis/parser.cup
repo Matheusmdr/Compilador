@@ -16,26 +16,89 @@ init with {:  :};
 scan with {: return s.next_token(); :};
 
 /* Terminais (tokens retornados pelo scanner). */
-terminal            RSV_PROGRAMA, RSV_PROCEDIMENTO, RSV_BEGIN, RSV_END, RSV_IF, RSV_THEN, RSV_ELSE, RSV_WHILE, RSV_DO, RSV_READ, RSV_WRITE, RSV_VAR, RSV_TRUE, RSV_FALSE, TIPO_INT, TIPO_BOOLEAN, OPERADOR_LOGICO_DIFERENCA, OPERADOR_LOGICO_MENOR, OPERADOR_LOGICO_MENOR_IGUAL, OPERADOR_LOGICO_MAIOR_IGUAL, OPERADOR_LOGICO_MAIOR, OPERADOR_LOGICO_IGUALDADE, OPERADOR_LOGICO_AND, OPERADOR_LOGICO_OR, OPERADOR_LOGICO_NOT, OPERADOR_ARITMETICO_ATRIBUICAO, OPERADOR_ARITMETICO_ADICAO, OPERADOR_ARITMETICO_SUBTRACAO, OPERADOR_ARITMETICO_MULTIPLICACAO, OPERADOR_ARITMETICO_DIVISAO, PARENTESES_ESQ, PARENTESES_DIR, SIMBOLO_DOIS_PONTOS, SIMBOLO_VIRGULA, SIMBOLO_PONTO_E_VIRGULA, SIMBOLO_TERMINACAO, IDENTIFICADOR, NUMERO_INTEIRO, LETRA, DIGITO, COMENTARIO_UMA_LINHA, COMENTARIO_MULT_LINHAS, ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR, ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR, DELIMITADOR, ERRO_SIMBOLO_INVALIDO, ERRO_TAM_MAX_NUMERO, ERRO_TAM_MAX_IDENTIFICADOR, ERRO;
-terminal Integer    NUMERO;        
+terminal            RSV_PROGRAMA, RSV_PROCEDIMENTO, RSV_BEGIN, RSV_END, RSV_IF, RSV_THEN, RSV_ELSE, RSV_WHILE, RSV_DO, RSV_READ, RSV_WRITE, RSV_VAR, RSV_TRUE, RSV_FALSE, TIPO_INT, TIPO_BOOLEAN, OPERADOR_LOGICO_DIFERENCA, OPERADOR_LOGICO_MENOR, OPERADOR_LOGICO_MENOR_IGUAL, OPERADOR_LOGICO_MAIOR_IGUAL, OPERADOR_LOGICO_MAIOR, OPERADOR_LOGICO_IGUALDADE, OPERADOR_LOGICO_AND, OPERADOR_LOGICO_OR, OPERADOR_LOGICO_NOT, OPERADOR_ARITMETICO_ATRIBUICAO, OPERADOR_ARITMETICO_ADICAO, OPERADOR_ARITMETICO_SUBTRACAO, OPERADOR_ARITMETICO_MULTIPLICACAO, OPERADOR_ARITMETICO_DIVISAO, PARENTESES_ESQ, PARENTESES_DIR, SIMBOLO_DOIS_PONTOS, SIMBOLO_VIRGULA, SIMBOLO_PONTO_E_VIRGULA, SIMBOLO_TERMINACAO, COMENTARIO_UMA_LINHA, COMENTARIO_MULT_LINHAS, ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR, ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR, DELIMITADOR, ERRO_SIMBOLO_INVALIDO, ERRO_TAM_MAX_NUMERO, ERRO_TAM_MAX_IDENTIFICADOR, ERRO;
+terminal Integer    DIGITO, NUMERO_INTEIRO;
+terminal String    LETRA, IDENTIFICADOR;      
 
 /* Não terminais */
-non terminal            inicio;
-non terminal Integer    exp;      // utilizado para armazenar as subexpressões avaliadas
+non terminal            parteDV, DV, listaID, listaID1, parteDV2, parteDV1;
+// non terminal Integer    exp;
 
 /* Regras da Gramática 
-S ->  S E ;
-    | E ;
 
-E ->  E + E
-    | E - E
-    | E * E
-    | - E
-    | ( E )
-    | n
-    | i
-    | i = E
+// PDF
+1. <parte de declarações de variáveis> ::= <declaração de variáveis> {; <declaração de variáveis>};
+2. <declaração de variáveis>::= <tipo> <lista de identificadores>
+3. <lista de identificadores> ::= <identificador> {, <identificador>}
+
+// Com terminais e não terminais
+1. <parteDV> ::= <DV> {SIMBOLO_PONTO_E_VIRGULA <DV>}SIMBOLO_PONTO_E_VIRGULA
+2. <DV> ::= <TIPO_BOOLEAN ou TIPO_INT> <listaID>
+3. <listaID> ::= <IDENTIFICADOR> {SIMBOLO_VIRGULA <IDENTIFICADOR>}
+
+// Trabalhando com a gramática
+
+Eu imagino que seria algo assim:
+
+    parteDV ::= DV parteDV1                 {: System.out.println("parteDV"); :}
+    ;
+
+    parteDV1 ::= ; parteDV2                 {: System.out.println("parteDV1"); :}
+    ;
+
+    parteDV2 ::= parteDV                    {: System.out.println("parteDV2"); :}
+             |                              {: System.out.println("parteDV2 FIM"); :}
+    ;
+
+    DV ::= TIPO_BOOLEAN listaID             {: System.out.println("DV booleano"); :}
+        | TIPO_INT listaID                  {: System.out.println("DV int"); :}
+        | error                             {: System.out.println("DV ERRO: tipo indefinido"); :}
+    ;
+
+    listaID ::= IDENTIFICADOR listaID1      {: System.out.println("listaID"); :}
+    ;
+
+    listaID1 ::= , listaID                  {: System.out.println("listaID1"); :}
+             |                              {: System.out.println("listaID1 FIM"); :}
+    ;
+
+Em gramática:
+    
+    S -> BA
+
+    A -> ; E
+
+    E -> S
+    E -> VAZIO
+
+    B -> boolean C
+    B -> int C
+
+    C -> nome D
+
+    D -> , C
+    D -> VAZIO
+
 */
 
-inicio ::= RSV_PROGRAMA {: System.out.println(RSV_PROGRAMA); :}
+parteDV ::= DV parteDV1                         {: System.out.println("parteDV"); :}
+;
+
+parteDV1 ::= SIMBOLO_PONTO_E_VIRGULA parteDV2   {: System.out.println("parteDV1"); :}
+;
+
+parteDV2 ::= parteDV                            {: System.out.println("parteDV2"); :}
+         |                                      {: System.out.println("parteDV2 FIM"); :}
+;
+
+DV ::= TIPO_BOOLEAN listaID                     {: System.out.println("DV booleano"); :}
+    | TIPO_INT listaID                          {: System.out.println("DV int"); :}
+    | error                                     {: System.out.println("DV ERRO: tipo indefinido"); :}
+;
+
+listaID ::= IDENTIFICADOR listaID1              {: System.out.println("listaID"); :}
+;
+
+listaID1 ::= SIMBOLO_VIRGULA listaID            {: System.out.println("listaID1"); :}
+         |                                      {: System.out.println("listaID1 FIM"); :}
 ;
