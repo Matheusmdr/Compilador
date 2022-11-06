@@ -153,7 +153,7 @@ ERRO_SIMBOLO_INVALIDO = [^]
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    return new Symbol(Tokens.NUMERO_INTEIRO, new Integer(yytext()));
+                                                    return new Symbol(Tokens.NUMERO_INTEIRO, Integer.parseInt(yytext()));
                                                     /*System.out.println(yytext()+" -> NUMERO_INTEIRO");*/
                                                 }
                                                 else{
