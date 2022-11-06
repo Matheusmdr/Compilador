@@ -812,7 +812,7 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    return new Symbol(Tokens.NUMERO_INTEIRO, yytext());
+                                                    return new Symbol(Tokens.NUMERO_INTEIRO, new Integer(yytext()));
                                                     /*System.out.println(yytext()+" -> NUMERO_INTEIRO");*/
                                                 }
                                                 else{
@@ -860,7 +860,7 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    return new Symbol(Tokens.IDENTIFICADOR, yytext());
+                                                    return new Symbol(Tokens.IDENTIFICADOR, new String(yytext()));
                                                     /*System.out.println(yytext()+" -> IDENTIFICADOR");*/
                                                 }
                                                 else{

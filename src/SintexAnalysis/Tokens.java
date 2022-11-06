@@ -8,32 +8,31 @@ package SintexAnalysis;
 /** CUP generated class containing symbol constants. */
 public class Tokens {
   /* terminals */
-  public static final int ERRO_TAM_MAX_NUMERO = 48;
-  public static final int NUMERO = 51;
-  public static final int ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR = 44;
+  public static final int ERRO_TAM_MAX_NUMERO = 44;
+  public static final int ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR = 40;
   public static final int RSV_BEGIN = 4;
   public static final int PARENTESES_DIR = 33;
-  public static final int DELIMITADOR = 46;
+  public static final int DELIMITADOR = 42;
   public static final int OPERADOR_LOGICO_OR = 25;
   public static final int SIMBOLO_VIRGULA = 35;
-  public static final int COMENTARIO_MULT_LINHAS = 43;
+  public static final int COMENTARIO_MULT_LINHAS = 39;
   public static final int OPERADOR_ARITMETICO_MULTIPLICACAO = 30;
-  public static final int ERRO = 50;
-  public static final int IDENTIFICADOR = 38;
+  public static final int ERRO = 46;
+  public static final int IDENTIFICADOR = 50;
   public static final int TIPO_BOOLEAN = 17;
-  public static final int LETRA = 40;
+  public static final int LETRA = 49;
   public static final int RSV_IF = 6;
   public static final int RSV_END = 5;
-  public static final int ERRO_SIMBOLO_INVALIDO = 47;
-  public static final int COMENTARIO_UMA_LINHA = 42;
-  public static final int ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR = 45;
+  public static final int ERRO_SIMBOLO_INVALIDO = 43;
+  public static final int COMENTARIO_UMA_LINHA = 38;
+  public static final int ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR = 41;
   public static final int RSV_WHILE = 9;
   public static final int RSV_VAR = 13;
   public static final int EOF = 0;
-  public static final int ERRO_TAM_MAX_IDENTIFICADOR = 49;
+  public static final int ERRO_TAM_MAX_IDENTIFICADOR = 45;
   public static final int SIMBOLO_DOIS_PONTOS = 34;
   public static final int error = 1;
-  public static final int DIGITO = 41;
+  public static final int DIGITO = 47;
   public static final int RSV_TRUE = 14;
   public static final int RSV_FALSE = 15;
   public static final int TIPO_INT = 16;
@@ -55,7 +54,7 @@ public class Tokens {
   public static final int RSV_DO = 10;
   public static final int OPERADOR_LOGICO_MAIOR = 22;
   public static final int OPERADOR_ARITMETICO_DIVISAO = 31;
-  public static final int NUMERO_INTEIRO = 39;
+  public static final int NUMERO_INTEIRO = 48;
   public static final int RSV_WRITE = 12;
   public static final int OPERADOR_LOGICO_IGUALDADE = 23;
   public static final int RSV_PROCEDIMENTO = 3;
@@ -99,10 +98,6 @@ public class Tokens {
   "SIMBOLO_VIRGULA",
   "SIMBOLO_PONTO_E_VIRGULA",
   "SIMBOLO_TERMINACAO",
-  "IDENTIFICADOR",
-  "NUMERO_INTEIRO",
-  "LETRA",
-  "DIGITO",
   "COMENTARIO_UMA_LINHA",
   "COMENTARIO_MULT_LINHAS",
   "ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR",
@@ -112,7 +107,10 @@ public class Tokens {
   "ERRO_TAM_MAX_NUMERO",
   "ERRO_TAM_MAX_IDENTIFICADOR",
   "ERRO",
-  "NUMERO"
+  "DIGITO",
+  "NUMERO_INTEIRO",
+  "LETRA",
+  "IDENTIFICADOR"
   };
 }
 
