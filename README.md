@@ -7,6 +7,7 @@ Desenvolver um Compilador.
 # Requisitos📋:
 Simulador de Linguagens Regulares – requisitos: \
 a) Análise Léxica; \
+b) Análise Sintática; 
 
 # Integrantes do Projeto 🛠️:
 
