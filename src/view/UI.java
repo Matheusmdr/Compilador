@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
@@ -63,24 +64,25 @@ public class UI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         fonteBox = new javax.swing.JTextPane();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        jTabbedPane3 = new javax.swing.JTabbedPane();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTable4 = new javax.swing.JTable();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText("Tokens:");
-
-        jLabel2.setText("Fonte:");
 
         fonteBox.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
         fonteBox.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -93,7 +95,7 @@ public class UI extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(fonteBox);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -116,7 +118,60 @@ public class UI extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane4.setViewportView(jTable2);
+        jScrollPane5.setViewportView(jTable4);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+        );
+
+        jTabbedPane3.addTab("Tokens", jPanel3);
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Erro", "Linha", "Coluna"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane6.setViewportView(jTable2);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+        );
+
+        jTabbedPane3.addTab("Log", jPanel4);
+
+        jLabel2.setText("Fonte:");
 
         jMenu1.setText("File");
 
@@ -140,20 +195,28 @@ public class UI extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Analisador");
+        jMenu2.setText("Executar");
         jMenu2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenu2ActionPerformed(evt);
             }
         });
 
-        jMenuItem1.setText("Léxico");
+        jMenuItem1.setText("Analisador Léxico");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
             }
         });
         jMenu2.add(jMenuItem1);
+
+        jMenuItem3.setText("Analisador Sintático");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem3);
 
         jMenuBar1.add(jMenu2);
 
@@ -166,26 +229,24 @@ public class UI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addComponent(jLabel2)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTabbedPane3)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jLabel2)
-                .addGap(1, 1, 1)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addComponent(jTabbedPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -276,6 +337,10 @@ public class UI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jMenu2ActionPerformed
 
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     public void salvaArquivo() throws IOException {
         // parent component of the dialog
         JFrame parentFrame = new JFrame();
@@ -296,11 +361,11 @@ public class UI extends javax.swing.JFrame {
 
     }
 
-/**
+    /**
      * @param args the command line arguments
-   * @throws jflex.exceptions.SilentExit
-   * @throws java.lang.InterruptedException
-   * @throws java.io.IOException
+     * @throws jflex.exceptions.SilentExit
+     * @throws java.lang.InterruptedException
+     * @throws java.io.IOException
      */
     public static void main(String args[]) throws SilentExit, InterruptedException, IOException, Exception {
         /* Set the Nimbus look and feel */
@@ -345,26 +410,39 @@ public class UI extends javax.swing.JFrame {
         p = r.exec(new String[]{"java", "-jar", rootPath+"\\lib\\CopyLibs\\java-cup-11b.jar", "-parser", rootPath+"\\src\\LexicalAnalysis\\Parser.java", "-symbols", rootPath+"\\src\\LexicalAnalysis\\Tokens.java", rootPath+"\\src\\SintexAnalysis\\parser.cup"}, null, new File(rootPath+"\\src\\"));
         System.out.println(p.waitFor());*/
 
-        /* Create and display the form */
+ /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-          new UI().setVisible(true);
+            new UI().setVisible(true);
         });
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane fonteBox;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTabbedPane jTabbedPane3;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTable4;
     // End of variables declaration//GEN-END:variables
 
     private class CustomDocumentFilter extends DocumentFilter {
@@ -411,7 +489,86 @@ public class UI extends javax.swing.JFrame {
             });
         }
 
+        private int findLastNonWordChar(String text, int index) {
+            while (--index >= 0) {
+                if (String.valueOf(text.charAt(index)).matches("\\W")) {
+                    break;
+                }
+            }
+            return index;
+        }
+
+        private int findFirstNonWordChar(String text, int index) {
+            while (index < text.length()) {
+                if (String.valueOf(text.charAt(index)).matches("\\W")) {
+                    break;
+                }
+                index++;
+            }
+            return index;
+        }
+
         private void updateTextStyles() {
+            styledDocument.setCharacterAttributes(0, fonteBox.getText().length(), blackAttributeSet, true);
+            DefaultStyledDocument doc = new DefaultStyledDocument() {
+                public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+                    super.insertString(offset, str, a);
+
+                    String text = getText(0, getLength());
+                    int before = findLastNonWordChar(text, offset);
+                    if (before < 0) {
+                        before = 0;
+                    }
+                    int after = findFirstNonWordChar(text, offset + str.length());
+                    int wordL = before;
+                    int wordR = before;
+
+                    while (wordR <= after) {
+                        if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
+                            if (text.substring(wordL, wordR).matches("(\\W)*(program|procedure|if|then|else|while|do|var|begin|end|false|true|int|boolean|read|write)")) {
+                                setCharacterAttributes(wordL, wordR - wordL, blueAttributeSet, true);
+                            } else if (text.substring(wordL, wordR).matches("(\\W)*(:|,|;|(:=)|(<>)|<|>|(>=)|(<=)|[\\-]|[\\+]|[\\*])")) {
+                                setCharacterAttributes(wordL, wordR - wordL, redAttributeSet, true);
+                            }
+                            else if (text.substring(wordL, wordR).matches("(\\W)*(div|and|or|not)")) {
+                                setCharacterAttributes(wordL, wordR - wordL, blueAttributeSet, true);
+                            } 
+                            else {
+                                setCharacterAttributes(wordL, wordR - wordL, blackAttributeSet, true);
+                            }
+                            wordL = wordR;
+                        }
+                        wordR++;
+                    }
+                }
+
+                public void remove(int offs, int len) throws BadLocationException {
+                    super.remove(offs, len);
+
+                    String text = getText(0, getLength());
+                    int before = findLastNonWordChar(text, offs);
+                    if (before < 0) {
+                        before = 0;
+                    }
+                    int after = findFirstNonWordChar(text, offs);
+
+                    if (text.substring(before, after).matches("(\\W)*(program|procedure|if|then|else|while|do|var|begin|end|false|true|int|boolean|read|write)")) {
+                        setCharacterAttributes(before, after - before, blueAttributeSet, false);
+                    } else if (text.substring(before, after).matches("(\\W)*(:|,|;|(:=)|(<>)|<|>|(>=)|(<=)|[\\-]|[\\+]|[\\*])")) {
+                        setCharacterAttributes(before, after - before, redAttributeSet, true);
+                    } 
+                    else if (text.substring(before, after).matches("(\\W)*(div|and|or|not)")) {
+                                setCharacterAttributes(before, after - before, blueAttributeSet, true);
+                            } 
+                    else {
+                        setCharacterAttributes(before, after - before, blackAttributeSet, false);
+                    }
+                }
+
+            };
+            String text = fonteBox.getText();
+            fonteBox.setStyledDocument(doc);
+            fonteBox.setText(text);
 
         }
 
