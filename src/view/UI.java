@@ -356,15 +356,17 @@ public class UI extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
             
-        /*Reader lector = new StringReader(fonteBox.getText());
+        Reader lector = new StringReader(fonteBox.getText());
         LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
             
         Parser parser = new Parser(lexer);
+        parser.Connection(lexer);
+        
         try {
             parser.parse();
         } catch (Exception ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
             
             
     }//GEN-LAST:event_jMenuItem3ActionPerformed

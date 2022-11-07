@@ -32,10 +32,11 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\013\000\002\002\004\000\002\002\004\000\002\007" +
-    "\004\000\002\006\003\000\002\006\002\000\002\003\004" +
-    "\000\002\003\004\000\002\003\003\000\002\004\004\000" +
-    "\002\005\004\000\002\005\002" });
+    "\000\016\000\002\002\004\000\002\002\004\000\002\002" +
+    "\003\000\002\007\004\000\002\006\003\000\002\006\002" +
+    "\000\002\003\004\000\002\003\004\000\002\003\003\000" +
+    "\002\004\004\000\002\004\003\000\002\005\004\000\002" +
+    "\005\002\000\002\005\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -43,15 +44,17 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\021\000\010\003\005\022\010\023\004\001\002\000" +
-    "\004\064\012\001\002\000\004\046\ufffa\001\002\000\004" +
-    "\002\022\001\002\000\004\046\017\001\002\000\004\064" +
-    "\012\001\002\000\004\046\ufffb\001\002\000\006\045\014" +
-    "\046\ufff7\001\002\000\004\046\ufff9\001\002\000\004\064" +
-    "\012\001\002\000\004\046\ufff8\001\002\000\004\002\001" +
-    "\001\002\000\012\002\ufffd\003\005\022\010\023\004\001" +
-    "\002\000\004\002\ufffe\001\002\000\004\002\uffff\001\002" +
-    "\000\004\002\000\001\002\000\004\046\ufffc\001\002" });
+    "\000\023\000\010\003\005\022\010\023\004\001\002\000" +
+    "\006\003\012\064\013\001\002\000\006\002\uffff\046\ufff9" +
+    "\001\002\000\004\002\024\001\002\000\004\046\021\001" +
+    "\002\000\006\003\012\064\013\001\002\000\004\046\ufffa" +
+    "\001\002\000\004\046\ufff7\001\002\000\010\003\015\045" +
+    "\016\046\ufff5\001\002\000\004\046\ufff8\001\002\000\004" +
+    "\046\ufff4\001\002\000\006\003\012\064\013\001\002\000" +
+    "\004\046\ufff6\001\002\000\004\002\001\001\002\000\012" +
+    "\002\ufffc\003\005\022\010\023\004\001\002\000\004\002" +
+    "\ufffd\001\002\000\004\002\ufffe\001\002\000\004\002\000" +
+    "\001\002\000\004\046\ufffb\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -59,13 +62,14 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\021\000\006\002\005\003\006\001\001\000\004\004" +
-    "\022\001\001\000\002\001\001\000\002\001\001\000\004" +
-    "\007\015\001\001\000\004\004\010\001\001\000\002\001" +
-    "\001\000\004\005\012\001\001\000\002\001\001\000\004" +
-    "\004\014\001\001\000\002\001\001\000\002\001\001\000" +
-    "\010\002\017\003\006\006\020\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001" });
+    "\000\023\000\006\002\005\003\006\001\001\000\004\004" +
+    "\024\001\001\000\002\001\001\000\002\001\001\000\004" +
+    "\007\017\001\001\000\004\004\010\001\001\000\002\001" +
+    "\001\000\002\001\001\000\004\005\013\001\001\000\002" +
+    "\001\001\000\002\001\001\000\004\004\016\001\001\000" +
+    "\002\001\001\000\002\001\001\000\010\002\021\003\006" +
+    "\006\022\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -119,7 +123,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 
     // conectar esse parser ao scanner!
     Scanner s;
-    // Parser(Scanner s){ this.s=s; }
+    public void Connection(java_cup.runtime.Scanner s){ this.s=s; }
 
     // tabela de símbolos
     java.util.Map<String, Integer> simbolos = new java.util.HashMap<String, Integer>();
@@ -173,7 +177,16 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // parteDV1 ::= SIMBOLO_PONTO_E_VIRGULA parteDV2 
+          case 2: // parteDV ::= error 
+            {
+              Object RESULT =null;
+		 System.out.println("Faltou ponto e vírgula"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("parteDV",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 3: // parteDV1 ::= SIMBOLO_PONTO_E_VIRGULA parteDV2 
             {
               Object RESULT =null;
 		 System.out.println("parteDV1"); 
@@ -182,7 +195,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // parteDV2 ::= parteDV 
+          case 4: // parteDV2 ::= parteDV 
             {
               Object RESULT =null;
 		 System.out.println("parteDV2"); 
@@ -191,7 +204,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // parteDV2 ::= 
+          case 5: // parteDV2 ::= 
             {
               Object RESULT =null;
 		 System.out.println("parteDV2 FIM"); 
@@ -200,7 +213,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // DV ::= TIPO_BOOLEAN listaID 
+          case 6: // DV ::= TIPO_BOOLEAN listaID 
             {
               Object RESULT =null;
 		 System.out.println("DV booleano"); 
@@ -209,7 +222,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // DV ::= TIPO_INT listaID 
+          case 7: // DV ::= TIPO_INT listaID 
             {
               Object RESULT =null;
 		 System.out.println("DV int"); 
@@ -218,7 +231,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // DV ::= error 
+          case 8: // DV ::= error 
             {
               Object RESULT =null;
 		 System.out.println("DV ERRO: tipo indefinido"); 
@@ -227,7 +240,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // listaID ::= IDENTIFICADOR listaID1 
+          case 9: // listaID ::= IDENTIFICADOR listaID1 
             {
               Object RESULT =null;
 		 System.out.println("listaID"); 
@@ -236,7 +249,16 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // listaID1 ::= SIMBOLO_VIRGULA listaID 
+          case 10: // listaID ::= error 
+            {
+              Object RESULT =null;
+		 System.out.println("ERRO: faltou  identificador"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("listaID",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 11: // listaID1 ::= SIMBOLO_VIRGULA listaID 
             {
               Object RESULT =null;
 		 System.out.println("listaID1"); 
@@ -245,11 +267,20 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // listaID1 ::= 
+          case 12: // listaID1 ::= 
             {
               Object RESULT =null;
 		 System.out.println("listaID1 FIM"); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("listaID1",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+            }
+          return CUP$Parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 13: // listaID1 ::= error 
+            {
+              Object RESULT =null;
+		 System.out.println("ERRO: faltou  vírgula"); 
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("listaID1",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 

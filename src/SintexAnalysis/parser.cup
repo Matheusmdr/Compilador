@@ -5,7 +5,7 @@ import SintexAnalysis.Tokens;
 parser code {:
     // conectar esse parser ao scanner!
     Scanner s;
-    // Parser(Scanner s){ this.s=s; }
+    public void Connection(java_cup.runtime.Scanner s){ this.s=s; }
 
     // tabela de símbolos
     java.util.Map<String, Integer> simbolos = new java.util.HashMap<String, Integer>();
@@ -82,9 +82,12 @@ Em gramática:
 */
 
 parteDV ::= DV parteDV1                         {: System.out.println("parteDV"); :}
+        | error                                {: System.out.println("Faltou ponto e vírgula"); :}
 ;
 
 parteDV1 ::= SIMBOLO_PONTO_E_VIRGULA parteDV2   {: System.out.println("parteDV1"); :}
+        | error                                {: System.out.println("Faltou ponto e vírgula"); :}
+          
 ;
 
 parteDV2 ::= parteDV                            {: System.out.println("parteDV2"); :}
@@ -97,8 +100,10 @@ DV ::= TIPO_BOOLEAN listaID                     {: System.out.println("DV boolea
 ;
 
 listaID ::= IDENTIFICADOR listaID1              {: System.out.println("listaID"); :}
+         | error                                {: System.out.println("ERRO: faltou  identificador"); :}  
 ;
 
 listaID1 ::= SIMBOLO_VIRGULA listaID            {: System.out.println("listaID1"); :}
          |                                      {: System.out.println("listaID1 FIM"); :}
+         | error                                {: System.out.println("ERRO: faltou  vírgula"); :}  
 ;
