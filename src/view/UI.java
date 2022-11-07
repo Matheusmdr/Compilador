@@ -5,7 +5,10 @@
  */
 package view;
 
-//import LexicalAnalysis.LexicalAnalyzer;
+import LexicalAnalysis.LexicalAnalyzer;
+import SintexAnalysis.Parser;
+import SintexAnalysis.Tokens;
+
 import java_cup.runtime.Symbol;
 import java.awt.Color;
 import java.io.File;
@@ -83,6 +86,7 @@ public class UI extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("IDE");
 
         fonteBox.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
         fonteBox.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -169,7 +173,7 @@ public class UI extends javax.swing.JFrame {
             .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
         );
 
-        jTabbedPane3.addTab("Log", jPanel4);
+        jTabbedPane3.addTab("Erros", jPanel4);
 
         jLabel2.setText("Fonte:");
 
@@ -278,36 +282,49 @@ public class UI extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         this.reloadTable(0);
-        /*try {
+        try {
             Reader lector = new StringReader(fonteBox.getText());
             LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
-            DefaultTableModel dtm = (DefaultTableModel) jTable2.getModel();
+            
+            DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
             dtm.getDataVector().removeAllElements();
             dtm.fireTableDataChanged();
-            while (true) {
+            
+            DefaultTableModel dtmE = (DefaultTableModel) jTable2.getModel();
+            dtmE.getDataVector().removeAllElements();
+            dtmE.fireTableDataChanged();
+
+            Symbol sym = lexer.next_token();
+            do {
                 String[] linha = new String[5];
-                Tokens tokens = lexer.yylex();
-                if (tokens == null) {
-                    break;
+
+                if (sym.sym == Tokens.ERRO) {
+                    linha[0] = lexer.erro;
+                    linha[1] = Integer.toString(lexer.line + 1);
+                    linha[2] = Integer.toString(lexer.column + 1);
+                    
+                    dtmE.addRow(linha);
+                    jTable2.revalidate();
+                    jTable2.repaint();
+                } else {
+
+                    linha[0] = lexer.lexema;
+                    linha[1] = lexer.token;
+                    linha[2] = Integer.toString(lexer.line + 1);
+                    linha[3] = Integer.toString(lexer.column + 1);
+                    linha[4] = Integer.toString(lexer.endColumn + 1);
+
+                    dtm.addRow(linha);
+                    jTable4.revalidate();
+                    jTable4.repaint();
                 }
 
-                linha[0] = lexer.lexema;
-                linha[2] = Integer.toString(lexer.line + 1);
-                linha[3] = Integer.toString(lexer.column + 1);
-                linha[4] = Integer.toString(lexer.endColumn + 1);
-                if (tokens != Tokens.ERRO) {
-                    linha[1] = lexer.token;
-                } else {
-                    linha[1] = lexer.erro;
-                }
-                dtm.addRow(linha);
-                jTable2.revalidate();
-                jTable2.repaint();
-            }
+                sym = lexer.next_token();
+            } while (!lexer.yyatEOF());
 
         } catch (IOException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void fonteBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fonteBoxKeyTyped
@@ -338,7 +355,18 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
+            
+        /*Reader lector = new StringReader(fonteBox.getText());
+        LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
+            
+        Parser parser = new Parser(lexer);
+        try {
+            parser.parse();
+        } catch (Exception ex) {
+            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+            
+            
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     public void salvaArquivo() throws IOException {
@@ -427,21 +455,13 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable4;
     // End of variables declaration//GEN-END:variables
 
@@ -529,11 +549,9 @@ public class UI extends javax.swing.JFrame {
                                 setCharacterAttributes(wordL, wordR - wordL, blueAttributeSet, true);
                             } else if (text.substring(wordL, wordR).matches("(\\W)*(:|,|;|(:=)|(<>)|<|>|(>=)|(<=)|[\\-]|[\\+]|[\\*])")) {
                                 setCharacterAttributes(wordL, wordR - wordL, redAttributeSet, true);
-                            }
-                            else if (text.substring(wordL, wordR).matches("(\\W)*(div|and|or|not)")) {
+                            } else if (text.substring(wordL, wordR).matches("(\\W)*(div|and|or|not)")) {
                                 setCharacterAttributes(wordL, wordR - wordL, blueAttributeSet, true);
-                            } 
-                            else {
+                            } else {
                                 setCharacterAttributes(wordL, wordR - wordL, blackAttributeSet, true);
                             }
                             wordL = wordR;
@@ -556,11 +574,9 @@ public class UI extends javax.swing.JFrame {
                         setCharacterAttributes(before, after - before, blueAttributeSet, false);
                     } else if (text.substring(before, after).matches("(\\W)*(:|,|;|(:=)|(<>)|<|>|(>=)|(<=)|[\\-]|[\\+]|[\\*])")) {
                         setCharacterAttributes(before, after - before, redAttributeSet, true);
-                    } 
-                    else if (text.substring(before, after).matches("(\\W)*(div|and|or|not)")) {
-                                setCharacterAttributes(before, after - before, blueAttributeSet, true);
-                            } 
-                    else {
+                    } else if (text.substring(before, after).matches("(\\W)*(div|and|or|not)")) {
+                        setCharacterAttributes(before, after - before, blueAttributeSet, true);
+                    } else {
                         setCharacterAttributes(before, after - before, blackAttributeSet, false);
                     }
                 }

@@ -812,7 +812,7 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    return new Symbol(Tokens.NUMERO_INTEIRO, new Integer(yytext()));
+                                                    return new Symbol(Tokens.NUMERO_INTEIRO, Integer.parseInt(yytext()));
                                                     /*System.out.println(yytext()+" -> NUMERO_INTEIRO");*/
                                                 }
                                                 else{
@@ -821,8 +821,8 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    erro="[Tokens.ERRO_TAM_MAX_NUMERO] Tamanho máximo para número inteiro (8) excedido";
-                                                    return new Symbol(Tokens.ERRO_TAM_MAX_NUMERO, yytext());
+                                                    erro="[ERRO_TAM_MAX_NUMERO] Tamanho máximo para número inteiro (8) excedido";
+                                                    return new Symbol(Tokens.ERRO, yytext());
                                                     /*System.out.println(yytext()+" -> Tokens.ERRO_TAM_MAX_NUMERO");*/
                                                 }
             }
@@ -869,20 +869,20 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    erro="[Tokens.ERRO_TAM_MAX_IDENTIFICADOR] Tamanho máximo para indentificador (15) excedido";
-                                                    return new Symbol(Tokens.ERRO_TAM_MAX_IDENTIFICADOR, yytext());
+                                                    erro="[ERRO_TAM_MAX_IDENTIFICADOR] Tamanho máximo para indentificador (15) excedido";
+                                                    return new Symbol(Tokens.ERRO, yytext());
                                                     /*System.out.println(yytext()+" -> Tokens.ERRO_TAM_MAX_IDENTIFICADOR");*/
                                                 }
             }
             // fall through
           case 59: break;
           case 16:
-            { token=""; line=yyline; column=yycolumn; endColumn=column+yylength()-1; lexema=yytext(); erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR] O bloco de comentário não foi fechado"; return new Symbol(Tokens.ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR");*/
+            { token=""; line=yyline; column=yycolumn; endColumn=column+yylength()-1; lexema=yytext(); erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR] O bloco de comentário não foi fechado"; return new Symbol(Tokens.ERRO, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR");*/
             }
             // fall through
           case 60: break;
           case 17:
-            { token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR] O bloco de comentário não foi aberto"; return new Symbol(Tokens.ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR");*/
+            { token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR] O bloco de comentário não foi aberto"; return new Symbol(Tokens.ERRO, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR");*/
             }
             // fall through
           case 61: break;

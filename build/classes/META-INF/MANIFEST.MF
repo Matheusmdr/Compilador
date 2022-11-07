@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.10.8
-Created-By: 18.0.1.1+2-6 (Oracle Corporation)
-Class-Path: lib/jflex-full-1.8.2.jar lib/java-cup-11b.jar
-X-COMMENT: Main-Class will be added automatically by build
-Main-Class: view.UI
-

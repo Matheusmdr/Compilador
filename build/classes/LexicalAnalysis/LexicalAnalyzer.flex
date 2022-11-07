@@ -141,8 +141,8 @@ ERRO_SIMBOLO_INVALIDO = [^]
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    erro="[Tokens.ERRO_TAM_MAX_IDENTIFICADOR] Tamanho máximo para indentificador (15) excedido";
-                                                    return new Symbol(Tokens.ERRO_TAM_MAX_IDENTIFICADOR, yytext());
+                                                    erro="[ERRO_TAM_MAX_IDENTIFICADOR] Tamanho máximo para indentificador (15) excedido";
+                                                    return new Symbol(Tokens.ERRO, yytext());
                                                     /*System.out.println(yytext()+" -> Tokens.ERRO_TAM_MAX_IDENTIFICADOR");*/
                                                 }
                                             }
@@ -162,13 +162,13 @@ ERRO_SIMBOLO_INVALIDO = [^]
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    erro="[Tokens.ERRO_TAM_MAX_NUMERO] Tamanho máximo para número inteiro (8) excedido";
-                                                    return new Symbol(Tokens.ERRO_TAM_MAX_NUMERO, yytext());
+                                                    erro="[ERRO_TAM_MAX_NUMERO] Tamanho máximo para número inteiro (8) excedido";
+                                                    return new Symbol(Tokens.ERRO, yytext());
                                                     /*System.out.println(yytext()+" -> Tokens.ERRO_TAM_MAX_NUMERO");*/
                                                 }
                                             }
 {COMENTARIO_UMA_LINHA}                      {token="COMENTARIO_UMA_LINHA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.COMENTARIO_UMA_LINHA, yytext()); /*System.out.println(yytext()+" -> COMENTARIO_UMA_LINHA");*/}
 {COMENTARIO_MULT_LINHAS}                    {token="COMENTARIO_MULT_LINHAS"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.COMENTARIO_MULT_LINHAS, yytext()); /*System.out.println(yytext()+" -> COMENTARIO_MULT_LINHAS");*/}
-{ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR}    {token=""; line=yyline; column=yycolumn; endColumn=column+yylength()-1; lexema=yytext(); erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR] O bloco de comentário não foi fechado"; return new Symbol(Tokens.ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR");*/}
-{ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR}     {token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR] O bloco de comentário não foi aberto"; return new Symbol(Tokens.ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR");*/}
+{ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR}    {token=""; line=yyline; column=yycolumn; endColumn=column+yylength()-1; lexema=yytext(); erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR] O bloco de comentário não foi fechado"; return new Symbol(Tokens.ERRO, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR");*/}
+{ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR}     {token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR] O bloco de comentário não foi aberto"; return new Symbol(Tokens.ERRO, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR");*/}
 {ERRO_SIMBOLO_INVALIDO}                     {token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_SIMBOLO_INVALIDO] Simbolo Inválido"; return new Symbol(Tokens.ERRO_SIMBOLO_INVALIDO, yytext()); /*System.out.println(yytext()+" -> ERRO_SIMBOLO_INVALIDO");*/}
