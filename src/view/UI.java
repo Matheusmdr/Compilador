@@ -47,15 +47,99 @@ public class UI extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    private CustomDocumentFilter documentFilter;
 
     private int size;
 
     public UI() {
         initComponents();
-        documentFilter = new CustomDocumentFilter();
         TextLineNumber tln = new TextLineNumber(fonteBox);
         jScrollPane3.setRowHeaderView(tln);
+        updateTextStyles();
+    }
+
+    private int findLastNonWordChar(String text, int index) {
+        while (--index >= 0) {
+            if (String.valueOf(text.charAt(index)).matches("\\W")) {
+                break;
+            }
+        }
+        return index;
+    }
+
+    private int findFirstNonWordChar(String text, int index) {
+        while (index < text.length()) {
+            if (String.valueOf(text.charAt(index)).matches("\\W")) {
+                break;
+            }
+            index++;
+        }
+        return index;
+    }
+
+    private void updateTextStyles() {
+        StyledDocument styledDocument = fonteBox.getStyledDocument();
+        StyleContext styleContext = StyleContext.getDefaultStyleContext();
+        AttributeSet blueAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLUE);
+        AttributeSet blackAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+        AttributeSet greenAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, new Color(0, 153, 0));
+        AttributeSet redAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.RED);
+        AttributeSet pinkAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, new Color(255, 0, 255));
+        AttributeSet grayAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.gray);
+        styledDocument.setCharacterAttributes(0, fonteBox.getText().length(), blackAttributeSet, true);
+        DefaultStyledDocument doc = new DefaultStyledDocument() {
+            public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+                super.insertString(offset, str, a);
+
+                String text = getText(0, getLength());
+                int before = findLastNonWordChar(text, offset);
+                if (before < 0) {
+                    before = 0;
+                }
+                int after = findFirstNonWordChar(text, offset + str.length());
+                int wordL = before;
+                int wordR = before;
+
+                while (wordR <= after) {
+                    if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
+                        if (text.substring(wordL, wordR).matches("(\\W)*(program|procedure|if|then|else|while|do|var|begin|end|false|true|int|boolean|read|write)")) {
+                            setCharacterAttributes(wordL, wordR - wordL, blueAttributeSet, true);
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(:|,|;|(:=)|(<>)|<|>|(>=)|(<=)|[\\-]|[\\+]|[\\*])")) {
+                            setCharacterAttributes(wordL, wordR - wordL, redAttributeSet, true);
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(div|and|or|not)")) {
+                            setCharacterAttributes(wordL, wordR - wordL, blueAttributeSet, true);
+                        } else {
+                            setCharacterAttributes(wordL, wordR - wordL, blackAttributeSet, true);
+                        }
+                        wordL = wordR;
+                    }
+                    wordR++;
+                }
+            }
+
+            public void remove(int offs, int len) throws BadLocationException {
+                super.remove(offs, len);
+
+                String text = getText(0, getLength());
+                int before = findLastNonWordChar(text, offs);
+                if (before < 0) {
+                    before = 0;
+                }
+                int after = findFirstNonWordChar(text, offs);
+
+                if (text.substring(before, after).matches("(\\W)*(program|procedure|if|then|else|while|do|var|begin|end|false|true|int|boolean|read|write)")) {
+                    setCharacterAttributes(before, after - before, blueAttributeSet, false);
+                } else if (text.substring(before, after).matches("(\\W)*(:|,|;|(:=)|(<>)|<|>|(>=)|(<=)|[\\-]|[\\+]|[\\*])")) {
+                    setCharacterAttributes(before, after - before, redAttributeSet, true);
+                } else if (text.substring(before, after).matches("(\\W)*(div|and|or|not)")) {
+                    setCharacterAttributes(before, after - before, blueAttributeSet, true);
+                } else {
+                    setCharacterAttributes(before, after - before, blackAttributeSet, false);
+                }
+            }
+
+        };
+        String text = fonteBox.getText();
+        fonteBox.setStyledDocument(doc);
 
     }
 
@@ -283,7 +367,6 @@ public class UI extends javax.swing.JFrame {
             } catch (FileNotFoundException ex) {
                 exit(1);
             }
-            documentFilter.updateTextStyles();
             fonteBox.repaint();
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
@@ -295,11 +378,11 @@ public class UI extends javax.swing.JFrame {
         try {
             Reader lector = new StringReader(fonteBox.getText());
             LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
-            
+
             DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
             dtm.getDataVector().removeAllElements();
             dtm.fireTableDataChanged();
-            
+
             DefaultTableModel dtmE = (DefaultTableModel) jTable2.getModel();
             dtmE.getDataVector().removeAllElements();
             dtmE.fireTableDataChanged();
@@ -312,7 +395,7 @@ public class UI extends javax.swing.JFrame {
                     linha[0] = lexer.erro;
                     linha[1] = Integer.toString(lexer.line + 1);
                     linha[2] = Integer.toString(lexer.column + 1);
-                    
+
                     dtmE.addRow(linha);
                     jTable2.revalidate();
                     jTable2.repaint();
@@ -346,7 +429,6 @@ public class UI extends javax.swing.JFrame {
         if (size != newfontSize) {
             size = newfontSize;
         }
-        documentFilter.updateTextStyles();
         fonteBox.repaint();
     }//GEN-LAST:event_fonteBoxKeyReleased
 
@@ -365,13 +447,13 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-            
+
         Reader lector = new StringReader(fonteBox.getText());
         LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
-            
+
         Parser parser = new Parser(lexer);
         parser.Connection(lexer);
-        
+
         try {
             parser.parse();
             fillTextAreaSintaxe(parser.getListaDeErros());
@@ -379,18 +461,19 @@ public class UI extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-            
+
+
     }//GEN-LAST:event_jMenuItem3ActionPerformed
-    public void fillTextAreaSintaxe(ArrayList<String> listadeErros){
+    public void fillTextAreaSintaxe(ArrayList<String> listadeErros) {
         ArrayList<String> fill = listadeErros;
         String text = "";
-        if(fill.size() > 0){
-            text = fill.get(2) + ". Na " + fill.get(0) +" e "+ fill.get(1);
+        if (fill.size() > 0) {
+            text = fill.get(2) + ". Na " + fill.get(0) + " e " + fill.get(1);
         }
         textAreaSintaxe.setText(text);
-        
+
     }
+
     public void salvaArquivo() throws IOException {
         // parent component of the dialog
         JFrame parentFrame = new JFrame();
@@ -489,128 +572,4 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JTextArea textAreaSintaxe;
     // End of variables declaration//GEN-END:variables
 
-    private class CustomDocumentFilter extends DocumentFilter {
-
-        private final StyledDocument styledDocument = fonteBox.getStyledDocument();
-        private final StyleContext styleContext = StyleContext.getDefaultStyleContext();
-        private final AttributeSet blueAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLUE);
-        private final AttributeSet blackAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
-        private final AttributeSet greenAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, new Color(0, 153, 0));
-        private final AttributeSet redAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.RED);
-        private final AttributeSet pinkAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, new Color(255, 0, 255));
-        private final AttributeSet grayAttributeSet = styleContext.addAttribute(styleContext.getEmptySet(), StyleConstants.Foreground, Color.gray);
-
-        @Override
-        public void insertString(FilterBypass fb, int offset, String text, AttributeSet attributeSet) throws BadLocationException {
-            super.insertString(fb, offset, text, attributeSet);
-
-            handleTextChanged();
-        }
-
-        @Override
-        public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-            super.remove(fb, offset, length);
-
-            handleTextChanged();
-        }
-
-        @Override
-        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attributeSet) throws BadLocationException {
-            super.replace(fb, offset, length, text, attributeSet);
-
-            handleTextChanged();
-        }
-
-        /**
-         * Runs your updates later, not during the event notification.
-         */
-        private void handleTextChanged() {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    updateTextStyles();
-                }
-            });
-        }
-
-        private int findLastNonWordChar(String text, int index) {
-            while (--index >= 0) {
-                if (String.valueOf(text.charAt(index)).matches("\\W")) {
-                    break;
-                }
-            }
-            return index;
-        }
-
-        private int findFirstNonWordChar(String text, int index) {
-            while (index < text.length()) {
-                if (String.valueOf(text.charAt(index)).matches("\\W")) {
-                    break;
-                }
-                index++;
-            }
-            return index;
-        }
-
-        private void updateTextStyles() {
-            styledDocument.setCharacterAttributes(0, fonteBox.getText().length(), blackAttributeSet, true);
-            DefaultStyledDocument doc = new DefaultStyledDocument() {
-                public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
-                    super.insertString(offset, str, a);
-
-                    String text = getText(0, getLength());
-                    int before = findLastNonWordChar(text, offset);
-                    if (before < 0) {
-                        before = 0;
-                    }
-                    int after = findFirstNonWordChar(text, offset + str.length());
-                    int wordL = before;
-                    int wordR = before;
-
-                    while (wordR <= after) {
-                        if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
-                            if (text.substring(wordL, wordR).matches("(\\W)*(program|procedure|if|then|else|while|do|var|begin|end|false|true|int|boolean|read|write)")) {
-                                setCharacterAttributes(wordL, wordR - wordL, blueAttributeSet, true);
-                            } else if (text.substring(wordL, wordR).matches("(\\W)*(:|,|;|(:=)|(<>)|<|>|(>=)|(<=)|[\\-]|[\\+]|[\\*])")) {
-                                setCharacterAttributes(wordL, wordR - wordL, redAttributeSet, true);
-                            } else if (text.substring(wordL, wordR).matches("(\\W)*(div|and|or|not)")) {
-                                setCharacterAttributes(wordL, wordR - wordL, blueAttributeSet, true);
-                            } else {
-                                setCharacterAttributes(wordL, wordR - wordL, blackAttributeSet, true);
-                            }
-                            wordL = wordR;
-                        }
-                        wordR++;
-                    }
-                }
-
-                public void remove(int offs, int len) throws BadLocationException {
-                    super.remove(offs, len);
-
-                    String text = getText(0, getLength());
-                    int before = findLastNonWordChar(text, offs);
-                    if (before < 0) {
-                        before = 0;
-                    }
-                    int after = findFirstNonWordChar(text, offs);
-
-                    if (text.substring(before, after).matches("(\\W)*(program|procedure|if|then|else|while|do|var|begin|end|false|true|int|boolean|read|write)")) {
-                        setCharacterAttributes(before, after - before, blueAttributeSet, false);
-                    } else if (text.substring(before, after).matches("(\\W)*(:|,|;|(:=)|(<>)|<|>|(>=)|(<=)|[\\-]|[\\+]|[\\*])")) {
-                        setCharacterAttributes(before, after - before, redAttributeSet, true);
-                    } else if (text.substring(before, after).matches("(\\W)*(div|and|or|not)")) {
-                        setCharacterAttributes(before, after - before, blueAttributeSet, true);
-                    } else {
-                        setCharacterAttributes(before, after - before, blackAttributeSet, false);
-                    }
-                }
-
-            };
-            String text = fonteBox.getText();
-            fonteBox.setStyledDocument(doc);
-            fonteBox.setText(text);
-
-        }
-
-    }
 }
