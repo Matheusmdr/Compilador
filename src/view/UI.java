@@ -19,6 +19,7 @@ import java.io.StringReader;
 import static java.lang.System.exit;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,6 +77,8 @@ public class UI extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textAreaSintaxe = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -173,7 +176,13 @@ public class UI extends javax.swing.JFrame {
             .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
         );
 
-        jTabbedPane3.addTab("Erros", jPanel4);
+        jTabbedPane3.addTab("Erros Léxicos", jPanel4);
+
+        textAreaSintaxe.setColumns(20);
+        textAreaSintaxe.setRows(5);
+        jScrollPane1.setViewportView(textAreaSintaxe);
+
+        jTabbedPane3.addTab("Erros Sintáticos", jScrollPane1);
 
         jLabel2.setText("Fonte:");
 
@@ -282,6 +291,7 @@ public class UI extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         this.reloadTable(0);
+        jTabbedPane3.setSelectedIndex(0);
         try {
             Reader lector = new StringReader(fonteBox.getText());
             LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
@@ -364,13 +374,23 @@ public class UI extends javax.swing.JFrame {
         
         try {
             parser.parse();
+            fillTextAreaSintaxe(parser.getListaDeErros());
+            jTabbedPane3.setSelectedIndex(2);
         } catch (Exception ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
             
             
     }//GEN-LAST:event_jMenuItem3ActionPerformed
-
+    public void fillTextAreaSintaxe(ArrayList<String> listadeErros){
+        ArrayList<String> fill = listadeErros;
+        String text = "";
+        if(fill.size() > 0){
+            text = fill.get(2) + ". Na " + fill.get(0) +" e "+ fill.get(1);
+        }
+        textAreaSintaxe.setText(text);
+        
+    }
     public void salvaArquivo() throws IOException {
         // parent component of the dialog
         JFrame parentFrame = new JFrame();
@@ -459,12 +479,14 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable4;
+    private javax.swing.JTextArea textAreaSintaxe;
     // End of variables declaration//GEN-END:variables
 
     private class CustomDocumentFilter extends DocumentFilter {
