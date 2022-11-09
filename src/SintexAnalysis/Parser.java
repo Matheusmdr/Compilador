@@ -7,6 +7,9 @@ package SintexAnalysis;
 
 import java_cup.runtime.*;
 import SintexAnalysis.Tokens;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -32,11 +35,11 @@ public class Parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\016\000\002\002\004\000\002\002\004\000\002\002" +
-    "\003\000\002\007\004\000\002\006\003\000\002\006\002" +
-    "\000\002\003\004\000\002\003\004\000\002\003\003\000" +
-    "\002\004\004\000\002\004\003\000\002\005\004\000\002" +
-    "\005\002\000\002\005\003" });
+    "\000\015\000\002\002\004\000\002\002\004\000\002\007" +
+    "\004\000\002\006\003\000\002\006\002\000\002\003\004" +
+    "\000\002\003\004\000\002\003\003\000\002\004\004\000" +
+    "\002\004\003\000\002\005\004\000\002\005\002\000\002" +
+    "\005\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -45,16 +48,16 @@ public class Parser extends java_cup.runtime.lr_parser {
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
     "\000\023\000\010\003\005\022\010\023\004\001\002\000" +
-    "\006\003\012\064\013\001\002\000\006\002\uffff\046\ufff9" +
-    "\001\002\000\004\002\024\001\002\000\004\046\021\001" +
-    "\002\000\006\003\012\064\013\001\002\000\004\046\ufffa" +
-    "\001\002\000\004\046\ufff7\001\002\000\010\003\015\045" +
-    "\016\046\ufff5\001\002\000\004\046\ufff8\001\002\000\004" +
-    "\046\ufff4\001\002\000\006\003\012\064\013\001\002\000" +
-    "\004\046\ufff6\001\002\000\004\002\001\001\002\000\012" +
-    "\002\ufffc\003\005\022\010\023\004\001\002\000\004\002" +
-    "\ufffd\001\002\000\004\002\ufffe\001\002\000\004\002\000" +
-    "\001\002\000\004\046\ufffb\001\002" });
+    "\006\003\012\064\013\001\002\000\004\046\ufffa\001\002" +
+    "\000\004\002\024\001\002\000\004\046\021\001\002\000" +
+    "\006\003\012\064\013\001\002\000\004\046\ufffb\001\002" +
+    "\000\004\046\ufff8\001\002\000\010\003\015\045\016\046" +
+    "\ufff6\001\002\000\004\046\ufff9\001\002\000\004\046\ufff5" +
+    "\001\002\000\006\003\012\064\013\001\002\000\004\046" +
+    "\ufff7\001\002\000\004\002\001\001\002\000\012\002\ufffd" +
+    "\003\005\022\010\023\004\001\002\000\004\002\ufffe\001" +
+    "\002\000\004\002\uffff\001\002\000\004\002\000\001\002" +
+    "\000\004\046\ufffc\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -125,8 +128,75 @@ public class Parser extends java_cup.runtime.lr_parser {
     Scanner s;
     public void Connection(java_cup.runtime.Scanner s){ this.s=s; }
 
-    // tabela de símbolos
-    java.util.Map<String, Integer> simbolos = new java.util.HashMap<String, Integer>();
+    public ArrayList<String> listaDeErros = new ArrayList<>();
+    
+    public ArrayList<String> getListaDeErros() {
+      return listaDeErros;
+    }
+
+    public int error_sync_size(){
+        return 1;
+    }
+
+    protected void report_expected_token_ids(){
+        List<Integer> ids = expected_token_ids();
+        LinkedList<String> list = new LinkedList<String>();
+        for (Integer expected : ids){
+          String token = symbl_name_from_id(expected);
+          if(token != "error")
+            list.add(token);
+        }
+        getListaDeErros().add("[ERRO DE SINTÁXE] Falta dos símbolos (tokens): "+list);
+        System.out.println(getListaDeErros());
+    }
+
+    public void report_error(String message, Object info) {
+   
+        /* Check if the information passed to the method is the same
+           type as the type java_cup.runtime.Symbol. */
+        if (info instanceof java_cup.runtime.Symbol) {
+            /* Declare a java_cup.runtime.Symbol object 's' with the
+               information in the object info that is being typecasted
+               as a java_cup.runtime.Symbol object. */
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            /* Check if the line number in the input is greater or
+               equal to zero. */
+            if (s.left >= 0) {                
+                /* Add to the end of the StringBuilder error message
+                   the line number of the error in the input. */
+                getListaDeErros().add("Linha "+(s.left+1));   
+                /* Check if the column number in the input is greater
+                   or equal to zero. */
+                if (s.right >= 0){                    
+                    /* Add to the end of the StringBuilder error message
+                       the column number of the error in the input. */
+                    getListaDeErros().add("Coluna "+(s.right+1));
+                }
+                /*if(s.value != null)
+                    //listaDeErros.add("Faltou o símbolo:"+(s.value));*/
+            }
+        }
+   
+        /* Add to the end of the StringBuilder error message created in
+           this method the message that was passed into this method. */
+        //listaDeErros.add(" : "+message);
+   
+        /* Print the contents of the StringBuilder 'm', which contains
+           an error message, out on a line. */
+        //System.err.println(listaDeErros);
+    }
+    
+   
+    /* Change the method report_fatal_error so when it reports a fatal
+       error it will display the line and column number of where the
+       fatal error occurred in the input as well as the reason for the
+       fatal error which is passed into the method in the object
+       'message' and then exit.*/
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+    }
+    
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -177,16 +247,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // parteDV ::= error 
-            {
-              Object RESULT =null;
-		 System.out.println("Faltou ponto e vírgula"); 
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("parteDV",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
-            }
-          return CUP$Parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 3: // parteDV1 ::= SIMBOLO_PONTO_E_VIRGULA parteDV2 
+          case 2: // parteDV1 ::= SIMBOLO_PONTO_E_VIRGULA parteDV2 
             {
               Object RESULT =null;
 		 System.out.println("parteDV1"); 
@@ -195,7 +256,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 4: // parteDV2 ::= parteDV 
+          case 3: // parteDV2 ::= parteDV 
             {
               Object RESULT =null;
 		 System.out.println("parteDV2"); 
@@ -204,16 +265,16 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // parteDV2 ::= 
+          case 4: // parteDV2 ::= 
             {
               Object RESULT =null;
-		 System.out.println("parteDV2 FIM"); 
+		 System.out.println("FIM"); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("parteDV2",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // DV ::= TIPO_BOOLEAN listaID 
+          case 5: // DV ::= TIPO_BOOLEAN listaID 
             {
               Object RESULT =null;
 		 System.out.println("DV booleano"); 
@@ -222,7 +283,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // DV ::= TIPO_INT listaID 
+          case 6: // DV ::= TIPO_INT listaID 
             {
               Object RESULT =null;
 		 System.out.println("DV int"); 
@@ -231,16 +292,16 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // DV ::= error 
+          case 7: // DV ::= error 
             {
               Object RESULT =null;
-		 System.out.println("DV ERRO: tipo indefinido"); 
+		 System.out.println("ERRO: Tipo indefinido"); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("DV",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // listaID ::= IDENTIFICADOR listaID1 
+          case 8: // listaID ::= IDENTIFICADOR listaID1 
             {
               Object RESULT =null;
 		 System.out.println("listaID"); 
@@ -249,16 +310,16 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // listaID ::= error 
+          case 9: // listaID ::= error 
             {
               Object RESULT =null;
-		 System.out.println("ERRO: faltou  identificador"); 
+		 System.out.println("ERRO: Faltou  identificador"); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("listaID",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // listaID1 ::= SIMBOLO_VIRGULA listaID 
+          case 10: // listaID1 ::= SIMBOLO_VIRGULA listaID 
             {
               Object RESULT =null;
 		 System.out.println("listaID1"); 
@@ -267,7 +328,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // listaID1 ::= 
+          case 11: // listaID1 ::= 
             {
               Object RESULT =null;
 		 System.out.println("listaID1 FIM"); 
@@ -276,10 +337,10 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // listaID1 ::= error 
+          case 12: // listaID1 ::= error 
             {
               Object RESULT =null;
-		 System.out.println("ERRO: faltou  vírgula"); 
+		 System.out.println("ERRO: Faltou  vírgula"); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("listaID1",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

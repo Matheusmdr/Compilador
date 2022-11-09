@@ -766,7 +766,7 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_SIMBOLO_INVALIDO] Simbolo Inválido"; return new Symbol(Tokens.ERRO_SIMBOLO_INVALIDO, yytext()); /*System.out.println(yytext()+" -> ERRO_SIMBOLO_INVALIDO");*/
+            { token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_SIMBOLO_INVALIDO] Simbolo Inválido"; return new Symbol(Tokens.ERRO_SIMBOLO_INVALIDO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> ERRO_SIMBOLO_INVALIDO");*/
             }
             // fall through
           case 45: break;
@@ -776,32 +776,32 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
             // fall through
           case 46: break;
           case 3:
-            { token="PARENTESES_ESQ"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.PARENTESES_ESQ, yytext()); /*System.out.println(yytext()+" -> PARENTESES_ESQ");*/
+            { token="PARENTESES_ESQ"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.PARENTESES_ESQ, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> PARENTESES_ESQ");*/
             }
             // fall through
           case 47: break;
           case 4:
-            { token="PARENTESES_DIR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.PARENTESES_DIR, yytext()); /*System.out.println(yytext()+" -> PARENTESES_DIR");*/
+            { token="PARENTESES_DIR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.PARENTESES_DIR, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> PARENTESES_DIR");*/
             }
             // fall through
           case 48: break;
           case 5:
-            { token="OPERADOR_ARITMETICO_MULTIPLICACAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_MULTIPLICACAO, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_MULTIPLICACAO");*/
+            { token="OPERADOR_ARITMETICO_MULTIPLICACAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_MULTIPLICACAO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_MULTIPLICACAO");*/
             }
             // fall through
           case 49: break;
           case 6:
-            { token="OPERADOR_ARITMETICO_ADICAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_ADICAO, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_ADICAO");*/
+            { token="OPERADOR_ARITMETICO_ADICAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_ADICAO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_ADICAO");*/
             }
             // fall through
           case 50: break;
           case 7:
-            { token="SIMBOLO_VIRGULA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.SIMBOLO_VIRGULA, yytext()); /*System.out.println(yytext()+" -> SIMBOLO_VIRGULA");*/
+            { token="SIMBOLO_VIRGULA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.SIMBOLO_VIRGULA, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> SIMBOLO_VIRGULA");*/
             }
             // fall through
           case 51: break;
           case 8:
-            { token="OPERADOR_ARITMETICO_SUBTRACAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_SUBTRACAO, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_SUBTRACAO");*/
+            { token="OPERADOR_ARITMETICO_SUBTRACAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_SUBTRACAO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_SUBTRACAO");*/
             }
             // fall through
           case 52: break;
@@ -812,7 +812,7 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    return new Symbol(Tokens.NUMERO_INTEIRO, Integer.parseInt(yytext()));
+                                                    return new Symbol(Tokens.NUMERO_INTEIRO, yyline, yycolumn, Integer.parseInt(yytext()));
                                                     /*System.out.println(yytext()+" -> NUMERO_INTEIRO");*/
                                                 }
                                                 else{
@@ -822,34 +822,34 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
                                                     erro="[ERRO_TAM_MAX_NUMERO] Tamanho máximo para número inteiro (8) excedido";
-                                                    return new Symbol(Tokens.ERRO, yytext());
+                                                    return new Symbol(Tokens.ERRO, yyline, yycolumn, yytext());
                                                     /*System.out.println(yytext()+" -> Tokens.ERRO_TAM_MAX_NUMERO");*/
                                                 }
             }
             // fall through
           case 53: break;
           case 10:
-            { token="SIMBOLO_DOIS_PONTOS"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.SIMBOLO_DOIS_PONTOS, yytext()); /*System.out.println(yytext()+" -> SIMBOLO_DOIS_PONTOS");*/
+            { token="SIMBOLO_DOIS_PONTOS"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.SIMBOLO_DOIS_PONTOS, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> SIMBOLO_DOIS_PONTOS");*/
             }
             // fall through
           case 54: break;
           case 11:
-            { token="SIMBOLO_PONTO_E_VIRGULA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.SIMBOLO_PONTO_E_VIRGULA, yytext()); /*System.out.println(yytext()+" -> SIMBOLO_PONTO_E_VIRGULA");*/
+            { token="SIMBOLO_PONTO_E_VIRGULA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.SIMBOLO_PONTO_E_VIRGULA, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> SIMBOLO_PONTO_E_VIRGULA");*/
             }
             // fall through
           case 55: break;
           case 12:
-            { token="OPERADOR_LOGICO_MENOR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_MENOR, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_MENOR");*/
+            { token="OPERADOR_LOGICO_MENOR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_MENOR, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_MENOR");*/
             }
             // fall through
           case 56: break;
           case 13:
-            { token="OPERADOR_LOGICO_IGUALDADE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_IGUALDADE, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_IGUALDADE");*/
+            { token="OPERADOR_LOGICO_IGUALDADE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_IGUALDADE, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_IGUALDADE");*/
             }
             // fall through
           case 57: break;
           case 14:
-            { token="OPERADOR_LOGICO_MAIOR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_MAIOR, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_MAIOR");*/
+            { token="OPERADOR_LOGICO_MAIOR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_MAIOR, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_MAIOR");*/
             }
             // fall through
           case 58: break;
@@ -860,7 +860,7 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     line=yyline;
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
-                                                    return new Symbol(Tokens.IDENTIFICADOR, new String(yytext()));
+                                                    return new Symbol(Tokens.IDENTIFICADOR, yyline, yycolumn, new String(yytext()));
                                                     /*System.out.println(yytext()+" -> IDENTIFICADOR");*/
                                                 }
                                                 else{
@@ -870,154 +870,154 @@ public class LexicalAnalyzer implements java_cup.runtime.Scanner {
                                                     column=yycolumn;
                                                     endColumn=column+yylength()-1;
                                                     erro="[ERRO_TAM_MAX_IDENTIFICADOR] Tamanho máximo para indentificador (15) excedido";
-                                                    return new Symbol(Tokens.ERRO, yytext());
+                                                    return new Symbol(Tokens.ERRO, yyline, yycolumn, yytext());
                                                     /*System.out.println(yytext()+" -> Tokens.ERRO_TAM_MAX_IDENTIFICADOR");*/
                                                 }
             }
             // fall through
           case 59: break;
           case 16:
-            { token=""; line=yyline; column=yycolumn; endColumn=column+yylength()-1; lexema=yytext(); erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR] O bloco de comentário não foi fechado"; return new Symbol(Tokens.ERRO, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR");*/
+            { token=""; line=yyline; column=yycolumn; endColumn=column+yylength()-1; lexema=yytext(); erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR] O bloco de comentário não foi fechado"; return new Symbol(Tokens.ERRO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR");*/
             }
             // fall through
           case 60: break;
           case 17:
-            { token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR] O bloco de comentário não foi aberto"; return new Symbol(Tokens.ERRO, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR");*/
+            { token=""; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; erro="[ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR] O bloco de comentário não foi aberto"; return new Symbol(Tokens.ERRO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR");*/
             }
             // fall through
           case 61: break;
           case 18:
-            { token="COMENTARIO_UMA_LINHA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.COMENTARIO_UMA_LINHA, yytext()); /*System.out.println(yytext()+" -> COMENTARIO_UMA_LINHA");*/
+            { token="COMENTARIO_UMA_LINHA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.COMENTARIO_UMA_LINHA, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> COMENTARIO_UMA_LINHA");*/
             }
             // fall through
           case 62: break;
           case 19:
-            { token="OPERADOR_ARITMETICO_ATRIBUICAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_ATRIBUICAO, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_ATRIBUICAO");*/
+            { token="OPERADOR_ARITMETICO_ATRIBUICAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_ATRIBUICAO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_ATRIBUICAO");*/
             }
             // fall through
           case 63: break;
           case 20:
-            { token="OPERADOR_LOGICO_MENOR_IGUAL"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_MENOR_IGUAL, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_MENOR_IGUAL");*/
+            { token="OPERADOR_LOGICO_MENOR_IGUAL"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_MENOR_IGUAL, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_MENOR_IGUAL");*/
             }
             // fall through
           case 64: break;
           case 21:
-            { token="OPERADOR_LOGICO_DIFERENCA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_DIFERENCA, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_DIFERENCA");*/
+            { token="OPERADOR_LOGICO_DIFERENCA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_DIFERENCA, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_DIFERENCA");*/
             }
             // fall through
           case 65: break;
           case 22:
-            { token="OPERADOR_LOGICO_MAIOR_IGUAL"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_MAIOR_IGUAL, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_MAIOR_IGUAL");*/
+            { token="OPERADOR_LOGICO_MAIOR_IGUAL"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_MAIOR_IGUAL, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_MAIOR_IGUAL");*/
             }
             // fall through
           case 66: break;
           case 23:
-            { token="RSV_DO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_DO, yytext()); /*System.out.println(yytext()+" -> RSV_DO");*/
+            { token="RSV_DO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_DO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_DO");*/
             }
             // fall through
           case 67: break;
           case 24:
-            { token="RSV_IF"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_IF, yytext()); /*System.out.println(yytext()+" -> RSV_IF");*/
+            { token="RSV_IF"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_IF, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_IF");*/
             }
             // fall through
           case 68: break;
           case 25:
-            { token="OPERADOR_LOGICO_OR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_OR, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_OR");*/
+            { token="OPERADOR_LOGICO_OR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_OR, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_OR");*/
             }
             // fall through
           case 69: break;
           case 26:
-            { token="COMENTARIO_MULT_LINHAS"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.COMENTARIO_MULT_LINHAS, yytext()); /*System.out.println(yytext()+" -> COMENTARIO_MULT_LINHAS");*/
+            { token="COMENTARIO_MULT_LINHAS"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.COMENTARIO_MULT_LINHAS, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> COMENTARIO_MULT_LINHAS");*/
             }
             // fall through
           case 70: break;
           case 27:
-            { token="OPERADOR_LOGICO_AND"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_AND, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_AND");*/
+            { token="OPERADOR_LOGICO_AND"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_AND, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_AND");*/
             }
             // fall through
           case 71: break;
           case 28:
-            { token="OPERADOR_ARITMETICO_DIVISAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_DIVISAO, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_DIVISAO");*/
+            { token="OPERADOR_ARITMETICO_DIVISAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_ARITMETICO_DIVISAO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_ARITMETICO_DIVISAO");*/
             }
             // fall through
           case 72: break;
           case 29:
-            { token="RSV_END"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_END, yytext()); /*System.out.println(yytext()+" -> RSV_END");*/
+            { token="RSV_END"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_END, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_END");*/
             }
             // fall through
           case 73: break;
           case 30:
-            { token="TIPO_INT"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.TIPO_INT, yytext()); /*System.out.println(yytext()+" -> TIPO_INT");*/
+            { token="TIPO_INT"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.TIPO_INT, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> TIPO_INT");*/
             }
             // fall through
           case 74: break;
           case 31:
-            { token="OPERADOR_LOGICO_NOT"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_NOT, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_NOT");*/
+            { token="OPERADOR_LOGICO_NOT"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.OPERADOR_LOGICO_NOT, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> OPERADOR_LOGICO_NOT");*/
             }
             // fall through
           case 75: break;
           case 32:
-            { token="RSV_VAR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_DO, yytext()); /*System.out.println(yytext()+" -> RSV_VAR");*/
+            { token="RSV_VAR"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_DO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_VAR");*/
             }
             // fall through
           case 76: break;
           case 33:
-            { token="RSV_ELSE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_ELSE, yytext()); /*System.out.println(yytext()+" -> RSV_ELSE");*/
+            { token="RSV_ELSE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_ELSE, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_ELSE");*/
             }
             // fall through
           case 77: break;
           case 34:
-            { token="SIMBOLO_TERMINACAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.SIMBOLO_TERMINACAO, yytext()); /*System.out.println(yytext()+" -> SIMBOLO_TERMINACAO");*/
+            { token="SIMBOLO_TERMINACAO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.SIMBOLO_TERMINACAO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> SIMBOLO_TERMINACAO");*/
             }
             // fall through
           case 78: break;
           case 35:
-            { token="RSV_READ"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_READ, yytext()); /*System.out.println(yytext()+" -> RSV_READ");*/
+            { token="RSV_READ"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_READ, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_READ");*/
             }
             // fall through
           case 79: break;
           case 36:
-            { token="RSV_THEN"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_THEN, yytext()); /*System.out.println(yytext()+" -> RSV_THEN");*/
+            { token="RSV_THEN"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_THEN, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_THEN");*/
             }
             // fall through
           case 80: break;
           case 37:
-            { token="RSV_TRUE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_TRUE, yytext()); /*System.out.println(yytext()+" -> RSV_TRUE");*/
+            { token="RSV_TRUE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_TRUE, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_TRUE");*/
             }
             // fall through
           case 81: break;
           case 38:
-            { token="RSV_BEGIN"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_BEGIN, yytext()); /*System.out.println(yytext()+" -> RSV_BEGIN");*/
+            { token="RSV_BEGIN"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_BEGIN, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_BEGIN");*/
             }
             // fall through
           case 82: break;
           case 39:
-            { token="RSV_FALSE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_FALSE, yytext()); /*System.out.println(yytext()+" -> RSV_FALSE");*/
+            { token="RSV_FALSE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_FALSE, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_FALSE");*/
             }
             // fall through
           case 83: break;
           case 40:
-            { token="RSV_WHILE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_WHILE, yytext()); /*System.out.println(yytext()+" -> RSV_WHILE");*/
+            { token="RSV_WHILE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_WHILE, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_WHILE");*/
             }
             // fall through
           case 84: break;
           case 41:
-            { token="RSV_WRITE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_WRITE, yytext()); /*System.out.println(yytext()+" -> RSV_WRITE");*/
+            { token="RSV_WRITE"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_WRITE, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_WRITE");*/
             }
             // fall through
           case 85: break;
           case 42:
-            { token="TIPO_BOOLEAN"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.TIPO_BOOLEAN, yytext()); /*System.out.println(yytext()+" -> TIPO_BOOLEAN");*/
+            { token="TIPO_BOOLEAN"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.TIPO_BOOLEAN, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> TIPO_BOOLEAN");*/
             }
             // fall through
           case 86: break;
           case 43:
-            { token="RSV_PROGRAMA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_PROGRAMA, yytext()); /*System.out.println(yytext()+" -> RSV_PROGRAMA");*/
+            { token="RSV_PROGRAMA"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_PROGRAMA, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_PROGRAMA");*/
             }
             // fall through
           case 87: break;
           case 44:
-            { token="RSV_PROCEDIMENTO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_PROCEDIMENTO, yytext()); /*System.out.println(yytext()+" -> RSV_PROCEDIMENTO");*/
+            { token="RSV_PROCEDIMENTO"; lexema=yytext(); line=yyline; column=yycolumn; endColumn=column+yylength()-1; return new Symbol(Tokens.RSV_PROCEDIMENTO, yyline, yycolumn, yytext()); /*System.out.println(yytext()+" -> RSV_PROCEDIMENTO");*/
             }
             // fall through
           case 88: break;
