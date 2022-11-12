@@ -526,7 +526,7 @@ public class UI extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
-        String rootPath = Paths.get("").toAbsolutePath().toString();
+        /*String rootPath = Paths.get("").toAbsolutePath().toString();
         String subPath = "\\src\\SintexAnalysis\\";
         String completePath = rootPath + subPath;
         String[] caminhoSintaxe = {"-parser", "Parser", "-symbols", "Tokens", "-destdir", completePath, "-package", "SintexAnalysis", completePath + "parser.cup"};
@@ -534,7 +534,7 @@ public class UI extends javax.swing.JFrame {
         String completePathL = rootPath + subPathL;
         String[] caminhoLexico = {completePathL + "LexicalAnalyzer.flex"};
         java_cup.Main.main(caminhoSintaxe);
-        jflex.Main.generate(caminhoLexico);
+        jflex.Main.generate(caminhoLexico);*/
         /*Runtime r = Runtime.getRuntime();
         Process p;
         p = r.exec(new String[]{"java", "-jar", rootPath+"\\lib\\CopyLibs\\jflex-full-1.8.2.jar", rootPath+"\\src\\LexicalAnalysis\\LexicalAnalyzer.flex"}, null, new File(rootPath+"\\src\\"));

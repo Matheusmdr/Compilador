@@ -1,0 +1,144 @@
+options{
+STATIC = false;
+DEBUG_LOOKAHEAD = false;
+}
+PARSER_BEGIN(Scanner_1)
+package compilador;
+import java.io.*;
+import java.util.*;
+import javax.swing.JOptionPane;
+
+public class Scanner_1{
+
+boolean Menosshort = false; //Saida resumida falso
+public void processa() throws Exception{
+Token t = new Token ();
+
+do {
+
+t = getNextToken(); //Obtém o próximo token
+String nomeToken = tokenImage[t.kind]; //guarda o nome do token na string
+
+} while(t.kind!=0); //condicao de parada: final do arquivo (constante eof 0 )
+}
+
+public static void main(String args[], String x) throws ParseException, FileNotFoundException {
+
+try {
+
+}catch (Error e){
+System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostrando linha e coluna
+}
+
+}
+}
+PARSER_END(Scanner_1)
+
+TOKEN_MGR_DECLS :{
+    int countLexError = 0;
+    public int foundLexError () {
+        return countLexError;
+    }
+}
+
+SKIP : // TOKENS IGNORADOS
+{
+ " "
+| "\r" 
+| "\t" 
+| "\n"
+//| <COMENTARIO: "//" (<COM>)*>
+//| <COMENTARIOS: "{" ("\n" | "\r" | <COM>)* "}" >
+| <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
+
+}
+
+TOKEN : //PALAVRAS RESERVADAS
+{
+ 
+    <NOVA: "nova"> { System.out.println("Palavra Reservada: "+image); }
+
+    |<RSV_PROGRAMA: "program"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_PROCEDIMENTO: "procedure"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_BEGIN: "begin"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_END: "end"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_IF: "if"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_THEN: "then"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_ELSE: "else"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_WHILE: "while"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_DO: "do"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_READ: "read"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_WRITE: "write"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_VAR: "var"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_TRUE: "true"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_FALSE: "false"> { System.out.println("Palavra Reservada: "+image); }
+}
+
+TOKEN : //TIPOS
+{
+
+    <TIPO_INT: "int"> { System.out.println("Palavra Reservada: "+image); }
+    |<TIPO_BOOLEAN: "boolean"> { System.out.println("Palavra Reservada: "+image); }
+
+}
+
+TOKEN : //OPERADORES E SÍMBOLOS
+{
+
+    <OPERADOR_LOGICO_DIFERENCA: "<>"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_MENOR: "<"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_MENOR_IGUAL: "<="> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_MAIOR_IGUAL: ">="> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_MAIOR: ">"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_IGUALDADE: "="> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_AND: "and"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_OR: "or"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_NOT: "not"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_ARITMETICO_ATRIBUICAO: ":="> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_ARITMETICO_ADICAO: "+"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_ARITMETICO_SUBTRACAO: "-"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_ARITMETICO_MULTIPLICACAO: "*"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_ARITMETICO_DIVISAO: "div"> { System.out.println("Palavra Reservada: "+image); }
+    |<PARENTESES_ESQ: "("> { System.out.println("Palavra Reservada: "+image); }
+    |<PARENTESES_DIR: ")"> { System.out.println("Palavra Reservada: "+image); }
+    |<SIMBOLO_DOIS_PONTOS: ":"> { System.out.println("Palavra Reservada: "+image); }
+    |<SIMBOLO_VIRGULA:  ","> { System.out.println("Palavra Reservada: "+image); }
+    |<SIMBOLO_PONTO_E_VIRGULA: ";"> { System.out.println("Palavra Reservada: "+image); }
+    |<SIMBOLO_TERMINACAO: "end."> { System.out.println("Palavra Reservada: "+image); }
+
+}
+
+TOKEN : //NÚMEROS E IDENTIFICADORES
+{
+
+    <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>)*> { System.out.println("IDENTIFICADOR: "+image); }
+    |<NUMERO_INTEIRO: <DIGITO>(<DIGITO>)*> { System.out.println("NUMERO_INTEIRO: "+image); }
+    |<#LETRA: ["_", "a"-"z", "A"-"Z"] >
+    |<#DIGITO: ["0" - "9"] >
+
+}
+
+TOKEN : //COMENTÁRIOS
+{
+
+    <COMENTARIO_UMA_LINHA: "//" (<COM>)*> { System.out.println("COMENTARIO_UMA_LINHA: "+image); }
+    |<COMENTARIO_MULT_LINHAS: "{" ("\n" | "\r" | <COM>)* "}" > { System.out.println("COMENTARIO_MULT_LINHAS: "+image); }
+
+}
+
+SPECIAL_TOKEN : {
+
+    <ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR: "{"(<COM>)*> {
+        countLexError++;
+        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
+        " Comentário de múltiplas linhas não foi fechado: " + image + " "+ "TOTAL ERRO "+countLexError);
+        System.out.println("Erro Lexico --------> "+image);
+    }
+    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR: (<COM>)*"}"> { 
+        countLexError++;
+        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
+        " Comentário de múltiplas linhas não foi aberto: " + image + " "+ "TOTAL ERRO "+countLexError);
+        System.out.println("Erro Lexico --------> "+image);
+    }
+
+}
