@@ -11,20 +11,39 @@ import javax.swing.JOptionPane;
 public class Scanner_1{
 
 boolean Menosshort = false; //Saida resumida falso
+
+public cadeProgram() {
+    Token t = new Token ();
+    do {
+
+    t = getNextToken(); //Obtém o próximo token
+    String nomeToken = tokenImage[t.kind]; //guarda o nome do token na string
+
+    } while(t.kind!=0); //condicao de parada: final do arquivo (constante eof 0 )
+}
+
 public void processa() throws Exception{
-Token t = new Token ();
+    Token t = new Token ();
 
-do {
+    do {
 
-t = getNextToken(); //Obtém o próximo token
-String nomeToken = tokenImage[t.kind]; //guarda o nome do token na string
+    t = getNextToken(); //Obtém o próximo token
+    String nomeToken = tokenImage[t.kind]; //guarda o nome do token na string
 
-} while(t.kind!=0); //condicao de parada: final do arquivo (constante eof 0 )
+    } while(t.kind!=0); //condicao de parada: final do arquivo (constante eof 0 )
+}
+
+public void processaSintax(Scanner_1 parser) throws ParseException {
+    System.out.println("comeco");
+    //parser.principal();
+    cadeProgram();
+    System.out.println("cabo");
 }
 
 public static void main(String args[], String x) throws ParseException, FileNotFoundException {
 
 try {
+    
 
 }catch (Error e){
 System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostrando linha e coluna
@@ -32,6 +51,15 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
 }
 }
+
+/*public class Parser {
+    public static void main(String args[], String x) throws ParseException {
+        Parser parser = new Parser(System.in);
+        System.out.println("comeco");
+        parser.principal();
+        System.out.println("cabo");
+    }
+}*/
 PARSER_END(Scanner_1)
 
 TOKEN_MGR_DECLS :{
@@ -111,9 +139,9 @@ TOKEN : //OPERADORES E SÍMBOLOS
 TOKEN : //NÚMEROS E IDENTIFICADORES
 {
 
-    <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>)*> { System.out.println("Palavra Reservada: "+image); }
-    |<NUMERO_INTEIRO: <DIGITO>(<DIGITO>)*> { System.out.println("Palavra Reservada: "+image); }
-    |<#LETRA: ~["_", "a"-"z", "A"-"Z"] >
+    <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>)*> { System.out.println("IDENTIFICADOR: "+image); }
+    |<NUMERO_INTEIRO: <DIGITO>(<DIGITO>)*> { System.out.println("NUMERO_INTEIRO: "+image); }
+    |<#LETRA: ["_", "a"-"z", "A"-"Z"] >
     |<#DIGITO: ["0" - "9"] >
 
 }
@@ -128,23 +156,59 @@ TOKEN : //COMENTÁRIOS
 
 SPECIAL_TOKEN : {
 
-    <ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR: "{"(<ERRO_SIMBOLO_INVALIDO>)*> {
+    <ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR: "{"(<COM>)*> {
         countLexError++;
         System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
         " Comentário de múltiplas linhas não foi fechado: " + image + " "+ "TOTAL ERRO "+countLexError);
         System.out.println("Erro Lexico --------> "+image);
     }
-    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR: (<ERRO_SIMBOLO_INVALIDO>)*"}"> { 
+    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR: (<COM>)*"}"> { 
         countLexError++;
         System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
         " Comentário de múltiplas linhas não foi aberto: " + image + " "+ "TOTAL ERRO "+countLexError);
         System.out.println("Erro Lexico --------> "+image);
     }
-    |<ERRO_SIMBOLO_INVALIDO: (~[" ","\t","\n","\r","\f"])+> {
-        countLexError++;
-        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
-        " Caractere invalido encontrado: " + image + " "+ "TOTAL ERRO "+countLexError);
-        System.out.println("Erro Lexico --------> "+image);
+
+}
+
+JAVACODE
+    void error_skipto(int kind) {
+      ParseException e = generateParseException();  // generate the exception object
+      System.out.println(e.toString());  // print the error message
+      Token t;
+      // consume tokens all the way up to a token of "kind" - use a do-while loop
+      // rather than a while because the current token is the one immediately before
+      // the erroneous token (in our case the token immediately before what should
+      // have been "if"/"while".
+      do {
+        t = getNextToken();
+      }
+      while (t.kind != kind);
     }
 
+void principal(): {Token t = new Token();}
+{
+    try {
+        listaIdentificadores()
+        <EOF>
+    }catch (ParseException e) {
+    System.out.println(e.toString());
+  }
+}
+
+void listaIdentificadores(): {Token t = new Token();}
+{
+    <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+
+    (
+      aaa()
+    )*
+
+    | {throw new ParseException("errinho").initialise;}
+}
+
+void aaa(): {Token t = new Token();}
+{
+    <SIMBOLO_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image); }
+    <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
 }
