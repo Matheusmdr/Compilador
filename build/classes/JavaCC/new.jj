@@ -3,7 +3,7 @@ STATIC = false;
 DEBUG_LOOKAHEAD = false;
 }
 PARSER_BEGIN(Scanner_1)
-package compilador;
+package JavaCC;
 import java.io.*;
 import java.util.*;
 import javax.swing.JOptionPane;
@@ -12,7 +12,7 @@ public class Scanner_1{
 
 boolean Menosshort = false; //Saida resumida falso
 
-public cadeProgram() {
+/*public cadeProgram() {
     Token t = new Token ();
     do {
 
@@ -36,9 +36,9 @@ public void processa() throws Exception{
 public void processaSintax(Scanner_1 parser) throws ParseException {
     System.out.println("comeco");
     //parser.principal();
-    cadeProgram();
+    //cadeProgram();
     System.out.println("cabo");
-}
+}*/
 
 public static void main(String args[], String x) throws ParseException, FileNotFoundException {
 
@@ -52,14 +52,6 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 }
 }
 
-/*public class Parser {
-    public static void main(String args[], String x) throws ParseException {
-        Parser parser = new Parser(System.in);
-        System.out.println("comeco");
-        parser.principal();
-        System.out.println("cabo");
-    }
-}*/
 PARSER_END(Scanner_1)
 
 TOKEN_MGR_DECLS :{
@@ -82,11 +74,8 @@ SKIP : // TOKENS IGNORADOS
 }
 
 TOKEN : //PALAVRAS RESERVADAS
-{
- 
-    <NOVA: "nova"> { System.out.println("Palavra Reservada: "+image); }
-
-    |<RSV_PROGRAMA: "program"> { System.out.println("Palavra Reservada: "+image); }
+{   
+    <RSV_PROGRAMA: "program"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_PROCEDIMENTO: "procedure"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_BEGIN: "begin"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_END: "end"> { System.out.println("Palavra Reservada: "+image); }
@@ -204,7 +193,7 @@ void listaIdentificadores(): {Token t = new Token();}
       aaa()
     )*
 
-    | {throw new ParseException("errinho").initialise;}
+    //| {throw new ParseException("errinho").initialise;}
 }
 
 void aaa(): {Token t = new Token();}

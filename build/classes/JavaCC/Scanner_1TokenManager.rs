@@ -1,1 +1,0 @@
-compilador.Scanner_1TokenManager
