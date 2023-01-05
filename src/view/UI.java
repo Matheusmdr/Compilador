@@ -7,7 +7,9 @@ package view;
 
 import LexicalAnalysis.LexicalAnalyzer;
 import SintexAnalysis.Parser;
-import SintexAnalysis.Tokens;
+import JavaCC.Token;
+import JavaCC.Scanner_1;
+import static JavaCC.Scanner_1Constants.tokenImage;
 
 import java_cup.runtime.Symbol;
 import java.awt.Color;
@@ -20,6 +22,8 @@ import static java.lang.System.exit;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +51,6 @@ public class UI extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-
     private int size;
 
     public UI() {
@@ -373,51 +376,35 @@ public class UI extends javax.swing.JFrame {
 
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        this.reloadTable(0);
+        //this.reloadTable(0);
+        Map<String, Integer> map = new HashMap<String, Integer>();
         jTabbedPane3.setSelectedIndex(0);
-        try {
-            Reader lector = new StringReader(fonteBox.getText());
-            LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
+        Reader lector = new StringReader(fonteBox.getText());
+        Scanner_1 lexer = new Scanner_1(lector);
 
-            DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
-            dtm.getDataVector().removeAllElements();
-            dtm.fireTableDataChanged();
+        DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
+        dtm.getDataVector().removeAllElements();
+        dtm.fireTableDataChanged();
 
-            DefaultTableModel dtmE = (DefaultTableModel) jTable2.getModel();
-            dtmE.getDataVector().removeAllElements();
-            dtmE.fireTableDataChanged();
+        DefaultTableModel dtmE = (DefaultTableModel) jTable2.getModel();
+        dtmE.getDataVector().removeAllElements();
+        dtmE.fireTableDataChanged();
 
-            Symbol sym = lexer.next_token();
-            do {
-                String[] linha = new String[5];
+        Token t = new Token();
+        t = lexer.getNextToken();
+        do {
+            String[] linha = new String[5];
+            linha[0] = t.image;
+            linha[1] = this.getTokenName(t.kind);
+            linha[2] = Integer.toString(t.beginLine);
+            linha[3] = Integer.toString(t.beginColumn);
+            linha[4] = Integer.toString(t.endColumn);
+            dtm.addRow(linha);
+            jTable4.revalidate();
+            jTable4.repaint();
 
-                if (sym.sym == Tokens.ERRO) {
-                    linha[0] = lexer.erro;
-                    linha[1] = Integer.toString(lexer.line + 1);
-                    linha[2] = Integer.toString(lexer.column + 1);
-
-                    dtmE.addRow(linha);
-                    jTable2.revalidate();
-                    jTable2.repaint();
-                } else {
-
-                    linha[0] = lexer.lexema;
-                    linha[1] = lexer.token;
-                    linha[2] = Integer.toString(lexer.line + 1);
-                    linha[3] = Integer.toString(lexer.column + 1);
-                    linha[4] = Integer.toString(lexer.endColumn + 1);
-
-                    dtm.addRow(linha);
-                    jTable4.revalidate();
-                    jTable4.repaint();
-                }
-
-                sym = lexer.next_token();
-            } while (!lexer.yyatEOF());
-
-        } catch (IOException ex) {
-            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            t = lexer.getNextToken();
+        } while (t.kind != 0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void fonteBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fonteBoxKeyTyped
@@ -494,6 +481,143 @@ public class UI extends javax.swing.JFrame {
 
     }
 
+    public String getTokenName(int type) {
+        String typeName = "";
+        switch (type) {
+            case 0:
+                typeName = "EOF";
+                break;
+            case 7:
+                typeName = "RSV_PROGRAMA";
+                break;
+            case 8:
+                typeName = "RSV_PROCEDIMENTO";
+                break;
+            case 9:
+                typeName = "RSV_BEGIN";
+                break;
+            case 10:
+                typeName = "RSV_END";
+                break;
+            case 11:
+                typeName = "RSV_IF";
+                break;
+            case 12:
+                typeName = "RSV_THEN";
+                break;
+            case 13:
+                typeName = "RSV_ELSE";
+                break;
+            case 14:
+                typeName = "RSV_WHILE";
+                break;
+            case 15:
+                typeName = "RSV_DO";
+                break;
+            case 16:
+                typeName = "SV_READ";
+                break;
+            case 17:
+                typeName = "RSV_WRITE";
+                break;
+            case 18:
+                typeName = "RSV_VAR";
+                break;
+            case 19:
+                typeName = "RSV_TRUE";
+                break;
+            case 20:
+                typeName = "RSV_FALSE";
+                break;
+            case 21:
+                typeName = "TIPO_INT";
+                break;
+            case 22:
+                typeName = "TIPO_BOOLEAN";
+                break;
+            case 23:
+                typeName = "OPERADOR_LOGICO_DIFERENCA";
+                break;
+            case 24:
+                typeName = "OPERADOR_LOGICO_MENOR";
+                break;
+            case 25:
+                typeName = "OPERADOR_LOGICO_MENOR_IGUAL";
+                break;
+            case 26:
+                typeName = "OPERADOR_LOGICO_MAIOR_IGUAL";
+                break;
+            case 27:
+                typeName = "OPERADOR_LOGICO_MAIOR";
+                break;
+            case 28:
+                typeName = "OPERADOR_LOGICO_IGUALDADE";
+                break;
+            case 29:
+                typeName = "OPERADOR_LOGICO_AND";
+                break;
+            case 30:
+                typeName = "OPERADOR_LOGICO_OR";
+                break;
+            case 31:
+                typeName = "OPERADOR_LOGICO_NOT";
+                break;
+            case 32:
+                typeName = "OPERADOR_ARITMETICO_ATRIBUICAO";
+                break;
+            case 33:
+                typeName = "OPERADOR_ARITMETICO_ADICAO";
+                break;
+            case 34:
+                typeName = "OPERADOR_ARITMETICO_SUBTRACAO";
+                break;
+            case 35:
+                typeName = "OPERADOR_ARITMETICO_MULTIPLICACAO";
+                break;
+            case 36:
+                typeName = "OPERADOR_ARITMETICO_DIVISAO";
+                break;
+            case 37:
+                typeName = "PARENTESES_ESQ";
+                break;
+            case 38:
+                typeName = "PARENTESES_DIR";
+                break;
+            case 39:
+                typeName = "SIMBOLO_DOIS_PONTOS";
+                break;
+            case 40:
+                typeName = "SIMBOLO_VIRGULA";
+                break;
+            case 41:
+                typeName = "SIMBOLO_PONTO_E_VIRGULA";
+                break;
+            case 42:
+                typeName = "SIMBOLO_TERMINACAO";
+                break;
+            case 43:
+                typeName = "IDENTIFICADOR";
+                break;
+            case 44:
+                typeName = "NUMERO_INTEIRO";
+                break;
+            case 47:
+                typeName = "COMENTARIO_UMA_LINHA";
+                break;
+            case 48:
+                typeName = "COMENTARIO_MULT_LINHAS";
+                break;
+            case 49:
+                typeName = "ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR";
+                break;
+            case 50:
+                typeName = "ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR";
+                break;
+
+        }
+        return typeName;
+    }
+
     /**
      * @param args the command line arguments
      * @throws jflex.exceptions.SilentExit
@@ -535,7 +659,7 @@ public class UI extends javax.swing.JFrame {
         String[] caminhoLexico = {completePathL + "LexicalAnalyzer.flex"};
         java_cup.Main.main(caminhoSintaxe);
         jflex.Main.generate(caminhoLexico);*/
-        /*Runtime r = Runtime.getRuntime();
+ /*Runtime r = Runtime.getRuntime();
         Process p;
         p = r.exec(new String[]{"java", "-jar", rootPath+"\\lib\\CopyLibs\\jflex-full-1.8.2.jar", rootPath+"\\src\\LexicalAnalysis\\LexicalAnalyzer.flex"}, null, new File(rootPath+"\\src\\"));
         System.out.println(p.waitFor());
