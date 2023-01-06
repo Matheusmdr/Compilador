@@ -4,6 +4,7 @@
  */
 package view;
 
+import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,10 +17,13 @@ import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 
 public class FindPanel extends JFrame implements ActionListener {
 
     private JPanel contentPane;
+    private boolean checkAux;
     JTextPane jTextPane;
     private int findPosn = 0;
     private String findText = null;
@@ -30,7 +34,7 @@ public class FindPanel extends JFrame implements ActionListener {
     public FindPanel(JTextPane jt) {
         setResizable(false);
         setTitle("Localizar");
-
+        this.checkAux = false;
         this.jTextPane = jt;
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -62,63 +66,41 @@ public class FindPanel extends JFrame implements ActionListener {
 
         Find.addActionListener(this);
         Find_Cancel.addActionListener(this);
-
     }
 
-    public void doFindText(String find) {
-        int nextPosn = 0;
-
-        if (!find.equals(findText)) {
-            findPosn = 0;
-        }
-        nextPosn = nextIndex(jTextPane.getText(), find, findPosn, findCase);
-
-        if (nextPosn >= 0) {
-            int rowNumber = getLineNumber(jTextPane, nextPosn);
-            nextPosn = rowNumber > 1 ? nextPosn - 1 : nextPosn;
-            int finalPosn = rowNumber > 1 ? nextPosn + find.length() - rowNumber + 2 : nextPosn + find.length() - rowNumber + 1;
-            jTextPane.setSelectionStart(nextPosn);
-            jTextPane.setSelectionEnd(finalPosn);
-            findPosn = nextPosn + find.length() - 1;
-            findText = find;
-        } else if (nextPosn == -1) {
-            findPosn = nextPosn;
-            JOptionPane.showMessageDialog(null, find + " não foi encontrado!");
-        } else {
-            findPosn = nextPosn;
-            JOptionPane.showMessageDialog(null, "Não existem mais ocorrências da palavra " + find + "!");
-        }
-    }
-
-    public int getLineNumber(JTextPane component, int pos) {
-        int posLine;
-        int y = 0;
+    public void findText(JTextComponent component, String patteren) {
+        Document document = component.getDocument();
 
         try {
-            Rectangle2D caretCoords = component.modelToView2D(pos);
-            y = (int) caretCoords.getY();
-        } catch (BadLocationException ex) {
-        }
-
-        int lineHeight = component.getFontMetrics(component.getFont()).getHeight();
-        posLine = (y / lineHeight) + 1;
-        return posLine;
-    }
-
-    public int nextIndex(String input, String find, int start, boolean caseSensitive) {
-        int textPosn = -1;
-        if (input != null && find != null && start < input.length()) {
-            if (caseSensitive == true) {
-                textPosn = input.indexOf(find, start);
-            } else {
-                textPosn = input.toLowerCase().indexOf(find.toLowerCase(),
-                        start);
+            int index = this.findPosn;
+            String find = patteren;
+            for (; index + find.length() < document.getLength(); index++) {
+                String match = document.getText(index, find.length());
+                if (find.equals(match)) {
+                    /*javax.swing.text.DefaultHighlighter.DefaultHighlightPainter highlightPainter
+                            = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+                   component.getHighlighter().addHighlight(index, index + find.length(),
+                            highlightPainter);*/// Seleciona todos */
+                    component.setSelectionStart(index);
+                    component.setSelectionEnd(index + find.length());
+                    this.findPosn = index + find.length() - 1;
+                    this.checkAux = true;
+                    break;
+                }
             }
+            if (index + find.length() >= document.getLength()) {
+                if (!this.checkAux) {
+                    JOptionPane.showMessageDialog(null, find + " não foi encontrado!");
+                    this.checkAux = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Não existem mais ocorrências da palavra " + find + "!");
+                     this.findPosn = 0;
+                     this.checkAux = false;
+                }
+            }
+        } catch (BadLocationException ex) {
+            ex.printStackTrace();
         }
-        if (start == input.length() - 1) {
-            textPosn = -2;
-        }
-        return textPosn;
     }
 
     @Override
@@ -128,7 +110,7 @@ public class FindPanel extends JFrame implements ActionListener {
             this.dispose();
 
         } else if (e.getActionCommand() == "Localizar próxima") {
-            doFindText(Find_TextField.getText());
+            findText(jTextPane, Find_TextField.getText());
         }
     }
 }
