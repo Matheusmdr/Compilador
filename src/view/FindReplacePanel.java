@@ -4,6 +4,7 @@
  */
 package view;
 
+import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,11 +17,14 @@ import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 
 public class FindReplacePanel extends JFrame implements ActionListener {
 
     private JPanel contentPane;
     JTextPane jTextPane;
+    private boolean checkAux;
     private int findPosn = 0;
     private String findText = null;
     private boolean findCase = true;
@@ -31,7 +35,7 @@ public class FindReplacePanel extends JFrame implements ActionListener {
     public FindReplacePanel(JTextPane jt) {
         setResizable(false);
         setTitle("Localizar e Substituir");
-
+        this.checkAux = false;
         this.jTextPane = jt;
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -41,16 +45,20 @@ public class FindReplacePanel extends JFrame implements ActionListener {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JButton Find = new JButton("Localizar próxima");
+        JButton Find = new JButton("Substituir");
         Find.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
         });
-        Find.setBounds(280, 46, 150, 34);
+        Find.setBounds(280, 36, 150, 34);
         contentPane.add(Find);
 
+        JButton FindAll = new JButton("Substituir Todas");
+        FindAll.setBounds(280, 66, 150, 34);
+        contentPane.add(FindAll);
+
         JButton Find_Cancel = new JButton("Cancelar");
-        Find_Cancel.setBounds(280, 88, 150, 34);
+        Find_Cancel.setBounds(280, 96, 150, 34);
         contentPane.add(Find_Cancel);
 
         JLabel lblNewLabel = new JLabel("Localizar");
@@ -72,31 +80,31 @@ public class FindReplacePanel extends JFrame implements ActionListener {
         Find_TextField.setColumns(10);
 
         Find.addActionListener(this);
+        FindAll.addActionListener(this);
         Find_Cancel.addActionListener(this);
 
     }
 
-    public void doReplaceWords(String find, String replace) {
+    /*public void doReplaceWords(String find, String replace) {
         int nextPosn = 0;
-        if (!find.equals(findText)) 
-        {
-            findPosn = 0; 
+        if (!find.equals(findText)) {
+            findPosn = 0;
         }
-        findPosn = 0; 
+        findPosn = 0;
         nextPosn = nextIndex(jTextPane.getText(), find, findPosn, findCase);
 
         if (nextPosn >= 0) {
             int rowNumber = getLineNumber(jTextPane, nextPosn);
             nextPosn = rowNumber > 1 ? nextPosn - 1 : nextPosn;
             int finalPosn = rowNumber > 1 ? nextPosn + find.length() - rowNumber + 2 : nextPosn + find.length() - rowNumber + 1;
-            jTextPane.setSelectionStart(nextPosn); 
+            jTextPane.setSelectionStart(nextPosn);
             jTextPane.setSelectionEnd(finalPosn);
-            findPosn = nextPosn + find.length() - 1; 
+            findPosn = nextPosn + find.length() - 1;
             findText = find;
 
             int rtn = JOptionPane.YES_OPTION;
             if (replaceConfirm) {
-                rtn = JOptionPane.showConfirmDialog(null, "Deseja substituir "+find+" por "+replace+"? ", "Localizar e substituir", JOptionPane.YES_NO_CANCEL_OPTION);
+                rtn = JOptionPane.showConfirmDialog(null, "Deseja substituir " + find + " por " + replace + "? ", "Localizar e substituir", JOptionPane.YES_NO_CANCEL_OPTION);
             }
             if (!replaceConfirm || rtn == JOptionPane.YES_OPTION) {
                 jTextPane.replaceSelection(replace);
@@ -106,53 +114,100 @@ public class FindReplacePanel extends JFrame implements ActionListener {
         } else if (nextPosn == -1) {
             findPosn = nextPosn;
             JOptionPane.showMessageDialog(null, find + " não foi encontrado!");
-        }
-        else{
+        } else {
             findPosn = nextPosn;
-            JOptionPane.showMessageDialog(null,"Não existem mais ocorrências da palavra "+find +  "!");
+            JOptionPane.showMessageDialog(null, "Não existem mais ocorrências da palavra " + find + "!");
         }
-    }
-
-    public int getLineNumber(JTextPane component, int pos) {
-        int posLine;
-        int y = 0;
+    }*/
+    public void findAndReplaceText(JTextComponent component, String patteren, String replace) {
+        Document document = component.getDocument();
 
         try {
-            Rectangle2D caretCoords = component.modelToView2D(pos);
-            y = (int) caretCoords.getY();
+            int index = this.findPosn;
+            String find = patteren;
+            for (; index + find.length() < document.getLength(); index++) {
+                String match = document.getText(index, find.length());
+                if (find.equals(match)) {
+                    /*javax.swing.text.DefaultHighlighter.DefaultHighlightPainter highlightPainter
+                            = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+                   component.getHighlighter().addHighlight(index, index + find.length(),
+                            highlightPainter);*/// Seleciona todos */
+                    component.setSelectionStart(index);
+                    component.setSelectionEnd(index + find.length());
+                    this.findPosn = index + find.length() - 1;
+                    this.checkAux = true;
+                    int rtn = JOptionPane.YES_OPTION;
+                    if (replaceConfirm) {
+                        rtn = JOptionPane.showConfirmDialog(null, "Deseja substituir " + find + " por " + replace + "? ", "Localizar e substituir", JOptionPane.YES_NO_CANCEL_OPTION);
+                    }
+                    if (!replaceConfirm || rtn == JOptionPane.YES_OPTION) {
+                        jTextPane.replaceSelection(replace);
+                    } else if (rtn == javax.swing.JOptionPane.CANCEL_OPTION) {
+                        return;
+                    }
+                    break;
+                }
+            }
+            if (index + find.length() >= document.getLength()) {
+                if (!this.checkAux) {
+                    JOptionPane.showMessageDialog(null, find + " não foi encontrado!");
+                    this.checkAux = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Não existem mais ocorrências da palavra " + find + "!");
+                    this.findPosn = 0;
+                    this.checkAux = false;
+                }
+            }
         } catch (BadLocationException ex) {
+            ex.printStackTrace();
         }
-
-        int lineHeight = component.getFontMetrics(component.getFont()).getHeight();
-        posLine = (y / lineHeight) + 1;
-        System.out.println("Posline: " + posLine);
-        return posLine;
     }
 
-     public int nextIndex(String input, String find, int start, boolean caseSensitive) {
-        int textPosn = -1;
-        if (input != null && find != null && start < input.length()) {
-            if (caseSensitive == true) { 
-                textPosn = input.indexOf(find, start);
-            } else {
-                textPosn = input.toLowerCase().indexOf(find.toLowerCase(),
-                        start);
+    public void findAndReplaceAllText(JTextComponent component, String patteren, String replace) {
+        Document document = component.getDocument();
+
+        try {
+            int index = this.findPosn;
+            String find = patteren;
+            for (; index + find.length() < document.getLength(); index++) {
+                String match = document.getText(index, find.length());
+                if (find.equals(match)) {
+                    javax.swing.text.DefaultHighlighter.DefaultHighlightPainter highlightPainter
+                            = new javax.swing.text.DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+                    component.getHighlighter().addHighlight(index, index + find.length(),
+                            highlightPainter);
+                    // component.setSelectionStart(index);
+                    // component.setSelectionEnd(index + find.length());
+                    this.findPosn = index + find.length() - 1;
+                    this.checkAux = true;
+                }
             }
+            int rtn = JOptionPane.YES_OPTION;
+            if (replaceConfirm) {
+                rtn = JOptionPane.showConfirmDialog(null, "Deseja substituir todos " + find + " por " + replace + "? ", "Localizar e substituir", JOptionPane.YES_NO_CANCEL_OPTION);
+            }
+            if (!replaceConfirm || rtn == JOptionPane.YES_OPTION) {
+                jTextPane.setText(jTextPane.getText().replaceAll(find, replace));
+                component.getHighlighter().removeAllHighlights();
+            } else if (rtn == javax.swing.JOptionPane.CANCEL_OPTION) {
+                return;
+            }
+        } catch (BadLocationException ex) {
+            ex.printStackTrace();
         }
-        if(start == input.length() - 1){
-            textPosn = -2;
-        }
-        return textPosn;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        System.out.println(e.getActionCommand());
         if (e.getActionCommand() == "Cancelar") {
             this.setVisible(false);
             this.dispose();
 
-        } else if (e.getActionCommand() == "Localizar próxima") {
-            doReplaceWords(Find_TextField.getText(), Replace_TextField.getText());
+        } else if (e.getActionCommand() == "Substituir") {
+            findAndReplaceText(jTextPane, Find_TextField.getText(), Replace_TextField.getText());
+        } else if (e.getActionCommand() == "Substituir Todas") {
+            findAndReplaceAllText(jTextPane, Find_TextField.getText(), Replace_TextField.getText());
         }
     }
 }
