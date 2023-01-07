@@ -74,7 +74,7 @@ public class FindPanel extends JFrame implements ActionListener {
         try {
             int index = this.findPosn;
             String find = patteren;
-            for (; index + find.length() < document.getLength(); index++) {
+            for (; index + find.length() <= document.getLength(); index++) {
                 String match = document.getText(index, find.length());
                 if (find.equals(match)) {
                     /*javax.swing.text.DefaultHighlighter.DefaultHighlightPainter highlightPainter
@@ -88,9 +88,10 @@ public class FindPanel extends JFrame implements ActionListener {
                     break;
                 }
             }
-            if (index + find.length() >= document.getLength()) {
+            if (index + find.length() > document.getLength()) {
                 if (!this.checkAux) {
                     JOptionPane.showMessageDialog(null, find + " não foi encontrado!");
+                    this.findPosn = 0;
                     this.checkAux = false;
                 } else {
                     JOptionPane.showMessageDialog(null, "Não existem mais ocorrências da palavra " + find + "!");
