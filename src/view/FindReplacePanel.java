@@ -125,7 +125,7 @@ public class FindReplacePanel extends JFrame implements ActionListener {
         try {
             int index = this.findPosn;
             String find = patteren;
-            for (; index + find.length() < document.getLength(); index++) {
+            for (; index + find.length() <= document.getLength(); index++) {
                 String match = document.getText(index, find.length());
                 if (find.equals(match)) {
                     /*javax.swing.text.DefaultHighlighter.DefaultHighlightPainter highlightPainter
@@ -169,7 +169,7 @@ public class FindReplacePanel extends JFrame implements ActionListener {
         try {
             int index = this.findPosn;
             String find = patteren;
-            for (; index + find.length() < document.getLength(); index++) {
+            for (; index + find.length() <= document.getLength(); index++) {
                 String match = document.getText(index, find.length());
                 if (find.equals(match)) {
                     javax.swing.text.DefaultHighlighter.DefaultHighlightPainter highlightPainter
@@ -199,7 +199,6 @@ public class FindReplacePanel extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
         if (e.getActionCommand() == "Cancelar") {
             this.setVisible(false);
             this.dispose();
