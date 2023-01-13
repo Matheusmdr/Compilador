@@ -216,8 +216,21 @@ void bloco(): {Token t = new Token();}
 void parteDeclaracaoVariaveis(): {Token t = new Token();}
 {
     try {
-        ( declaracaoVariavel()
-          <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); } )+
+        declaracaoVariavel()
+        auxParteDeclaracaoVariaveis()
+        <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void auxParteDeclaracaoVariaveis(): {Token t = new Token();}
+{
+    try {
+        <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+        declaracaoVariavel()
+        auxParteDeclaracaoVariaveis()
+        | {}
     }catch (ParseException e) {
         armazenamentoErros(e);
     }

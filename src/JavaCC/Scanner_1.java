@@ -115,20 +115,28 @@ armazenamentoErros(e);
 
   final public void parteDeclaracaoVariaveis() throws ParseException {Token t = new Token();
     try {
-      label_1:
-      while (true) {
-        declaracaoVariavel();
+      declaracaoVariavel();
+      auxParteDeclaracaoVariaveis();
+      jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
+t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
+    } catch (ParseException e) {
+armazenamentoErros(e);
+    }
+}
+
+  final public void auxParteDeclaracaoVariaveis() throws ParseException {Token t = new Token();
+    try {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case SIMBOLO_PONTO_E_VIRGULA:{
         jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
-        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case TIPO:{
-          ;
-          break;
-          }
-        default:
-          jj_la1[2] = jj_gen;
-          break label_1;
+        declaracaoVariavel();
+        auxParteDeclaracaoVariaveis();
+        break;
         }
+      default:
+        jj_la1[2] = jj_gen;
+
       }
     } catch (ParseException e) {
 armazenamentoErros(e);
@@ -152,7 +160,7 @@ armazenamentoErros(e);
     try {
       jj_consume_token(IDENTIFICADOR);
 t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
-      label_2:
+      label_1:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SIMBOLO_VIRGULA:{
@@ -161,7 +169,7 @@ t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
           }
         default:
           jj_la1[3] = jj_gen;
-          break label_2;
+          break label_1;
         }
         jj_consume_token(SIMBOLO_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image);
@@ -178,7 +186,7 @@ armazenamentoErros(e);
 
   final public void parteDeclaracaoSubrotinas() throws ParseException {Token t = new Token();
     try {
-      label_3:
+      label_2:
       while (true) {
         declaracaoProcedimento();
         jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
@@ -190,7 +198,7 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
           }
         default:
           jj_la1[4] = jj_gen;
-          break label_3;
+          break label_2;
         }
       }
     } catch (ParseException e) {
@@ -232,7 +240,7 @@ armazenamentoErros(e);
       jj_consume_token(PARENTESES_ESQ);
 t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
       secaoParametrosFormais();
-      label_4:
+      label_3:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SIMBOLO_PONTO_E_VIRGULA:{
@@ -241,7 +249,7 @@ t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
           }
         default:
           jj_la1[6] = jj_gen;
-          break label_4;
+          break label_3;
         }
         jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
@@ -287,7 +295,7 @@ armazenamentoErros(e);
       jj_consume_token(RSV_BEGIN);
 t = getToken(0); System.out.println("RSV_BEGIN Sintax: "+t.image);
       comando();
-      label_5:
+      label_4:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SIMBOLO_PONTO_E_VIRGULA:{
@@ -296,7 +304,7 @@ t = getToken(0); System.out.println("RSV_BEGIN Sintax: "+t.image);
           }
         default:
           jj_la1[8] = jj_gen;
-          break label_5;
+          break label_4;
         }
         jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
@@ -428,7 +436,7 @@ armazenamentoErros(e);
   final public void listaExpressoes() throws ParseException {Token t = new Token();
     try {
       expressao();
-      label_6:
+      label_5:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SIMBOLO_VIRGULA:{
@@ -437,7 +445,7 @@ armazenamentoErros(e);
           }
         default:
           jj_la1[12] = jj_gen;
-          break label_6;
+          break label_5;
         }
         jj_consume_token(SIMBOLO_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image);
@@ -729,10 +737,10 @@ armazenamentoErros(e);
 	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x200000,0x400,0x200000,0x0,0x400,0x0,0x0,0x100000,0x0,0x12800,0x8000,0x0,0x0,0x3f000000,0x0,0x0,0x0,0x0,0x80000000,0x80000000,0x0,0x0,0x3f000000,};
+	   jj_la1_0 = new int[] {0x200000,0x400,0x0,0x0,0x400,0x0,0x0,0x100000,0x0,0x12800,0x8000,0x0,0x0,0x3f000000,0x0,0x0,0x0,0x0,0x80000000,0x80000000,0x0,0x0,0x3f000000,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x400,0x0,0x80,0x800,0x0,0x800,0x6000,0x0,0xa09a,0x400,0x0,0x18,0x18,0x19,0x19,0x60,0x60,0xa082,0xa09a,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x0,0x800,0x400,0x0,0x80,0x800,0x0,0x800,0x6000,0x0,0xa09a,0x400,0x0,0x18,0x18,0x19,0x19,0x60,0x60,0xa082,0xa09a,0x0,};
 	}
 
   /** Constructor with InputStream. */
