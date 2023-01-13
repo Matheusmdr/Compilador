@@ -217,22 +217,22 @@ void parteDeclaracaoVariaveis(): {Token t = new Token();}
 {
     try {
         declaracaoVariavel()
-        auxParteDeclaracaoVariaveis()
         <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+        auxParteDeclaracaoVariaveis()
     }catch (ParseException e) {
-        armazenamentoErros(e);
+        armazenamentoErros(e.toString());
     }
 }
 
 void auxParteDeclaracaoVariaveis(): {Token t = new Token();}
 {
     try {
-        <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
         declaracaoVariavel()
+        <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
         auxParteDeclaracaoVariaveis()
         | {}
     }catch (ParseException e) {
-        armazenamentoErros(e);
+        armazenamentoErros(e.toString());
     }
 }
 
