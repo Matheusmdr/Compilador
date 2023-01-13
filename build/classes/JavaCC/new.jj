@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 public class Scanner_1{
 
 boolean Menosshort = false; //Saida resumida falso
+ArrayList<String> listaErrosSintax = new ArrayList<>();
 
 /*public cadeProgram() {
     Token t = new Token ();
@@ -63,19 +64,25 @@ TOKEN_MGR_DECLS :{
 
 SKIP : // TOKENS IGNORADOS
 {
- " "
-| "\r" 
-| "\t" 
-| "\n"
-//| <COMENTARIO: "//" (<COM>)*>
-//| <COMENTARIOS: "{" ("\n" | "\r" | <COM>)* "}" >
-| <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
+
+    " "
+    | "\r" 
+    | "\t" 
+    | "\n"
+    //| <COMENTARIO: "//" (<COM>)*>
+    //| <COMENTARIOS: "{" ("\n" | "\r" | <COM>)* "}" >
+    |<COMENTARIO_UMA_LINHA: "//" (<COM>)*> { System.out.println("COMENTARIO_UMA_LINHA: "+image); }
+    |<COMENTARIO_MULT_LINHAS: "{" ("\n" | "\r" | <COM>)* "}" > { System.out.println("COMENTARIO_MULT_LINHAS: "+image); }
+    | <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
 
 }
 
 TOKEN : //PALAVRAS RESERVADAS
-{   
-    <RSV_PROGRAMA: "program"> { System.out.println("Palavra Reservada: "+image); }
+{
+ 
+    <NOVA: "nova"> { System.out.println("Palavra Reservada: "+image); }
+
+    |<RSV_PROGRAMA: "program"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_PROCEDIMENTO: "procedure"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_BEGIN: "begin"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_END: "end"> { System.out.println("Palavra Reservada: "+image); }
@@ -87,22 +94,22 @@ TOKEN : //PALAVRAS RESERVADAS
     |<RSV_READ: "read"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_WRITE: "write"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_VAR: "var"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_TRUE: "true"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_FALSE: "false"> { System.out.println("Palavra Reservada: "+image); }
+    //|<RSV_TRUE: "true"> { System.out.println("Palavra Reservada: "+image); }
+    //|<RSV_FALSE: "false"> { System.out.println("Palavra Reservada: "+image); }
 }
 
 TOKEN : //TIPOS
 {
-
-    <TIPO_INT: "int"> { System.out.println("Palavra Reservada: "+image); }
-    |<TIPO_BOOLEAN: "boolean"> { System.out.println("Palavra Reservada: "+image); }
-
+    <TIPO: (<TIPO_INT>|<TIPO_BOOLEAN>)> { System.out.println("Palavra Reservada: "+image); }
+    |<#TIPO_INT: "int">
+    |<#TIPO_BOOLEAN: "boolean">
 }
 
 TOKEN : //OPERADORES E SÍMBOLOS
 {
-
+    
     <OPERADOR_LOGICO_DIFERENCA: "<>"> { System.out.println("Palavra Reservada: "+image); }
+    |<OPERADOR_LOGICO_IGUAL_IGUAL: "=="> { System.out.println("Palavra Reservada: "+image); }
     |<OPERADOR_LOGICO_MENOR: "<"> { System.out.println("Palavra Reservada: "+image); }
     |<OPERADOR_LOGICO_MENOR_IGUAL: "<="> { System.out.println("Palavra Reservada: "+image); }
     |<OPERADOR_LOGICO_MAIOR_IGUAL: ">="> { System.out.println("Palavra Reservada: "+image); }
@@ -121,7 +128,7 @@ TOKEN : //OPERADORES E SÍMBOLOS
     |<SIMBOLO_DOIS_PONTOS: ":"> { System.out.println("Palavra Reservada: "+image); }
     |<SIMBOLO_VIRGULA:  ","> { System.out.println("Palavra Reservada: "+image); }
     |<SIMBOLO_PONTO_E_VIRGULA: ";"> { System.out.println("Palavra Reservada: "+image); }
-    |<SIMBOLO_TERMINACAO: "end."> { System.out.println("Palavra Reservada: "+image); }
+    |<SIMBOLO_PONTO: "."> { System.out.println("Palavra Reservada: "+image); }
 
 }
 
@@ -129,19 +136,17 @@ TOKEN : //NÚMEROS E IDENTIFICADORES
 {
 
     <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>)*> { System.out.println("IDENTIFICADOR: "+image); }
+    |<IDENTIFICADOR_CHAMADA_PROCEDIMENTO: <LETRA> (<LETRA>|<DIGITO>)*> { System.out.println("IDENTIFICADOR_CHAMADA_PROCEDIMENTO: "+image); }
     |<NUMERO_INTEIRO: <DIGITO>(<DIGITO>)*> { System.out.println("NUMERO_INTEIRO: "+image); }
     |<#LETRA: ["_", "a"-"z", "A"-"Z"] >
     |<#DIGITO: ["0" - "9"] >
 
 }
 
-TOKEN : //COMENTÁRIOS
+/*TOKEN : //COMENTÁRIOS
 {
 
-    <COMENTARIO_UMA_LINHA: "//" (<COM>)*> { System.out.println("COMENTARIO_UMA_LINHA: "+image); }
-    |<COMENTARIO_MULT_LINHAS: "{" ("\n" | "\r" | <COM>)* "}" > { System.out.println("COMENTARIO_MULT_LINHAS: "+image); }
-
-}
+}*/
 
 SPECIAL_TOKEN : {
 
@@ -161,43 +166,359 @@ SPECIAL_TOKEN : {
 }
 
 JAVACODE
-    void error_skipto(int kind) {
-      ParseException e = generateParseException();  // generate the exception object
-      System.out.println(e.toString());  // print the error message
-      Token t;
-      // consume tokens all the way up to a token of "kind" - use a do-while loop
-      // rather than a while because the current token is the one immediately before
-      // the erroneous token (in our case the token immediately before what should
-      // have been "if"/"while".
-      do {
-        t = getNextToken();
-      }
-      while (t.kind != kind);
+    void armazenamentoErros(ParseException e) {
+        String erro = e.toString();
+        String[] split = erro.split("Was expecting one of:");
+        String comecoErro = split[0];
+        for(String str : listaErrosSintax) {
+            String[] parte = str.split("Was expecting one of:");
+            String comecoErro1 = parte[0];
+            if(comecoErro1.equals(comecoErro))
+                return;
+        }
+        listaErrosSintax.add(erro); // save the error message
     }
 
 void principal(): {Token t = new Token();}
 {
     try {
-        listaIdentificadores()
+        programa()
         <EOF>
     }catch (ParseException e) {
-    System.out.println(e.toString());
-  }
+        armazenamentoErros(e);
+    }
+}
+
+void programa(): {Token t = new Token();}
+{
+    try {
+        <RSV_PROGRAMA> { t = getToken(0); System.out.println("RSV_PROGRAMA Sintax: "+t.image); }
+        <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+        <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+        bloco()
+        <SIMBOLO_PONTO> { t = getToken(0); System.out.println("SIMBOLO_PONTO Sintax: "+t.image); }
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void bloco(): {Token t = new Token();}
+{
+    try {
+        [ parteDeclaracaoVariaveis() ]
+        [ parteDeclaracaoSubrotinas() ]
+        comandoComposto()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void parteDeclaracaoVariaveis(): {Token t = new Token();}
+{
+    try {
+        ( declaracaoVariavel()
+          <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); } )+
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void declaracaoVariavel(): {Token t = new Token();}
+{
+    try {
+        <TIPO> { t = getToken(0); System.out.println("TIPO Sintax: "+t.image); }
+        listaIdentificadores()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+        /* error_skipto(new ArrayList<>(Arrays.asList(SIMBOLO_PONTO_E_VIRGULA)));
+        parteDeclaracaoVariaveis(); */
+    }
 }
 
 void listaIdentificadores(): {Token t = new Token();}
 {
-    <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+    try {
+        <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
 
-    (
-      aaa()
-    )*
-
-    //| {throw new ParseException("errinho").initialise;}
+        (
+          <SIMBOLO_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image); }
+          <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+        )*
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+        /* error_skipto(new ArrayList<>(Arrays.asList(SIMBOLO_PONTO_E_VIRGULA)));
+        bloco(); */
+    }
 }
 
-void aaa(): {Token t = new Token();}
+void parteDeclaracaoSubrotinas(): {Token t = new Token();}
 {
-    <SIMBOLO_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image); }
-    <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+    try {
+        ( declaracaoProcedimento() 
+          <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+        )+
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+        /* error_skipto(new ArrayList<>(Arrays.asList(SIMBOLO_PONTO_E_VIRGULA, SIMBOLO_PONTO)));
+        return; */
+    }
+}
+
+void declaracaoProcedimento(): {Token t = new Token();}
+{
+    try {
+        <RSV_PROCEDIMENTO> { t = getToken(0); System.out.println("RSV_PROCEDIMENTO Sintax: "+t.image); }
+        <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+        [ parametrosFormais() ]
+        <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+        bloco()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+        /* error_skipto(new ArrayList<>(Arrays.asList(SIMBOLO_PONTO_E_VIRGULA)));
+        parteDeclaracaoSubrotinas(); */
+    }
+}
+
+void parametrosFormais(): {Token t = new Token();}
+{
+    try {
+        <PARENTESES_ESQ> { t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image); }
+        secaoParametrosFormais()
+        ( <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+          secaoParametrosFormais() )*
+        <PARENTESES_DIR> { t = getToken(0); System.out.println("PARENTESES_DIR Sintax: "+t.image); }
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+        /* error_skipto(new ArrayList<>(Arrays.asList(SIMBOLO_PONTO_E_VIRGULA)));
+        bloco(); */
+    }
+}
+
+void secaoParametrosFormais(): {Token t = new Token();}
+{
+    try {
+        [ <RSV_VAR> { t = getToken(0); System.out.println("RSV_VAR Sintax: "+t.image); } ]
+        listaIdentificadores()
+        <SIMBOLO_DOIS_PONTOS> { t = getToken(0); System.out.println("SIMBOLO_DOIS_PONTOS Sintax: "+t.image); }
+        <TIPO> { t = getToken(0); System.out.println("TIPO Sintax: "+t.image); }
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+        /* error_skipto(new ArrayList<>(Arrays.asList(SIMBOLO_PONTO_E_VIRGULA)));
+        bloco(); */
+    }
+}
+
+void comandoComposto() : {Token t = new Token();}
+{
+    try {
+        <RSV_BEGIN> { t = getToken(0); System.out.println("RSV_BEGIN Sintax: "+t.image); }
+        comando()
+        ( <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+          comando() )*
+        <RSV_END> { t = getToken(0); System.out.println("RSV_END Sintax: "+t.image); }
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void comando() : {Token t = new Token();}
+{
+    try {
+        atribuicao()
+        |chamadaProcedimento()
+        |comandoComposto()
+        |comandoCondicional()
+        |comandoRepetitivo()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void comandoRepetitivo() : {Token t = new Token();}
+{
+    try {
+        <RSV_WHILE> { t = getToken(0); System.out.println("RSV_WHILE Sintax: "+t.image); }
+        expressao()
+        <RSV_DO> { t = getToken(0); System.out.println("RSV_DO Sintax: "+t.image); }
+        comando()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void comandoCondicional() : {Token t = new Token();}
+{
+    try {
+        <RSV_IF> { t = getToken(0); System.out.println("RSV_IF Sintax: "+t.image); }
+        expressao()
+        <RSV_THEN> { t = getToken(0); System.out.println("RSV_THEN Sintax: "+t.image); }
+        comando()
+        auxComandoCondicional()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void auxComandoCondicional() : {Token t = new Token();}
+{
+    try {
+        <RSV_ELSE> { t = getToken(0); System.out.println("RSV_ELSE Sintax: "+t.image); }
+          comando()
+        | {}
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void chamadaProcedimento() : {Token t = new Token();}
+{
+    try {
+        <IDENTIFICADOR_CHAMADA_PROCEDIMENTO> { t = getToken(0); System.out.println("IDENTIFICADOR_CHAMADA_PROCEDIMENTO Sintax: "+t.image); }
+        <PARENTESES_ESQ> { t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image); }
+        [ listaExpressoes() ]
+        <PARENTESES_DIR> { t = getToken(0); System.out.println("PARENTESES_DIR Sintax: "+t.image); }
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void atribuicao() : {Token t = new Token();}
+{
+    try {
+        variavel()
+        <OPERADOR_ARITMETICO_ATRIBUICAO> { t = getToken(0); System.out.println("OPERADOR_ARITMETICO_ATRIBUICAO Sintax: "+t.image); }
+        expressao()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void listaExpressoes() : {Token t = new Token();}
+{
+    try {
+        expressao()
+        ( <SIMBOLO_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image); }
+          expressao() )*
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void expressao() : {Token t = new Token();}
+{
+    try {
+        expressaoSimples()
+        auxExpressao()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void auxExpressao() : {Token t = new Token();}
+{
+    try {
+        relacao() expressaoSimples()
+        | {}
+    }catch (ParseException e) {
+       armazenamentoErros(e);
+    }
+}
+
+void expressaoSimples() : {Token t = new Token();}
+{
+    try {
+        [ <OPERADOR_ARITMETICO_ADICAO> { t = getToken(0); System.out.println("OPERADOR_ARITMETICO_ADICAO Sintax: "+t.image); }
+          |<OPERADOR_ARITMETICO_SUBTRACAO> { t = getToken(0); System.out.println("OPERADOR_ARITMETICO_SUBTRACAO Sintax: "+t.image); } ]
+        termo()
+        auxExpressaoSimples()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void auxExpressaoSimples() : {Token t = new Token();}
+{
+    try {
+        ( <OPERADOR_ARITMETICO_ADICAO> { t = getToken(0); System.out.println("OPERADOR_ARITMETICO_ADICAO Sintax: "+t.image); }
+          |<OPERADOR_ARITMETICO_SUBTRACAO> { t = getToken(0); System.out.println("OPERADOR_ARITMETICO_SUBTRACAO Sintax: "+t.image); }
+          |<OPERADOR_LOGICO_OR> { t = getToken(0); System.out.println("OPERADOR_LOGICO_OR Sintax: "+t.image); } )
+        termo()
+        auxExpressaoSimples()
+        | {}
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void termo() : {Token t = new Token();}
+{
+    try {
+        fator()
+        auxTermo()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void auxTermo() : {Token t = new Token();}
+{
+    try {
+        ( <OPERADOR_ARITMETICO_MULTIPLICACAO> { t = getToken(0); System.out.println("OPERADOR_ARITMETICO_MULTIPLICACAO Sintax: "+t.image); }
+          |<OPERADOR_ARITMETICO_DIVISAO> { t = getToken(0); System.out.println("OPERADOR_ARITMETICO_DIVISAO Sintax: "+t.image); }
+          |<OPERADOR_LOGICO_AND> { t = getToken(0); System.out.println("OPERADOR_LOGICO_AND Sintax: "+t.image); } )
+        fator()
+        auxTermo()
+        | {}
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void fator() : {Token t = new Token();}
+{
+    try {
+        variavel()
+        |<NUMERO_INTEIRO> { t = getToken(0); System.out.println("NUMERO_INTEIRO Sintax: "+t.image); }
+        |( <PARENTESES_ESQ> { t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image); }
+           expressao()
+           <PARENTESES_DIR> { t = getToken(0); System.out.println("PARENTESES_DIR Sintax: "+t.image); } )
+        |( <OPERADOR_LOGICO_NOT> { t = getToken(0); System.out.println("OPERADOR_LOGICO_NOT Sintax: "+t.image); }
+           fator() )
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void variavel() : {Token t = new Token();}
+{
+    try {
+        <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+        auxVariavel()
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void auxVariavel() : {Token t = new Token();}
+{
+    try {
+        expressao()
+        | {}
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
+}
+
+void relacao() : {Token t = new Token();}
+{
+    try {
+        <OPERADOR_LOGICO_IGUAL_IGUAL> { t = getToken(0); System.out.println("OPERADOR_LOGICO_IGUAL_IGUAL Sintax: "+t.image); }
+        |<OPERADOR_LOGICO_DIFERENCA> { t = getToken(0); System.out.println("OPERADOR_LOGICO_DIFERENCA Sintax: "+t.image); }
+        |<OPERADOR_LOGICO_MENOR> { t = getToken(0); System.out.println("OPERADOR_LOGICO_MENOR Sintax: "+t.image); }
+        |<OPERADOR_LOGICO_MENOR_IGUAL> { t = getToken(0); System.out.println("OPERADOR_LOGICO_MENOR_IGUAL Sintax: "+t.image); }
+        |<OPERADOR_LOGICO_MAIOR_IGUAL> { t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR_IGUAL Sintax: "+t.image); }
+        |<OPERADOR_LOGICO_MAIOR> { t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image); }
+    }catch (ParseException e) {
+        armazenamentoErros(e);
+    }
 }

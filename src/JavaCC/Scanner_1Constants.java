@@ -11,97 +11,99 @@ public interface Scanner_1Constants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int COM = 5;
+  int COMENTARIO_UMA_LINHA = 5;
   /** RegularExpression Id. */
-  int NOVA = 6;
+  int COMENTARIO_MULT_LINHAS = 6;
   /** RegularExpression Id. */
-  int RSV_PROGRAMA = 7;
+  int COM = 7;
   /** RegularExpression Id. */
-  int RSV_PROCEDIMENTO = 8;
+  int NOVA = 8;
   /** RegularExpression Id. */
-  int RSV_BEGIN = 9;
+  int RSV_PROGRAMA = 9;
   /** RegularExpression Id. */
-  int RSV_END = 10;
+  int RSV_PROCEDIMENTO = 10;
   /** RegularExpression Id. */
-  int RSV_IF = 11;
+  int RSV_BEGIN = 11;
   /** RegularExpression Id. */
-  int RSV_THEN = 12;
+  int RSV_END = 12;
   /** RegularExpression Id. */
-  int RSV_ELSE = 13;
+  int RSV_IF = 13;
   /** RegularExpression Id. */
-  int RSV_WHILE = 14;
+  int RSV_THEN = 14;
   /** RegularExpression Id. */
-  int RSV_DO = 15;
+  int RSV_ELSE = 15;
   /** RegularExpression Id. */
-  int RSV_READ = 16;
+  int RSV_WHILE = 16;
   /** RegularExpression Id. */
-  int RSV_WRITE = 17;
+  int RSV_DO = 17;
   /** RegularExpression Id. */
-  int RSV_VAR = 18;
+  int RSV_READ = 18;
   /** RegularExpression Id. */
-  int RSV_TRUE = 19;
+  int RSV_WRITE = 19;
   /** RegularExpression Id. */
-  int RSV_FALSE = 20;
+  int RSV_VAR = 20;
   /** RegularExpression Id. */
-  int TIPO_INT = 21;
+  int TIPO = 21;
   /** RegularExpression Id. */
-  int TIPO_BOOLEAN = 22;
+  int TIPO_INT = 22;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_DIFERENCA = 23;
+  int TIPO_BOOLEAN = 23;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_MENOR = 24;
+  int OPERADOR_LOGICO_DIFERENCA = 24;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_MENOR_IGUAL = 25;
+  int OPERADOR_LOGICO_IGUAL_IGUAL = 25;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_MAIOR_IGUAL = 26;
+  int OPERADOR_LOGICO_MENOR = 26;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_MAIOR = 27;
+  int OPERADOR_LOGICO_MENOR_IGUAL = 27;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_IGUALDADE = 28;
+  int OPERADOR_LOGICO_MAIOR_IGUAL = 28;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_AND = 29;
+  int OPERADOR_LOGICO_MAIOR = 29;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_OR = 30;
+  int OPERADOR_LOGICO_IGUALDADE = 30;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_NOT = 31;
+  int OPERADOR_LOGICO_AND = 31;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_ATRIBUICAO = 32;
+  int OPERADOR_LOGICO_OR = 32;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_ADICAO = 33;
+  int OPERADOR_LOGICO_NOT = 33;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_SUBTRACAO = 34;
+  int OPERADOR_ARITMETICO_ATRIBUICAO = 34;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_MULTIPLICACAO = 35;
+  int OPERADOR_ARITMETICO_ADICAO = 35;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_DIVISAO = 36;
+  int OPERADOR_ARITMETICO_SUBTRACAO = 36;
   /** RegularExpression Id. */
-  int PARENTESES_ESQ = 37;
+  int OPERADOR_ARITMETICO_MULTIPLICACAO = 37;
   /** RegularExpression Id. */
-  int PARENTESES_DIR = 38;
+  int OPERADOR_ARITMETICO_DIVISAO = 38;
   /** RegularExpression Id. */
-  int SIMBOLO_DOIS_PONTOS = 39;
+  int PARENTESES_ESQ = 39;
   /** RegularExpression Id. */
-  int SIMBOLO_VIRGULA = 40;
+  int PARENTESES_DIR = 40;
   /** RegularExpression Id. */
-  int SIMBOLO_PONTO_E_VIRGULA = 41;
+  int SIMBOLO_DOIS_PONTOS = 41;
   /** RegularExpression Id. */
-  int SIMBOLO_TERMINACAO = 42;
+  int SIMBOLO_VIRGULA = 42;
   /** RegularExpression Id. */
-  int IDENTIFICADOR = 43;
+  int SIMBOLO_PONTO_E_VIRGULA = 43;
   /** RegularExpression Id. */
-  int NUMERO_INTEIRO = 44;
+  int SIMBOLO_PONTO = 44;
   /** RegularExpression Id. */
-  int LETRA = 45;
+  int IDENTIFICADOR = 45;
   /** RegularExpression Id. */
-  int DIGITO = 46;
+  int IDENTIFICADOR_CHAMADA_PROCEDIMENTO = 46;
   /** RegularExpression Id. */
-  int COMENTARIO_UMA_LINHA = 47;
+  int NUMERO_INTEIRO = 47;
   /** RegularExpression Id. */
-  int COMENTARIO_MULT_LINHAS = 48;
+  int LETRA = 48;
   /** RegularExpression Id. */
-  int ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR = 49;
+  int DIGITO = 49;
   /** RegularExpression Id. */
-  int ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR = 50;
+  int ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR = 50;
+  /** RegularExpression Id. */
+  int ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR = 51;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -113,6 +115,8 @@ public interface Scanner_1Constants {
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
+    "<COMENTARIO_UMA_LINHA>",
+    "<COMENTARIO_MULT_LINHAS>",
     "<COM>",
     "\"nova\"",
     "\"program\"",
@@ -127,11 +131,11 @@ public interface Scanner_1Constants {
     "\"read\"",
     "\"write\"",
     "\"var\"",
-    "\"true\"",
-    "\"false\"",
+    "<TIPO>",
     "\"int\"",
     "\"boolean\"",
     "\"<>\"",
+    "\"==\"",
     "\"<\"",
     "\"<=\"",
     "\">=\"",
@@ -150,13 +154,12 @@ public interface Scanner_1Constants {
     "\":\"",
     "\",\"",
     "\";\"",
-    "\"end.\"",
+    "\".\"",
     "<IDENTIFICADOR>",
+    "<IDENTIFICADOR_CHAMADA_PROCEDIMENTO>",
     "<NUMERO_INTEIRO>",
     "<LETRA>",
     "<DIGITO>",
-    "<COMENTARIO_UMA_LINHA>",
-    "<COMENTARIO_MULT_LINHAS>",
     "<ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR>",
     "<ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR>",
   };
