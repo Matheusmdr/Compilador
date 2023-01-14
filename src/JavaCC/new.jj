@@ -64,16 +64,13 @@ TOKEN_MGR_DECLS :{
 
 SKIP : // TOKENS IGNORADOS
 {
-
-    " "
-    | "\r" 
-    | "\t" 
-    | "\n"
-    //| <COMENTARIO: "//" (<COM>)*>
-    //| <COMENTARIOS: "{" ("\n" | "\r" | <COM>)* "}" >
-    |<COMENTARIO_UMA_LINHA: "//" (<COM>)*> { System.out.println("COMENTARIO_UMA_LINHA: "+image); }
-    |<COMENTARIO_MULT_LINHAS: "{" ("\n" | "\r" | <COM>)* "}" > { System.out.println("COMENTARIO_MULT_LINHAS: "+image); }
-    | <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
+ " "
+| "\r" 
+| "\t" 
+| "\n"
+//| <COMENTARIO: "//" (<COM>)*>
+//| <COMENTARIOS: "{" ("\n" | "\r" | <COM>)* "}" >
+| <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
 
 }
 
@@ -94,15 +91,16 @@ TOKEN : //PALAVRAS RESERVADAS
     |<RSV_READ: "read"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_WRITE: "write"> { System.out.println("Palavra Reservada: "+image); }
     |<RSV_VAR: "var"> { System.out.println("Palavra Reservada: "+image); }
+    |<RSV_FIM: <RSV_END>"."> { System.out.println("Palavra Reservada: "+image); }
     //|<RSV_TRUE: "true"> { System.out.println("Palavra Reservada: "+image); }
     //|<RSV_FALSE: "false"> { System.out.println("Palavra Reservada: "+image); }
 }
 
 TOKEN : //TIPOS
 {
-    <TIPO: (<TIPO_INT>|<TIPO_BOOLEAN>)> { System.out.println("Palavra Reservada: "+image); }
-    |<#TIPO_INT: "int">
-    |<#TIPO_BOOLEAN: "boolean">
+    //<TIPO: (<TIPO_INT>|<TIPO_BOOLEAN>)> { System.out.println("Palavra Reservada: "+image); }
+    <TIPO_INT: "int"> { System.out.println("Palavra Reservada: "+image); }
+    |<TIPO_BOOLEAN: "boolean"> { System.out.println("Palavra Reservada: "+image); }
 }
 
 TOKEN : //OPERADORES E SÍMBOLOS
@@ -135,9 +133,9 @@ TOKEN : //OPERADORES E SÍMBOLOS
 TOKEN : //NÚMEROS E IDENTIFICADORES
 {
 
-    <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>)*> { System.out.println("IDENTIFICADOR: "+image); }
-    |<IDENTIFICADOR_CHAMADA_PROCEDIMENTO: <LETRA> (<LETRA>|<DIGITO>)*> { System.out.println("IDENTIFICADOR_CHAMADA_PROCEDIMENTO: "+image); }
-    |<NUMERO_INTEIRO: <DIGITO>(<DIGITO>)*> { System.out.println("NUMERO_INTEIRO: "+image); }
+    <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){0,14}> { System.out.println("IDENTIFICADOR: "+image); }
+    |<IDENTIFICADOR_CHAMADA_PROCEDIMENTO: <IDENTIFICADOR>> { System.out.println("IDENTIFICADOR_CHAMADA_PROCEDIMENTO: "+image); }
+    |<NUMERO_INTEIRO: (<DIGITO>){1,8}> { System.out.println("NUMERO_INTEIRO: "+image); }
     |<#LETRA: ["_", "a"-"z", "A"-"Z"] >
     |<#DIGITO: ["0" - "9"] >
 
@@ -150,16 +148,41 @@ TOKEN : //NÚMEROS E IDENTIFICADORES
 
 SPECIAL_TOKEN : {
 
-    <ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR: "{"(<COM>)*> {
+    <COMENTARIO_UMA_LINHA: "//" (<COM>)*> { System.out.println("COMENTARIO_UMA_LINHA: "+image); }
+    |<COMENTARIO_MULT_LINHAS: "{" ("\n" | "\r" | <COM>)* "}" > { System.out.println("COMENTARIO_MULT_LINHAS: "+image); }
+
+    |<ERRO_OVERFLOW_INT: (<DIGITO>){9,} > {
+        countLexError++;
+        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
+        "Máximo de caracteres para NÚMERO INTEIRO (8) ultrapassado: " + image + " "+ "TOTAL ERRO "+countLexError);
+        System.out.println("Erro Lexico --------> "+image);
+    }
+
+    |<ERRO_OVERFLOW_IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){15,} > {
+        countLexError++;
+        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
+        "Máximo de caracteres para IDENTIFICADOR (15) ultrapassado: " + image + " "+ "TOTAL ERRO "+countLexError);
+        System.out.println("Erro Lexico --------> "+image);
+    }
+
+    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR: "{"(<COM>)*> {
         countLexError++;
         System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
         " Comentário de múltiplas linhas não foi fechado: " + image + " "+ "TOTAL ERRO "+countLexError);
         System.out.println("Erro Lexico --------> "+image);
     }
+
     |<ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR: (<COM>)*"}"> { 
         countLexError++;
         System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
         " Comentário de múltiplas linhas não foi aberto: " + image + " "+ "TOTAL ERRO "+countLexError);
+        System.out.println("Erro Lexico --------> "+image);
+    }
+
+    |<ERRO_SIMBOLO_INVALIDO: ~["_", "a"-"z", "A"-"Z", "0" - "9", ".", ";", ",", ")", "(", "*", "+", ":", "=", ">", "<"]> {
+        countLexError++;
+        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
+        " Símbolo inválido foi encontrado: " + image + " "+ "TOTAL ERRO "+countLexError);
         System.out.println("Erro Lexico --------> "+image);
     }
 
@@ -197,6 +220,23 @@ JAVACODE
         listaErrosSintax.add(erro); // save the error message
     }
 
+JAVACODE
+    void teste(int kind) {
+      ParseException e = generateParseException();  // generate the exception object
+      String erro = e.toString();
+      //System.out.println(erro);  // print the error message
+      armazenamentoErros(erro);
+      Token t;
+      // consume tokens all the way up to a token of "kind" - use a do-while loop
+      // rather than a while because the current token is the one immediately before
+      // the erroneous token (in our case the token immediately before what should
+      // have been "if"/"while".
+      do {
+        t = getNextToken();
+      }
+      while (t.kind != kind);
+    }
+
 void principal(): {Token t = new Token();}
 {
     try {
@@ -214,13 +254,18 @@ void programa(): {Token t = new Token();}
         <RSV_PROGRAMA> { t = getToken(0); System.out.println("RSV_PROGRAMA Sintax: "+t.image); }
         <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
         <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
-        bloco()
-        <SIMBOLO_PONTO> { t = getToken(0); System.out.println("SIMBOLO_PONTO Sintax: "+t.image); }
+        [ parteDeclaracaoVariaveis() ]
+        [ parteDeclaracaoSubrotinas() ]
+        <RSV_BEGIN> { t = getToken(0); System.out.println("RSV_BEGIN Sintax: "+t.image); }
+        comando()
+        ( <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
+          comando() )*
+        <RSV_FIM> { t = getToken(0); System.out.println("RSV_FIM Sintax: "+t.image); }
     }catch (ParseException e) {
         //armazenamentoErros(e.toString());
         error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
         bloco();
-        System.out.println("!!!! PROGRAMA !!!!");
+        //System.out.println("!!!! PROGRAMA !!!!");
     }
 }
 
@@ -231,8 +276,9 @@ void bloco(): {Token t = new Token();}
         [ parteDeclaracaoSubrotinas() ]
         comandoComposto()
     }catch (ParseException e) {
-        //armazenamentoErros(e.toString());
-        error_skipto(e, new ArrayList<>(Arrays.asList(EOF)));
+        armazenamentoErros(e.toString());
+        //error_skipto(e, new ArrayList<>(Arrays.asList(EOF)));
+        bloco();
     }
 }
 
@@ -268,7 +314,8 @@ void auxParteDeclaracaoVariaveis(): {Token t = new Token();}
 void declaracaoVariavel(): {Token t = new Token();}
 {
    try {
-    ( <TIPO> { t = getToken(0); System.out.println("TIPO Sintax: "+t.image); }
+    ( ( <TIPO_BOOLEAN> { t = getToken(0); System.out.println("TIPO_BOOLEAN Sintax: "+t.image); }
+        |<TIPO_INT> { t = getToken(0); System.out.println("TIPO_INT Sintax: "+t.image); } )
     listaIdentificadores() )
    }catch (ParseException e) {
         //armazenamentoErros(e.toString());
@@ -288,8 +335,6 @@ void listaIdentificadores(): {Token t = new Token();}
         )*
     }catch (ParseException e) {
         //armazenamentoErros(e.toString());
-        /* error_skipto(new ArrayList<>(Arrays.asList(SIMBOLO_PONTO_E_VIRGULA)));
-        bloco(); */
         error_skipto(e, new ArrayList<>(Arrays.asList(EOF, RSV_BEGIN)));
         comando();
     }
@@ -350,7 +395,8 @@ void secaoParametrosFormais(): {Token t = new Token();}
         [ <RSV_VAR> { t = getToken(0); System.out.println("RSV_VAR Sintax: "+t.image); } ]
         listaIdentificadores()
         <SIMBOLO_DOIS_PONTOS> { t = getToken(0); System.out.println("SIMBOLO_DOIS_PONTOS Sintax: "+t.image); }
-        <TIPO> { t = getToken(0); System.out.println("TIPO Sintax: "+t.image); }
+        ( <TIPO_BOOLEAN> { t = getToken(0); System.out.println("TIPO_BOOLEAN Sintax: "+t.image); }
+          |<TIPO_INT> { t = getToken(0); System.out.println("TIPO_INT Sintax: "+t.image); } )
     }catch (ParseException e) {
         //armazenamentoErros(e.toString());
         error_skipto(e, new ArrayList<>(Arrays.asList(EOF, RSV_BEGIN)));
@@ -367,9 +413,15 @@ void comandoComposto() : {Token t = new Token();}
           comando() )*
         <RSV_END> { t = getToken(0); System.out.println("RSV_END Sintax: "+t.image); }
     }catch (ParseException e) {
-        //armazenamentoErros(e.toString());
         //error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
-        comando();
+        Token token = new Token();
+        token = getToken(0);
+        if(token.kind == RSV_END)
+            error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
+        else {
+            comando();
+            armazenamentoErros(e.toString());
+        }
     }
 }
 

@@ -78,6 +78,21 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
   }
 
+  void teste(int kind) throws ParseException {ParseException e = generateParseException();  // generate the exception object
+      String erro = e.toString();
+      //System.out.println(erro);  // print the error message
+      armazenamentoErros(erro);
+      Token t;
+      // consume tokens all the way up to a token of "kind" - use a do-while loop
+      // rather than a while because the current token is the one immediately before
+      // the erroneous token (in our case the token immediately before what should
+      // have been "if"/"while".
+      do {
+        t = getNextToken();
+      }
+      while (t.kind != kind);
+  }
+
   final public void principal() throws ParseException {Token t = new Token();
     try {
       programa();
@@ -96,21 +111,9 @@ t = getToken(0); System.out.println("RSV_PROGRAMA Sintax: "+t.image);
 t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
       jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
-      bloco();
-      jj_consume_token(SIMBOLO_PONTO);
-t = getToken(0); System.out.println("SIMBOLO_PONTO Sintax: "+t.image);
-    } catch (ParseException e) {
-//armazenamentoErros(e.toString());
-        error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
-        bloco();
-        System.out.println("!!!! PROGRAMA !!!!");
-    }
-}
-
-  final public void bloco() throws ParseException {Token t = new Token();
-    try {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case TIPO:{
+      case TIPO_INT:
+      case TIPO_BOOLEAN:{
         parteDeclaracaoVariaveis();
         break;
         }
@@ -127,10 +130,61 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO Sintax: "+t.image);
         jj_la1[1] = jj_gen;
         ;
       }
-      comandoComposto();
+      jj_consume_token(RSV_BEGIN);
+t = getToken(0); System.out.println("RSV_BEGIN Sintax: "+t.image);
+      comando();
+      label_1:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case SIMBOLO_PONTO_E_VIRGULA:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[2] = jj_gen;
+          break label_1;
+        }
+        jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
+t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
+        comando();
+      }
+      jj_consume_token(RSV_FIM);
+t = getToken(0); System.out.println("RSV_FIM Sintax: "+t.image);
     } catch (ParseException e) {
 //armazenamentoErros(e.toString());
-        error_skipto(e, new ArrayList<>(Arrays.asList(EOF)));
+        error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
+        bloco();
+        //System.out.println("!!!! PROGRAMA !!!!");
+
+    }
+}
+
+  final public void bloco() throws ParseException {Token t = new Token();
+    try {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case TIPO_INT:
+      case TIPO_BOOLEAN:{
+        parteDeclaracaoVariaveis();
+        break;
+        }
+      default:
+        jj_la1[3] = jj_gen;
+        ;
+      }
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case RSV_PROCEDIMENTO:{
+        parteDeclaracaoSubrotinas();
+        break;
+        }
+      default:
+        jj_la1[4] = jj_gen;
+        ;
+      }
+      comandoComposto();
+    } catch (ParseException e) {
+armazenamentoErros(e.toString());
+        //error_skipto(e, new ArrayList<>(Arrays.asList(EOF)));
+        bloco();
     }
 }
 
@@ -152,7 +206,8 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
   final public void auxParteDeclaracaoVariaveis() throws ParseException {Token t = new Token();
     try {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case TIPO:{
+      case TIPO_INT:
+      case TIPO_BOOLEAN:{
         declaracaoVariavel();
         jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
@@ -160,7 +215,7 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[5] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -173,8 +228,22 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
 
   final public void declaracaoVariavel() throws ParseException {Token t = new Token();
     try {
-      jj_consume_token(TIPO);
-t = getToken(0); System.out.println("TIPO Sintax: "+t.image);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case TIPO_BOOLEAN:{
+        jj_consume_token(TIPO_BOOLEAN);
+t = getToken(0); System.out.println("TIPO_BOOLEAN Sintax: "+t.image);
+        break;
+        }
+      case TIPO_INT:{
+        jj_consume_token(TIPO_INT);
+t = getToken(0); System.out.println("TIPO_INT Sintax: "+t.image);
+        break;
+        }
+      default:
+        jj_la1[6] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
       listaIdentificadores();
     } catch (ParseException e) {
 //armazenamentoErros(e.toString());
@@ -187,7 +256,7 @@ t = getToken(0); System.out.println("TIPO Sintax: "+t.image);
     try {
       jj_consume_token(IDENTIFICADOR);
 t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
-      label_1:
+      label_2:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SIMBOLO_VIRGULA:{
@@ -195,8 +264,8 @@ t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
           break;
           }
         default:
-          jj_la1[3] = jj_gen;
-          break label_1;
+          jj_la1[7] = jj_gen;
+          break label_2;
         }
         jj_consume_token(SIMBOLO_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image);
@@ -205,8 +274,6 @@ t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
       }
     } catch (ParseException e) {
 //armazenamentoErros(e.toString());
-        /* error_skipto(new ArrayList<>(Arrays.asList(SIMBOLO_PONTO_E_VIRGULA)));
-        bloco(); */
         error_skipto(e, new ArrayList<>(Arrays.asList(EOF, RSV_BEGIN)));
         comando();
     }
@@ -214,7 +281,7 @@ t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
 
   final public void parteDeclaracaoSubrotinas() throws ParseException {Token t = new Token();
     try {
-      label_2:
+      label_3:
       while (true) {
         declaracaoProcedimento();
         jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
@@ -225,8 +292,8 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
           break;
           }
         default:
-          jj_la1[4] = jj_gen;
-          break label_2;
+          jj_la1[8] = jj_gen;
+          break label_3;
         }
       }
     } catch (ParseException e) {
@@ -250,7 +317,7 @@ t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[5] = jj_gen;
+        jj_la1[9] = jj_gen;
         ;
       }
       jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
@@ -270,7 +337,7 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
       jj_consume_token(PARENTESES_ESQ);
 t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
       secaoParametrosFormais();
-      label_3:
+      label_4:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SIMBOLO_PONTO_E_VIRGULA:{
@@ -278,8 +345,8 @@ t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
           break;
           }
         default:
-          jj_la1[6] = jj_gen;
-          break label_3;
+          jj_la1[10] = jj_gen;
+          break label_4;
         }
         jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
@@ -305,14 +372,28 @@ t = getToken(0); System.out.println("RSV_VAR Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[7] = jj_gen;
+        jj_la1[11] = jj_gen;
         ;
       }
       listaIdentificadores();
       jj_consume_token(SIMBOLO_DOIS_PONTOS);
 t = getToken(0); System.out.println("SIMBOLO_DOIS_PONTOS Sintax: "+t.image);
-      jj_consume_token(TIPO);
-t = getToken(0); System.out.println("TIPO Sintax: "+t.image);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case TIPO_BOOLEAN:{
+        jj_consume_token(TIPO_BOOLEAN);
+t = getToken(0); System.out.println("TIPO_BOOLEAN Sintax: "+t.image);
+        break;
+        }
+      case TIPO_INT:{
+        jj_consume_token(TIPO_INT);
+t = getToken(0); System.out.println("TIPO_INT Sintax: "+t.image);
+        break;
+        }
+      default:
+        jj_la1[12] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
     } catch (ParseException e) {
 //armazenamentoErros(e.toString());
         error_skipto(e, new ArrayList<>(Arrays.asList(EOF, RSV_BEGIN)));
@@ -325,7 +406,7 @@ t = getToken(0); System.out.println("TIPO Sintax: "+t.image);
       jj_consume_token(RSV_BEGIN);
 t = getToken(0); System.out.println("RSV_BEGIN Sintax: "+t.image);
       comando();
-      label_4:
+      label_5:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SIMBOLO_PONTO_E_VIRGULA:{
@@ -333,8 +414,8 @@ t = getToken(0); System.out.println("RSV_BEGIN Sintax: "+t.image);
           break;
           }
         default:
-          jj_la1[8] = jj_gen;
-          break label_4;
+          jj_la1[13] = jj_gen;
+          break label_5;
         }
         jj_consume_token(SIMBOLO_PONTO_E_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
@@ -343,9 +424,15 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
       jj_consume_token(RSV_END);
 t = getToken(0); System.out.println("RSV_END Sintax: "+t.image);
     } catch (ParseException e) {
-//armazenamentoErros(e.toString());
-        //error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
-        comando();
+//error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
+        Token token = new Token();
+        token = getToken(0);
+        if(token.kind == RSV_END)
+            error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
+        else {
+            comando();
+            armazenamentoErros(e.toString());
+        }
     }
 }
 
@@ -373,7 +460,7 @@ t = getToken(0); System.out.println("RSV_END Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[9] = jj_gen;
+        jj_la1[14] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -424,7 +511,7 @@ t = getToken(0); System.out.println("RSV_ELSE Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[15] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -451,7 +538,7 @@ t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[11] = jj_gen;
+        jj_la1[16] = jj_gen;
         ;
       }
       jj_consume_token(PARENTESES_DIR);
@@ -479,7 +566,7 @@ t = getToken(0); System.out.println("OPERADOR_ARITMETICO_ATRIBUICAO Sintax: "+t.
   final public void listaExpressoes() throws ParseException {Token t = new Token();
     try {
       expressao();
-      label_5:
+      label_6:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case SIMBOLO_VIRGULA:{
@@ -487,8 +574,8 @@ t = getToken(0); System.out.println("OPERADOR_ARITMETICO_ATRIBUICAO Sintax: "+t.
           break;
           }
         default:
-          jj_la1[12] = jj_gen;
-          break label_5;
+          jj_la1[17] = jj_gen;
+          break label_6;
         }
         jj_consume_token(SIMBOLO_VIRGULA);
 t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image);
@@ -525,7 +612,7 @@ t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[18] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -551,14 +638,14 @@ t = getToken(0); System.out.println("OPERADOR_ARITMETICO_SUBTRACAO Sintax: "+t.i
           break;
           }
         default:
-          jj_la1[14] = jj_gen;
+          jj_la1[19] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
         break;
         }
       default:
-        jj_la1[15] = jj_gen;
+        jj_la1[20] = jj_gen;
         ;
       }
       termo();
@@ -593,7 +680,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_OR Sintax: "+t.image);
           break;
           }
         default:
-          jj_la1[16] = jj_gen;
+          jj_la1[21] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -602,7 +689,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_OR Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[17] = jj_gen;
+        jj_la1[22] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -645,7 +732,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_AND Sintax: "+t.image);
           break;
           }
         default:
-          jj_la1[18] = jj_gen;
+          jj_la1[23] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -654,7 +741,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_AND Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[19] = jj_gen;
+        jj_la1[24] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -691,7 +778,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_NOT Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[20] = jj_gen;
+        jj_la1[25] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -727,7 +814,7 @@ t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[21] = jj_gen;
+        jj_la1[26] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -770,7 +857,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[22] = jj_gen;
+        jj_la1[27] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -790,7 +877,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[23];
+  final private int[] jj_la1 = new int[28];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -798,10 +885,10 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x200000,0x400,0x200000,0x0,0x400,0x0,0x0,0x100000,0x0,0x12800,0x8000,0x0,0x0,0x3f000000,0x0,0x0,0x0,0x0,0x80000000,0x80000000,0x0,0x0,0x3f000000,};
+	   jj_la1_0 = new int[] {0x300000,0x100,0x0,0x300000,0x100,0x300000,0x300000,0x0,0x100,0x0,0x0,0x40000,0x300000,0x0,0x4a00,0x2000,0x80000000,0x0,0xfc00000,0x0,0x0,0x40000000,0x40000000,0x20000000,0x20000000,0x80000000,0x80000000,0xfc00000,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x400,0x0,0x80,0x800,0x0,0x800,0x6000,0x0,0xa09a,0x400,0x0,0x18,0x18,0x19,0x19,0x60,0x60,0xa082,0xa09a,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x0,0x200,0x0,0x0,0x0,0x0,0x100,0x0,0x20,0x200,0x0,0x0,0x200,0x1800,0x0,0x2826,0x100,0x0,0x6,0x6,0x6,0x6,0x18,0x18,0x2820,0x2826,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -815,7 +902,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 23; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -829,7 +916,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 23; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -839,7 +926,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 23; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -857,7 +944,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 23; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -866,7 +953,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 23; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -875,7 +962,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 23; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -926,12 +1013,12 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
   /** Generate ParseException. */
   public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[52];
+	 boolean[] la1tokens = new boolean[55];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 23; i++) {
+	 for (int i = 0; i < 28; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -943,7 +1030,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 52; i++) {
+	 for (int i = 0; i < 55; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
