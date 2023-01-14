@@ -13,6 +13,10 @@ public class Scanner_1{
 boolean Menosshort = false; //Saida resumida falso
 ArrayList<String> listaErrosSintax = new ArrayList<>();
 
+public ArraList <String> getListaErrosSintax(){
+    return listaErrosSintax;
+}
+
 /*public cadeProgram() {
     Token t = new Token ();
     do {
