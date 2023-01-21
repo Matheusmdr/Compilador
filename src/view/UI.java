@@ -6,8 +6,6 @@
 package view;
 
 import JavaCC.ParseException;
-import LexicalAnalysis.LexicalAnalyzer;
-import SintexAnalysis.Parser;
 import JavaCC.Token;
 import JavaCC.Scanner_1;
 import static JavaCC.Scanner_1Constants.tokenImage;

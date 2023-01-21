@@ -7,13 +7,17 @@ package JavaCC;
 import java.io.*;
 import java.util.*;
 import javax.swing.JOptionPane;
+import Utils.SemanticTableObject;
+import Utils.SemanticTable;
 
 public class Scanner_1{
 
 boolean Menosshort = false; //Saida resumida falso
 ArrayList<String> listaErrosSintax = new ArrayList<>();
+SemanticTable table  = new SemanticTable();
+String tipo =  "";
 
-public ArraList <String> getListaErrosSintax(){
+public ArrayList <String> getListaErrosSintax(){
     return listaErrosSintax;
 }
 
@@ -256,7 +260,10 @@ void programa(): {Token t = new Token();}
 {
     try {
         <RSV_PROGRAMA> { t = getToken(0); System.out.println("RSV_PROGRAMA Sintax: "+t.image); }
-        <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+        <IDENTIFICADOR> { 
+        t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); 
+        table.insertTableRow(new SemanticTableObject(t.image, "IDENTIFICADOR", "program", "", "", ""));
+        }
         <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
         [ parteDeclaracaoVariaveis() ]
         [ parteDeclaracaoSubrotinas() ]
@@ -331,7 +338,10 @@ void declaracaoVariavel(): {Token t = new Token();}
 void listaIdentificadores(): {Token t = new Token();}
 {
     try {
-        <IDENTIFICADOR> { t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); }
+        <IDENTIFICADOR> { 
+        t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); 
+        table.insertTableRow(new SemanticTableObject(t.image, "IDENTIFICADOR", "var", "", "", ""));
+        }
 
         (
           <SIMBOLO_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image); }
