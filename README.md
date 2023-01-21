@@ -6,7 +6,8 @@ Desenvolver um Compilador.
 
 # Requisitos📋:
 a) Análise Léxica; \
-b) Análise Sintática; 
+b) Análise Sintática; \
+c) Análise Semântica; 
 
 # Integrantes do Projeto 🛠️:
 
