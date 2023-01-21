@@ -49,6 +49,10 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
 }
 
+    public ArrayList<String> getListaErrosSintax() {
+        return listaErrosSintax;
+    }
+
   void error_skipto(ParseException e, ArrayList<Integer> sincronizadores) throws ParseException {String erro = e.toString();
       //System.out.println(erro);  // print the error message
       armazenamentoErros(erro);
