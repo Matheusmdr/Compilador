@@ -27,7 +27,7 @@ public class TokenManager {
     }
 
     private String getTokenStringType(int kind) {
-        String typeName;
+        String typeName = "";
         switch (kind) {
             case 0:
                 typeName = "EOF";
@@ -60,7 +60,7 @@ public class TokenManager {
                 typeName = "RSV_DO";
                 break;
             case 16:
-                typeName = "SV_READ";
+                typeName = "RSV_READ";
                 break;
             case 17:
                 typeName = "RSV_WRITE";
@@ -69,19 +69,19 @@ public class TokenManager {
                 typeName = "RSV_VAR";
                 break;
             case 19:
-                typeName = "RSV_TRUE";
+                typeName = "RSV_FIM";
                 break;
             case 20:
-                typeName = "RSV_FALSE";
-                break;
-            case 21:
                 typeName = "TIPO_INT";
                 break;
-            case 22:
+            case 21:
                 typeName = "TIPO_BOOLEAN";
                 break;
-            case 23:
+            case 22:
                 typeName = "OPERADOR_LOGICO_DIFERENCA";
+                break;
+            case 23:
+                typeName = "OPERADOR_LOGICO_IGUAL_IGUAL";
                 break;
             case 24:
                 typeName = "OPERADOR_LOGICO_MENOR";
@@ -138,35 +138,43 @@ public class TokenManager {
                 typeName = "SIMBOLO_PONTO_E_VIRGULA";
                 break;
             case 42:
-                typeName = "SIMBOLO_TERMINACAO";
+                typeName = "SIMBOLO_PONTO";
                 break;
             case 43:
                 typeName = "IDENTIFICADOR";
                 break;
             case 44:
+                typeName = "IDENTIFICADOR_CHAMADA_PROCEDIMENTO";
+                break;
+            case 45:
                 typeName = "NUMERO_INTEIRO";
                 break;
-            case 47:
+            case 48:
                 typeName = "COMENTARIO_UMA_LINHA";
                 break;
-            case 48:
+            case 49:
                 typeName = "COMENTARIO_MULT_LINHAS";
                 break;
-            case 49:
+            case 50:
+                typeName = "ERRO_OVERFLOW_INT";
+                break;
+            case 51:
+                typeName = "ERRO_OVERFLOW_IDENTIFICADOR";
+                break;
+            case 52:
                 typeName = "ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR";
                 break;
-            case 50:
+            case 53:
                 typeName = "ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR";
                 break;
-            default:
-                typeName = "ERRO";
+            case 54:
+                typeName = "ERRO_SIMBOLO_INVALIDO";
                 break;
         }
         return typeName;
     }
-    
-    
-    public String[] getStringRowLexicalTable(){
+
+    public String[] getStringRowLexicalTable() {
         String[] row = new String[5];
         row[0] = this.getTokenImage();
         row[1] = this.getTokenType();
@@ -175,16 +183,14 @@ public class TokenManager {
         row[4] = Integer.toString(this.endColumn);
         return row;
     }
-    
-    
-     public String[] getStringRowLexicalErrorTable(){
+
+    public String[] getStringRowLexicalErrorTable() {
         String[] row = new String[3];
         row[0] = this.getTokenType();
         row[1] = Integer.toString(this.beginLine);
         row[2] = Integer.toString(this.endColumn);
         return row;
     }
-
 
     public String getTokenType() {
         return TokenType;

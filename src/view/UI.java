@@ -5,6 +5,7 @@
  */
 package view;
 
+import JavaCC.ParseException;
 import LexicalAnalysis.LexicalAnalyzer;
 import SintexAnalysis.Parser;
 import JavaCC.Token;
@@ -482,12 +483,16 @@ public class UI extends javax.swing.JFrame {
         t = lexer.getNextToken();
         do {
             if (t.specialToken != null) {
-                jTabbedPane3.setSelectedIndex(1);
-                TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
-                String[] linha = tm.getStringRowLexicalErrorTable();
-                dtmE.addRow(linha);
-                jTable2.revalidate();
-                jTable2.repaint();
+                if (t.specialToken.kind == 54 || t.specialToken.kind == 53
+                        || t.specialToken.kind == 52 || t.specialToken.kind == 51 || t.specialToken.kind == 50) {
+                    jTabbedPane3.setSelectedIndex(1);
+                    TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
+                    String[] linha = tm.getStringRowLexicalErrorTable();
+                    dtmE.addRow(linha);
+                    jTable2.revalidate();
+                    jTable2.repaint();
+                }
+
             } else {
                 jTabbedPane3.setSelectedIndex(0);
                 TokenManager tm = new TokenManager(t.kind, t.image, t.beginLine, t.endLine, t.beginColumn, t.endColumn);
@@ -528,18 +533,57 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-
+        jTabbedPane3.setSelectedIndex(0);
         Reader lector = new StringReader(fonteBox.getText());
-        LexicalAnalyzer lexer = new LexicalAnalyzer(lector);
+        Scanner_1 lexer = new Scanner_1(lector);
 
-        Parser parser = new Parser(lexer);
-        parser.Connection(lexer);
+        DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
+        dtm.getDataVector().removeAllElements();
+        dtm.fireTableDataChanged();
 
+        DefaultTableModel dtmE = (DefaultTableModel) jTable2.getModel();
+        dtmE.getDataVector().removeAllElements();
+        dtmE.fireTableDataChanged();
+
+        Token t = new Token();
+        t = lexer.getNextToken();
+        do {
+            if (t.specialToken != null) {
+                if (t.specialToken.kind == 54 || t.specialToken.kind == 53
+                        || t.specialToken.kind == 52 || t.specialToken.kind == 51 || t.specialToken.kind == 50) {
+                    jTabbedPane3.setSelectedIndex(1);
+                    TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
+                    String[] linha = tm.getStringRowLexicalErrorTable();
+                    dtmE.addRow(linha);
+                    jTable2.revalidate();
+                    jTable2.repaint();
+                }
+
+            } else {
+                jTabbedPane3.setSelectedIndex(0);
+                TokenManager tm = new TokenManager(t.kind, t.image, t.beginLine, t.endLine, t.beginColumn, t.endColumn);
+                String[] linha = tm.getStringRowLexicalTable();
+                dtm.addRow(linha);
+                jTable4.revalidate();
+                jTable4.repaint();
+            }
+
+            t = lexer.getNextToken();
+        } while (t.kind != 0);
+
+        jTabbedPane3.setSelectedIndex(2);
+
+        Reader lectorParser = new StringReader(fonteBox.getText());
+        Scanner_1 parser = new Scanner_1(lectorParser);
         try {
-            parser.parse();
-            fillTextAreaSintaxe(parser.getListaDeErros());
-            jTabbedPane3.setSelectedIndex(2);
-        } catch (Exception ex) {
+            parser.principal();
+            var listaErrosSintax = parser.getListaErrosSintax();
+            for (int i = 0; i < listaErrosSintax.size(); i++) {
+                textAreaSintaxe.append(listaErrosSintax.get(i));
+                textAreaSintaxe.revalidate();
+                textAreaSintaxe.repaint();
+            }
+        } catch (ParseException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
