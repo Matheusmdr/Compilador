@@ -3,7 +3,7 @@ STATIC = false;
 DEBUG_LOOKAHEAD = false;
 }
 PARSER_BEGIN(Scanner_1)
-package JavaCC;
+package LexicalAnalysis;
 import java.io.*;
 import java.util.*;
 import javax.swing.JOptionPane;

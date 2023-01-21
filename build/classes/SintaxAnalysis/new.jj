@@ -3,7 +3,7 @@ STATIC = false;
 DEBUG_LOOKAHEAD = false;
 }
 PARSER_BEGIN(Scanner_1)
-package JavaCC;
+package SintaxAnalysis;
 import java.io.*;
 import java.util.*;
 import javax.swing.JOptionPane;
@@ -266,17 +266,34 @@ void programa(): {Token t = new Token();}
         }
         <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
         [ parteDeclaracaoVariaveis() ]
-        [ parteDeclaracaoSubrotinas() ]
+        [ parteDeclaracaoSubrotinas() ] 
+        auxPrograma();
+    }catch (ParseException e) {
+        //armazenamentoErros(e.toString());
+        error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
+        bloco();
+        //System.out.println("!!!! PROGRAMA !!!!");
+    }
+}
+
+
+void auxPrograma(): {Token t = new Token();}
+{
+    try {
         <RSV_BEGIN> { t = getToken(0); System.out.println("RSV_BEGIN Sintax: "+t.image); }
         comando()
         ( <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
           comando() )*
         <RSV_FIM> { t = getToken(0); System.out.println("RSV_FIM Sintax: "+t.image); }
     }catch (ParseException e) {
-        //armazenamentoErros(e.toString());
-        error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
-        bloco();
-        //System.out.println("!!!! PROGRAMA !!!!");
+        Token token = new Token();
+        token = getToken(0);
+        if(token.kind == RSV_END)
+            error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
+        else {
+            comando();
+            armazenamentoErros(e.toString());
+        }
     }
 }
 

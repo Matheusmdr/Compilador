@@ -5,11 +5,11 @@ import java.io.*;
 import java.util.*;
 import javax.swing.JOptionPane;
 
+
 public class Scanner_1 implements Scanner_1Constants {
 
 boolean Menosshort = false; //Saida resumida falso
 ArrayList<String> listaErrosSintax = new ArrayList<>();
-
 /*public cadeProgram() {
     Token t = new Token ();
     do {
