@@ -5,14 +5,12 @@
  */
 package view;
 
+import Interpretador.MEPA;
 import Utils.TokenManager;
 import java.awt.AWTException;
 
 //Imports Lexer
 import LexicalAnalysis.Lexer;
-
-
-
 
 import java_cup.runtime.Symbol;
 import java.awt.Color;
@@ -184,6 +182,8 @@ public class UI extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaSintaxe = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textAreaMEPA = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -200,6 +200,8 @@ public class UI extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem11 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("IDE");
@@ -296,6 +298,14 @@ public class UI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(textAreaSintaxe);
 
         jTabbedPane3.addTab("Erros Sintáticos", jScrollPane1);
+
+        textAreaMEPA.setBackground(new java.awt.Color(0, 0, 0));
+        textAreaMEPA.setColumns(20);
+        textAreaMEPA.setForeground(new java.awt.Color(255, 255, 255));
+        textAreaMEPA.setRows(5);
+        jScrollPane2.setViewportView(textAreaMEPA);
+
+        jTabbedPane3.addTab("Console", jScrollPane2);
 
         jLabel2.setText("Fonte:");
 
@@ -407,6 +417,15 @@ public class UI extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem3);
+        jMenu2.add(jSeparator1);
+
+        jMenuItem11.setText("Interpretador");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem11);
 
         jMenuBar1.add(jMenu2);
 
@@ -659,6 +678,28 @@ public class UI extends javax.swing.JFrame {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        // TODO add your handling code here:
+        jTabbedPane3.setSelectedIndex(3);
+        textAreaMEPA.setText("");
+        JFileChooser abrir = new JFileChooser();
+        abrir.setFileFilter(new FileFilterTXT());
+        int opcao;
+        opcao = abrir.showOpenDialog(null);
+        if (opcao == JFileChooser.APPROVE_OPTION) {
+            String path = abrir.getSelectedFile().getAbsolutePath();
+            MEPA interpretador = new MEPA(path);
+            try {
+                long startTime = System.nanoTime();
+                interpretador.interpretar(textAreaMEPA);
+                long endTime = (System.nanoTime() - startTime)/1000000;
+                textAreaMEPA.setText(textAreaMEPA.getText() + "\nExecution time: "+ Long.toString(endTime)+"ms");
+            }catch (IOException ex) {
+                Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
     public void fillTextAreaSintaxe(ArrayList<String> listadeErros) {
         ArrayList<String> fill = listadeErros;
         String text = "";
@@ -666,7 +707,6 @@ public class UI extends javax.swing.JFrame {
             text = fill.get(2) + ". Na " + fill.get(0) + " e " + fill.get(1);
         }
         textAreaSintaxe.setText(text);
-
     }
 
     public void salvaArquivo() throws IOException {
@@ -759,6 +799,7 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -770,12 +811,15 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable4;
+    private javax.swing.JTextArea textAreaMEPA;
     private javax.swing.JTextArea textAreaSintaxe;
     // End of variables declaration//GEN-END:variables
 
