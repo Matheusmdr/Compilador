@@ -32,140 +32,137 @@ public class TokenManager {
             case 0:
                 typeName = "EOF";
                 break;
-            case 7:
+            case 5:
                 typeName = "RSV_PROGRAMA";
                 break;
-            case 8:
+            case 6:
                 typeName = "RSV_PROCEDIMENTO";
                 break;
-            case 9:
+            case 7:
                 typeName = "RSV_BEGIN";
                 break;
-            case 10:
+            case 8:
                 typeName = "RSV_END";
                 break;
-            case 11:
+            case 9:
                 typeName = "RSV_IF";
                 break;
-            case 12:
+            case 10:
                 typeName = "RSV_THEN";
                 break;
-            case 13:
+            case 11:
                 typeName = "RSV_ELSE";
                 break;
-            case 14:
+            case 12:
                 typeName = "RSV_WHILE";
                 break;
-            case 15:
+            case 13:
                 typeName = "RSV_DO";
                 break;
-            case 16:
-                typeName = "RSV_READ";
-                break;
-            case 17:
-                typeName = "RSV_WRITE";
-                break;
-            case 18:
+            case 14:
                 typeName = "RSV_VAR";
                 break;
-            case 19:
+            case 15:
                 typeName = "RSV_FIM";
                 break;
-            case 20:
+            case 16:
                 typeName = "TIPO_INT";
                 break;
-            case 21:
+            case 17:
                 typeName = "TIPO_BOOLEAN";
                 break;
-            case 22:
+            case 18:
                 typeName = "OPERADOR_LOGICO_DIFERENCA";
                 break;
-            case 23:
+            case 19:
                 typeName = "OPERADOR_LOGICO_IGUAL_IGUAL";
                 break;
-            case 24:
+            case 20:
                 typeName = "OPERADOR_LOGICO_MENOR";
                 break;
-            case 25:
+            case 21:
                 typeName = "OPERADOR_LOGICO_MENOR_IGUAL";
                 break;
-            case 26:
+            case 22:
                 typeName = "OPERADOR_LOGICO_MAIOR_IGUAL";
                 break;
-            case 27:
+            case 23:
                 typeName = "OPERADOR_LOGICO_MAIOR";
                 break;
-            case 28:
+            case 24:
                 typeName = "OPERADOR_LOGICO_IGUALDADE";
                 break;
-            case 29:
+            case 25:
                 typeName = "OPERADOR_LOGICO_AND";
                 break;
-            case 30:
+            case 26:
                 typeName = "OPERADOR_LOGICO_OR";
                 break;
-            case 31:
+            case 27:
                 typeName = "OPERADOR_LOGICO_NOT";
                 break;
-            case 32:
+            case 28:
                 typeName = "OPERADOR_ARITMETICO_ATRIBUICAO";
                 break;
-            case 33:
+            case 29:
                 typeName = "OPERADOR_ARITMETICO_ADICAO";
                 break;
-            case 34:
+            case 30:
                 typeName = "OPERADOR_ARITMETICO_SUBTRACAO";
                 break;
-            case 35:
+            case 31:
                 typeName = "OPERADOR_ARITMETICO_MULTIPLICACAO";
                 break;
-            case 36:
+            case 32:
                 typeName = "OPERADOR_ARITMETICO_DIVISAO";
                 break;
-            case 37:
+            case 33:
                 typeName = "PARENTESES_ESQ";
                 break;
-            case 38:
+            case 34:
                 typeName = "PARENTESES_DIR";
                 break;
-            case 39:
+            case 35:
                 typeName = "SIMBOLO_DOIS_PONTOS";
                 break;
-            case 40:
+            case 36:
                 typeName = "SIMBOLO_VIRGULA";
                 break;
-            case 41:
+            case 37:
                 typeName = "SIMBOLO_PONTO_E_VIRGULA";
                 break;
-            case 42:
+            case 38:
                 typeName = "SIMBOLO_PONTO";
                 break;
-            case 43:
+            case 39:
                 typeName = "IDENTIFICADOR";
                 break;
-            case 44:
+            case 40:
                 typeName = "IDENTIFICADOR_CHAMADA_PROCEDIMENTO";
                 break;
-            case 45:
+            case 41:
                 typeName = "NUMERO_INTEIRO";
                 break;
-            case 48:
+            case 47:
                 typeName = "COMENTARIO_UMA_LINHA";
                 break;
-            case 49:
+            case 48:
                 typeName = "COMENTARIO_MULT_LINHAS";
                 break;
+            case 49:
+                typeName = "ERRO_SIMBOLO_INVALIDO_COMENTARIO";
+                break;  
             case 50:
-                typeName = "ERRO_OVERFLOW_INT";
-                break;
-            case 51:
-                typeName = "ERRO_OVERFLOW_IDENTIFICADOR";
-                break;
-            case 52:
                 typeName = "ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR";
                 break;
-            case 53:
+            case 51:
                 typeName = "ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR";
+                break;
+            case 52:
+                typeName = "ERRO_OVERFLOW_INT";
+                break;
+            case 53:
+                typeName = "ERRO_OVERFLOW_IDENTIFICADOR";
                 break;
             case 54:
                 typeName = "ERRO_SIMBOLO_INVALIDO";

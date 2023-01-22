@@ -5,12 +5,14 @@
  */
 package view;
 
-import JavaCC.ParseException;
-import JavaCC.Token;
-import JavaCC.Scanner_1;
-import static JavaCC.Scanner_1Constants.tokenImage;
 import Utils.TokenManager;
 import java.awt.AWTException;
+
+//Imports Lexer
+import LexicalAnalysis.Lexer;
+
+
+
 
 import java_cup.runtime.Symbol;
 import java.awt.Color;
@@ -463,11 +465,9 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        //this.reloadTable(0);
-        Map<String, Integer> map = new HashMap<String, Integer>();
         jTabbedPane3.setSelectedIndex(0);
         Reader lector = new StringReader(fonteBox.getText());
-        Scanner_1 lexer = new Scanner_1(lector);
+        Lexer lexer = new Lexer(lector);
 
         DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
         dtm.getDataVector().removeAllElements();
@@ -477,12 +477,12 @@ public class UI extends javax.swing.JFrame {
         dtmE.getDataVector().removeAllElements();
         dtmE.fireTableDataChanged();
 
-        Token t = new Token();
+        LexicalAnalysis.Token t = new LexicalAnalysis.Token();
         t = lexer.getNextToken();
         do {
             if (t.specialToken != null) {
-                if (t.specialToken.kind == 54 || t.specialToken.kind == 53
-                        || t.specialToken.kind == 52 || t.specialToken.kind == 51 || t.specialToken.kind == 50) {
+                if (t.specialToken.kind == 49 || t.specialToken.kind == 50
+                        || t.specialToken.kind == 51 || t.specialToken.kind == 52 || t.specialToken.kind == 53 || t.specialToken.kind == 54) {
                     jTabbedPane3.setSelectedIndex(1);
                     TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
                     String[] linha = tm.getStringRowLexicalErrorTable();
@@ -501,6 +501,7 @@ public class UI extends javax.swing.JFrame {
             }
 
             t = lexer.getNextToken();
+            System.out.println(t);
         } while (t.kind != 0);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -531,9 +532,9 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        jTabbedPane3.setSelectedIndex(0);
+        /*jTabbedPane3.setSelectedIndex(0);
         Reader lector = new StringReader(fonteBox.getText());
-        Scanner_1 lexer = new Scanner_1(lector);
+        //Lexer lexer = new Lexer(lector);
 
         DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
         dtm.getDataVector().removeAllElements();
@@ -543,12 +544,12 @@ public class UI extends javax.swing.JFrame {
         dtmE.getDataVector().removeAllElements();
         dtmE.fireTableDataChanged();
 
-        Token t = new Token();
+        //LexicalAnalysis.Token t = new LexicalAnalysis.Token();
         t = lexer.getNextToken();
         do {
             if (t.specialToken != null) {
-                if (t.specialToken.kind == 54 || t.specialToken.kind == 53
-                        || t.specialToken.kind == 52 || t.specialToken.kind == 51 || t.specialToken.kind == 50) {
+                if (t.specialToken.kind == 49 || t.specialToken.kind == 50
+                        || t.specialToken.kind == 51 || t.specialToken.kind == 52 || t.specialToken.kind == 53 || t.specialToken.kind == 54) {
                     jTabbedPane3.setSelectedIndex(1);
                     TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
                     String[] linha = tm.getStringRowLexicalErrorTable();
@@ -583,7 +584,7 @@ public class UI extends javax.swing.JFrame {
             }
         } catch (ParseException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
 
 
     }//GEN-LAST:event_jMenuItem3ActionPerformed

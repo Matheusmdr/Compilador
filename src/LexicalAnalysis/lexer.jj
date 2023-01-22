@@ -1,0 +1,113 @@
+//Opções do JavaCC
+options{
+STATIC = false;
+DEBUG_LOOKAHEAD = false;
+}
+
+//Parser
+PARSER_BEGIN(Lexer)
+//Imports do Java
+package LexicalAnalysis;
+import java.io.*;
+import java.util.*;
+
+//Classe Lexer
+public class Lexer{
+
+    boolean Menosshort = false; //Saida resumida falso
+
+    //Método main
+    /*public static void main(String args[], String x) throws ParseException, FileNotFoundException {
+        try {
+    
+        }catch (Error e){
+            System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostrando linha e coluna
+        }
+
+    }*/
+}
+PARSER_END(Lexer)
+
+
+
+//Declaração de Tokens
+SKIP : // TOKENS IGNORADOS
+{
+ " "
+| "\r" 
+| "\t" 
+| "\n"
+}
+
+TOKEN : //PALAVRAS RESERVADAS
+{
+    <RSV_PROGRAMA: "program"> 
+    |<RSV_PROCEDIMENTO: "procedure"> 
+    |<RSV_BEGIN: "begin"> 
+    |<RSV_END: "end"> 
+    |<RSV_IF: "if"> 
+    |<RSV_THEN: "then"> 
+    |<RSV_ELSE: "else"> 
+    |<RSV_WHILE: "while"> 
+    |<RSV_DO: "do"> 
+    |<RSV_VAR: "var"> 
+    |<RSV_FIM: <RSV_END>"."> 
+}
+
+TOKEN : //TIPOS
+{
+    <TIPO_INT: "int"> 
+    |<TIPO_BOOLEAN: "boolean"> 
+}
+
+TOKEN : //OPERADORES E SÍMBOLOS
+{
+    <OPERADOR_LOGICO_DIFERENCA: "<>"> 
+    |<OPERADOR_LOGICO_IGUAL_IGUAL: "=="> 
+    |<OPERADOR_LOGICO_MENOR: "<"> 
+    |<OPERADOR_LOGICO_MENOR_IGUAL: "<="> 
+    |<OPERADOR_LOGICO_MAIOR_IGUAL: ">="> 
+    |<OPERADOR_LOGICO_MAIOR: ">"> 
+    |<OPERADOR_LOGICO_IGUALDADE: "="> 
+    |<OPERADOR_LOGICO_AND: "and"> 
+    |<OPERADOR_LOGICO_OR: "or"> 
+    |<OPERADOR_LOGICO_NOT: "not"> 
+    |<OPERADOR_ARITMETICO_ATRIBUICAO: ":="> 
+    |<OPERADOR_ARITMETICO_ADICAO: "+"> 
+    |<OPERADOR_ARITMETICO_SUBTRACAO: "-"> 
+    |<OPERADOR_ARITMETICO_MULTIPLICACAO: "*"> 
+    |<OPERADOR_ARITMETICO_DIVISAO: "div"> 
+    |<PARENTESES_ESQ: "("> 
+    |<PARENTESES_DIR: ")"> 
+    |<SIMBOLO_DOIS_PONTOS: ":"> 
+    |<SIMBOLO_VIRGULA:  ","> 
+    |<SIMBOLO_PONTO_E_VIRGULA: ";"> 
+    |<SIMBOLO_PONTO: "."> 
+
+}
+
+TOKEN : //NÚMEROS E IDENTIFICADORES
+{
+
+    <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){0,14}> 
+    |<IDENTIFICADOR_CHAMADA_PROCEDIMENTO: <IDENTIFICADOR>> 
+    |<NUMERO_INTEIRO: (<DIGITO>){1,8}> 
+    |<#LETRA: ["_", "a"-"z", "A"-"Z"] >
+    |<#DIGITO: ["0" - "9"] >
+}
+
+SPECIAL_TOKEN : { //COMENTARIOS E ERROS
+    <COMENTARIO_UMA_LINHA: "//"(<COM>)*"\n"> 
+    |<COMENTARIO_MULT_LINHAS: "{"(<COM_MULT>)*"}" > 
+    |<ERRO_SIMBOLO_INVALIDO_COMENTARIO: "/"> 
+    |<ERRO_COMENTARIO_SEM_FECHAR: "{"(<COM_MULT>)* >  
+    |<ERRO_COMENTARIO_SEM_ABRIR: (<COM_MULT_ERRO_ABRIR>)*"}" >   
+    |<ERRO_OVERFLOW_INT: (<DIGITO>){9,} > 
+    |<ERRO_OVERFLOW_IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){15,} > 
+    |<ERRO_SIMBOLO_INVALIDO: ~["_", "a"-"z", "A"-"Z", "0" - "9", ".", ";", ",", ")", "(", "*", "+", ":", "=", ">", "<", "/"]> 
+    
+    //CONSTRUTORES COMENTARIOS
+    |<#COM: ~["\n", "\r", "\t"]>
+    |<#COM_MULT: ~["}"]>
+    |<#COM_MULT_ERRO_ABRIR: ~["{"]>
+}
