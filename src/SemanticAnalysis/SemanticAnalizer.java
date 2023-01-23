@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import Utils.SemanticTableObject;
 import Utils.SemanticTable;
 import Utils.GenerateCode;
+import Utils.PolishNotation;
 
 public class SemanticAnalizer implements SemanticAnalizerConstants {
 
@@ -173,6 +174,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             if(auxListaLexemasSemantico.size() > 1)
                 linhaSeguinte = auxListaLexemasSemantico.get(1);
             valor = valorExpressaoAtribuicao(expressao);
+            esvaziarArraysLists(expressao);
         }
         preparaParaProximaExpressao(auxListaLexemasSemantico);
   }
@@ -185,6 +187,17 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         // Considere que a expressao dada não possui erros sintáticos ou semânticos
         // o return abaixo é só pro método funcionar e eu poder testar
         // Não se esqueçam que se der real tem q arredondar pra inteiro por favor
+
+
+        String exp = "";
+
+        for(ArrayList<String> s : expressao){
+            exp = exp.concat(s.get(0));
+        }
+
+        System.out.println("Express\u00e3o: " + exp);
+        //PolishNotation.convertToReversePolish();
+        //gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(linha.get(0),linha.get(1))));
         return "1";
   }
 

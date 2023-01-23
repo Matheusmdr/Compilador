@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import Utils.SemanticTableObject;
 import Utils.SemanticTable;
 import Utils.GenerateCode;
+import Utils.PolishNotation;
 
 /** Token Manager. */
 @SuppressWarnings ("unused")

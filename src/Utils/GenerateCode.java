@@ -19,7 +19,7 @@ public class GenerateCode {
     
     public void gerar(String rotulo, String instrucao, String valor){
         this.codeMEPA += rotulo + " " + instrucao + " " + valor + "\n";
-        System.out.println(this.codeMEPA);
+        //System.out.println(this.codeMEPA);
     }    
     
     public void gerarArquivo(){

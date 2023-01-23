@@ -95,19 +95,21 @@ TOKEN : //NÚMEROS E IDENTIFICADORES
     |<#LETRA: ["_", "a"-"z", "A"-"Z"] >
     |<#DIGITO: ["0" - "9"] >
 }
+ 
+TOKEN: //CONSTRUTORES COMENTARIOS
+{
+    <#COM: ~["\n", "\r", "\t"]>
+    |<#COM_MULT: ~["}"]>
+    |<#COM_MULT_ERRO_ABRIR: ~["{"]>
+}
 
 SPECIAL_TOKEN : { //COMENTARIOS E ERROS
     <COMENTARIO_UMA_LINHA: "//"(<COM>)*"\n"> 
     |<COMENTARIO_MULT_LINHAS: "{"(<COM_MULT>)*"}" > 
     |<ERRO_SIMBOLO_INVALIDO_COMENTARIO: "/"> 
-    |<ERRO_COMENTARIO_SEM_FECHAR: "{"(<COM_MULT>)* >  
-    |<ERRO_COMENTARIO_SEM_ABRIR: (<COM_MULT_ERRO_ABRIR>)*"}" >   
+    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR: "{">  
+    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR: "}" >   //{System.out.println("Não abriu: " + image);}
     |<ERRO_OVERFLOW_INT: (<DIGITO>){9,} > 
     |<ERRO_OVERFLOW_IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){15,} > 
     |<ERRO_SIMBOLO_INVALIDO: ~["_", "a"-"z", "A"-"Z", "0" - "9", ".", ";", ",", ")", "(", "*", "+", ":", "=", ">", "<", "/"]> 
-    
-    //CONSTRUTORES COMENTARIOS
-    |<#COM: ~["\n", "\r", "\t"]>
-    |<#COM_MULT: ~["}"]>
-    |<#COM_MULT_ERRO_ABRIR: ~["{"]>
 }

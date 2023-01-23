@@ -90,27 +90,27 @@ public interface LexerConstants {
   /** RegularExpression Id. */
   int DIGITO = 43;
   /** RegularExpression Id. */
-  int COMENTARIO_UMA_LINHA = 44;
+  int COM = 44;
   /** RegularExpression Id. */
-  int COMENTARIO_MULT_LINHAS = 45;
+  int COM_MULT = 45;
   /** RegularExpression Id. */
-  int ERRO_SIMBOLO_INVALIDO_COMENTARIO = 46;
+  int COM_MULT_ERRO_ABRIR = 46;
   /** RegularExpression Id. */
-  int ERRO_COMENTARIO_SEM_FECHAR = 47;
+  int COMENTARIO_UMA_LINHA = 47;
   /** RegularExpression Id. */
-  int ERRO_COMENTARIO_SEM_ABRIR = 48;
+  int COMENTARIO_MULT_LINHAS = 48;
   /** RegularExpression Id. */
-  int ERRO_OVERFLOW_INT = 49;
+  int ERRO_SIMBOLO_INVALIDO_COMENTARIO = 49;
   /** RegularExpression Id. */
-  int ERRO_OVERFLOW_IDENTIFICADOR = 50;
+  int ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR = 50;
   /** RegularExpression Id. */
-  int ERRO_SIMBOLO_INVALIDO = 51;
+  int ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR = 51;
   /** RegularExpression Id. */
-  int COM = 52;
+  int ERRO_OVERFLOW_INT = 52;
   /** RegularExpression Id. */
-  int COM_MULT = 53;
+  int ERRO_OVERFLOW_IDENTIFICADOR = 53;
   /** RegularExpression Id. */
-  int COM_MULT_ERRO_ABRIR = 54;
+  int ERRO_SIMBOLO_INVALIDO = 54;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -161,17 +161,17 @@ public interface LexerConstants {
     "<NUMERO_INTEIRO>",
     "<LETRA>",
     "<DIGITO>",
-    "<COMENTARIO_UMA_LINHA>",
-    "<COMENTARIO_MULT_LINHAS>",
-    "\"/\"",
-    "<ERRO_COMENTARIO_SEM_FECHAR>",
-    "<ERRO_COMENTARIO_SEM_ABRIR>",
-    "<ERRO_OVERFLOW_INT>",
-    "<ERRO_OVERFLOW_IDENTIFICADOR>",
-    "<ERRO_SIMBOLO_INVALIDO>",
     "<COM>",
     "<COM_MULT>",
     "<COM_MULT_ERRO_ABRIR>",
+    "<COMENTARIO_UMA_LINHA>",
+    "<COMENTARIO_MULT_LINHAS>",
+    "\"/\"",
+    "\"{\"",
+    "\"}\"",
+    "<ERRO_OVERFLOW_INT>",
+    "<ERRO_OVERFLOW_IDENTIFICADOR>",
+    "<ERRO_SIMBOLO_INVALIDO>",
   };
 
 }

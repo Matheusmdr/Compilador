@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -498,32 +499,59 @@ public class UI extends javax.swing.JFrame {
         dtmE.getDataVector().removeAllElements();
         dtmE.fireTableDataChanged();
 
-        LexicalAnalysis.Token t = new LexicalAnalysis.Token();
+      LexicalAnalysis.Token t = new LexicalAnalysis.Token();
+        boolean EOF = false;
+        int countErrosLexicos = 0;
+        
         t = lexer.getNextToken();
+        
         do {
-            if (t.specialToken != null) {
-                if (t.specialToken.kind == 49 || t.specialToken.kind == 50
-                        || t.specialToken.kind == 51 || t.specialToken.kind == 52 || t.specialToken.kind == 53 || t.specialToken.kind == 54) {
-                    jTabbedPane3.setSelectedIndex(1);
-                    TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
-                    String[] linha = tm.getStringRowLexicalErrorTable();
-                    dtmE.addRow(linha);
-                    jTable2.revalidate();
-                    jTable2.repaint();
-                }
-
-            } else {
-                jTabbedPane3.setSelectedIndex(0);
-                TokenManager tm = new TokenManager(t.kind, t.image, t.beginLine, t.endLine, t.beginColumn, t.endColumn);
-                String[] linha = tm.getStringRowLexicalTable();
-                dtm.addRow(linha);
-                jTable4.revalidate();
-                jTable4.repaint();
+            if (t.specialToken != null) { //Exibe os SpecialTokens de cada Token na Tabela
+                Stack pilhaTokens = new Stack(); //Pilha para SpecialTokens
+                LexicalAnalysis.Token aux = t.specialToken; 
+                
+                do{ //Empilha os SpecialTokens encontrados
+                    pilhaTokens.add(aux);
+                    aux = aux.specialToken;
+                } while(aux != null);
+                
+                do{ //Joga na Tabela todos os SpecialTokens empilhados
+                    aux = (LexicalAnalysis.Token) pilhaTokens.pop();
+                            
+                    if (aux.kind == 49 || aux.kind == 50 || aux.kind == 51 || 
+                        aux.kind == 52 || aux.kind == 53 || aux.kind == 54) { //Exibe os Tokens de Erros Léxicos na Tabela
+                        jTabbedPane3.setSelectedIndex(1);
+                        TokenManager tm = new TokenManager(aux.kind, aux.image, aux.beginLine, aux.endLine, aux.beginColumn, aux.endColumn);
+                        String[] linha = tm.getStringRowLexicalErrorTable();
+                        dtmE.addRow(linha);
+                        jTable2.revalidate();
+                        jTable2.repaint();
+                        
+                        //Aumenta a contagem de erros léxicos
+                        countErrosLexicos++;
+                    }
+                    else if(aux.kind == 47 || aux.kind == 48){ //Exibe os Tokens de Comentários na Tabela
+                        jTabbedPane3.setSelectedIndex(0);
+                        TokenManager tm = new TokenManager(aux.kind, aux.image, aux.beginLine, aux.endLine,aux.beginColumn, aux.endColumn);
+                        String[] linha = tm.getStringRowLexicalTable();
+                        dtm.addRow(linha);
+                        jTable4.revalidate();
+                        jTable4.repaint();
+                    }
+                } while(pilhaTokens.isEmpty() != true);
             }
-
-            t = lexer.getNextToken();
-            System.out.println(t);
-        } while (t.kind != 0);
+                   
+            //Exibe os demais Tokens na Tabela
+            jTabbedPane3.setSelectedIndex(0); 
+            TokenManager tm = new TokenManager(t.kind, t.image, t.beginLine, t.endLine, t.beginColumn, t.endColumn);
+            String[] linha = tm.getStringRowLexicalTable();
+            dtm.addRow(linha);
+            jTable4.revalidate();
+            jTable4.repaint();
+            
+            if(t.kind == 0) EOF = true; //Verifica se o EOF já foi checado
+            else t = lexer.getNextToken(); 
+        } while (t.kind != 0 || EOF != true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void fonteBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fonteBoxKeyTyped
