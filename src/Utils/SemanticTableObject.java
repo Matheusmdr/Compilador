@@ -16,6 +16,7 @@ public class SemanticTableObject {
     private String tipo;
     private String valor;
     private Boolean utilizada;
+    private Integer endRelativo;
 
     public String getLexema() {
         return lexema;
@@ -65,13 +66,22 @@ public class SemanticTableObject {
         this.utilizada = utilizada;
     }
 
-    public SemanticTableObject(String lexema, String token, String categoria, String tipo, String valor, Boolean utilizada) {
+    public Integer getEndRelativo() {
+      return endRelativo;
+    }
+
+    public void setEndRelativo(Integer endRelativo) {
+      this.endRelativo = endRelativo;
+    }
+
+    public SemanticTableObject(String lexema, String token, String categoria, String tipo, String valor, Boolean utilizada, Integer endRelativo) {
         this.lexema = lexema;
         this.token = token;
         this.categoria = categoria;
         this.tipo = tipo;
         this.valor = valor;
         this.utilizada = utilizada;
+        this.endRelativo = endRelativo;
     }
     
     

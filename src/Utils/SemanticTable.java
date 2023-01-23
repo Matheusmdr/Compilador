@@ -21,6 +21,22 @@ public class SemanticTable {
         return table.contains(row);
     }
     
+    public String searchRowByLexemaTokenAndReturnValue (String lexema, String token){
+        ArrayList<SemanticTableObject> table = getTable();
+        for(SemanticTableObject linha : table)
+          if(linha.getLexema().equals(lexema) && linha.getToken().equals(token))
+            return linha.getValor();
+        return "";
+    }
+    
+    public SemanticTableObject searchRowByLexemaTokenAndReturnObject (String lexema, String token){
+        ArrayList<SemanticTableObject> table = getTable();
+        for(SemanticTableObject linha : table)
+          if(linha.getLexema().equals(lexema) && linha.getToken().equals(token))
+            return linha;
+        return null;
+    }
+    
     public void insertTableRow(SemanticTableObject row){
         table.add(row);
     }
@@ -38,5 +54,17 @@ public class SemanticTable {
         return false;
     }
     
+    public void updateRowByLexemaAndToken(String lexema, String token, String valor){
+        SemanticTableObject linha = searchRowByLexemaTokenAndReturnObject(lexema, token);
+        if(linha != null){
+          linha.setValor(valor);
+          linha.setUtilizada(true);
+          updateTableRow(linha);
+        }
+    }
+
+    public ArrayList<SemanticTableObject> getTable() {
+      return table;
+    }
     
 }
