@@ -6,6 +6,7 @@ package Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EmptyStackException;
 import java.util.Stack;
 
 /**
@@ -58,7 +59,7 @@ public class PolishNotation {
     //Substituir and,or e not por operadores válidos e aliminar espaços
     String strTransformada = exp.replaceAll("\\sand\\s", "&");
     strTransformada = strTransformada.replaceAll("\\sor\\s", "|");
-    strTransformada = strTransformada.replaceAll("\\snot\\s", "!");
+    strTransformada = strTransformada.replaceAll("(\\snot\\s)|(not\\s)", "!");
     strTransformada = strTransformada.replaceAll("\\sdiv\\s", "/");
     strTransformada = strTransformada.replaceAll(" ", "");
     //Quebrar a string em várias subsstrings
@@ -109,6 +110,120 @@ public class PolishNotation {
     
     return listaPolonesa;
     }
-
+    
+    public static Integer compute(ArrayList<String> expr) throws
+            ArithmeticException,
+            EmptyStackException {
+        Stack<Integer> stack = new Stack<>();
+        for (String token : expr) {
+            switch (token) {
+                case "+":
+                    stack.push(stack.pop() + stack.pop());
+                    break;
+                case "-":
+                    stack.push(-stack.pop() + stack.pop());
+                    break;
+                case "*":
+                    stack.push(stack.pop() * stack.pop());
+                    break;
+                case "/":
+                    Integer divisor = stack.pop();
+                    stack.push(Math.round(stack.pop() / divisor));
+                    break;
+                case "!":
+                    stack.push( notOperator(stack.pop()));
+                    break;
+                case "&":
+                    stack.push(andOperator(stack.pop(), stack.pop()));
+                    break;
+                case "|":
+                    stack.push(orOperator(stack.pop(), stack.pop()));
+                    break;
+                default:
+                    stack.push(Integer.parseInt(token));
+                    break;
+            }
+        }
+        return stack.pop();
+    }
+    
+    
+    public static Integer notOperator(Integer number){
+        //System.out.println(number);
+        String binaryNumber = Integer.toBinaryString(number);
+        String notBinaryNumber = "";
+        System.out.println(binaryNumber);
+        for(int i = 0; i < binaryNumber.length(); i++){
+            if(binaryNumber.charAt(i) == '0'){
+                notBinaryNumber += '1';
+            }
+            else{
+                 notBinaryNumber += '0';
+            } 
+        }
+        return Integer.parseInt(notBinaryNumber, 2);
+    }
+    
+    public static Integer andOperator(Integer number1, Integer number2){
+        String binaryNumber1 = Integer.toBinaryString(number1);
+        String binaryNumber2 = Integer.toBinaryString(number2);
+        String andBinaryNumber = "";
+        if(binaryNumber1.length() > binaryNumber2.length()){
+            String concat = "";
+            for(int i = 0; i < binaryNumber1.length() - binaryNumber2.length(); i++){
+               concat += '0';
+            }
+            binaryNumber2 = concat + binaryNumber2;
+        }
+        else if (binaryNumber2.length() > binaryNumber1.length()){
+            String concat = "";
+            for(int i = 0; i < binaryNumber2.length() - binaryNumber1.length(); i++){
+               concat += '0';
+            }
+            binaryNumber1 = concat + binaryNumber1;
+        }
+        
+        
+        for(int i = 0; i < binaryNumber1.length(); i++){
+            if(binaryNumber1.charAt(i) == '1' && binaryNumber2.charAt(i) == '1'){
+                andBinaryNumber += '1';
+            }
+            else{
+                andBinaryNumber += '0';
+            }
+        }
+        return Integer.parseInt(andBinaryNumber,2);
+    }
+    
+     public static Integer orOperator(Integer number1, Integer number2){
+        String binaryNumber1 = Integer.toBinaryString(number1);
+        String binaryNumber2 = Integer.toBinaryString(number2);
+        String andBinaryNumber = "";
+        if(binaryNumber1.length() > binaryNumber2.length()){
+            String concat = "";
+            for(int i = 0; i < binaryNumber1.length() - binaryNumber2.length(); i++){
+               concat += '0';
+            }
+            binaryNumber2 = concat + binaryNumber2;
+        }
+        else if (binaryNumber2.length() > binaryNumber1.length()){
+            String concat = "";
+            for(int i = 0; i < binaryNumber2.length() - binaryNumber1.length(); i++){
+               concat += '0';
+            }
+            binaryNumber1 = concat + binaryNumber1;
+        }
+        
+        
+        for(int i = 0; i < binaryNumber1.length(); i++){
+            if(binaryNumber1.charAt(i) == '1' || binaryNumber2.charAt(i) == '1'){
+                andBinaryNumber += '1';
+            }
+            else{
+                andBinaryNumber += '0';
+            }
+        }
+        return Integer.parseInt(andBinaryNumber,2);
+    }
 }
     

@@ -211,9 +211,6 @@ public class MEPA {
                 this.i += 1;
             }
         } while (true);
-        for(int j = 0; j < this.D.size(); j++){
-            System.out.println("Pilha: "+this.D.get(j));
-        }
     }
 
     public void leArquivo(String path) throws FileNotFoundException, IOException {
