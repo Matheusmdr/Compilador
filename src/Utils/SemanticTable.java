@@ -29,6 +29,14 @@ public class SemanticTable {
         return "";
     }
     
+    public Integer searchRowByLexemaTokenAndReturnAddress (String lexema, String token){
+        ArrayList<SemanticTableObject> table = getTable();
+        for(SemanticTableObject linha : table)
+          if(linha.getLexema().equals(lexema) && linha.getToken().equals(token))
+            return linha.getEndRelativo();
+        return -1;
+    }
+    
     public SemanticTableObject searchRowByLexemaTokenAndReturnObject (String lexema, String token){
         ArrayList<SemanticTableObject> table = getTable();
         for(SemanticTableObject linha : table)
@@ -62,6 +70,7 @@ public class SemanticTable {
           updateTableRow(linha);
         }
     }
+    
 
     public ArrayList<SemanticTableObject> getTable() {
       return table;

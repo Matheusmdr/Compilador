@@ -11,6 +11,8 @@ import java.awt.AWTException;
 
 //Imports Lexer
 import LexicalAnalysis.Lexer;
+import SemanticAnalysis.ParseException;
+import SemanticAnalysis.SemanticAnalizer;
 
 import java_cup.runtime.Symbol;
 import java.awt.Color;
@@ -551,59 +553,66 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        /*jTabbedPane3.setSelectedIndex(0);
         Reader lector = new StringReader(fonteBox.getText());
-        //Lexer lexer = new Lexer(lector);
-
-        DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
-        dtm.getDataVector().removeAllElements();
-        dtm.fireTableDataChanged();
-
-        DefaultTableModel dtmE = (DefaultTableModel) jTable2.getModel();
-        dtmE.getDataVector().removeAllElements();
-        dtmE.fireTableDataChanged();
-
-        //LexicalAnalysis.Token t = new LexicalAnalysis.Token();
-        t = lexer.getNextToken();
-        do {
+        SemanticAnalizer semanticAnal = new SemanticAnalizer(lector);
+        try {
+            semanticAnal.principal();
+            /*jTabbedPane3.setSelectedIndex(0);
+            Reader lector = new StringReader(fonteBox.getText());
+            //Lexer lexer = new Lexer(lector);
+            
+            DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
+            dtm.getDataVector().removeAllElements();
+            dtm.fireTableDataChanged();
+            
+            DefaultTableModel dtmE = (DefaultTableModel) jTable2.getModel();
+            dtmE.getDataVector().removeAllElements();
+            dtmE.fireTableDataChanged();
+            
+            //LexicalAnalysis.Token t = new LexicalAnalysis.Token();
+            t = lexer.getNextToken();
+            do {
             if (t.specialToken != null) {
-                if (t.specialToken.kind == 49 || t.specialToken.kind == 50
-                        || t.specialToken.kind == 51 || t.specialToken.kind == 52 || t.specialToken.kind == 53 || t.specialToken.kind == 54) {
-                    jTabbedPane3.setSelectedIndex(1);
-                    TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
-                    String[] linha = tm.getStringRowLexicalErrorTable();
-                    dtmE.addRow(linha);
-                    jTable2.revalidate();
-                    jTable2.repaint();
-                }
-
+            if (t.specialToken.kind == 49 || t.specialToken.kind == 50
+            || t.specialToken.kind == 51 || t.specialToken.kind == 52 || t.specialToken.kind == 53 || t.specialToken.kind == 54) {
+            jTabbedPane3.setSelectedIndex(1);
+            TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
+            String[] linha = tm.getStringRowLexicalErrorTable();
+            dtmE.addRow(linha);
+            jTable2.revalidate();
+            jTable2.repaint();
+            }
+            
             } else {
-                jTabbedPane3.setSelectedIndex(0);
-                TokenManager tm = new TokenManager(t.kind, t.image, t.beginLine, t.endLine, t.beginColumn, t.endColumn);
-                String[] linha = tm.getStringRowLexicalTable();
-                dtm.addRow(linha);
-                jTable4.revalidate();
-                jTable4.repaint();
+            jTabbedPane3.setSelectedIndex(0);
+            TokenManager tm = new TokenManager(t.kind, t.image, t.beginLine, t.endLine, t.beginColumn, t.endColumn);
+            String[] linha = tm.getStringRowLexicalTable();
+            dtm.addRow(linha);
+            jTable4.revalidate();
+            jTable4.repaint();
             }
 
             t = lexer.getNextToken();
-        } while (t.kind != 0);
-
-        jTabbedPane3.setSelectedIndex(2);
-
-        Reader lectorParser = new StringReader(fonteBox.getText());
-        Scanner_1 parser = new Scanner_1(lectorParser);
-        try {
+            } while (t.kind != 0);
+            
+            jTabbedPane3.setSelectedIndex(2);
+            
+            Reader lectorParser = new StringReader(fonteBox.getText());
+            Scanner_1 parser = new Scanner_1(lectorParser);
+            try {
             parser.principal();
             var listaErrosSintax = parser.getListaErrosSintax();
             for (int i = 0; i < listaErrosSintax.size(); i++) {
-                textAreaSintaxe.append(listaErrosSintax.get(i));
-                textAreaSintaxe.revalidate();
-                textAreaSintaxe.repaint();
+            textAreaSintaxe.append(listaErrosSintax.get(i));
+            textAreaSintaxe.revalidate();
+            textAreaSintaxe.repaint();
             }
+            } catch (ParseException ex) {
+            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
         } catch (ParseException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
 
 
     }//GEN-LAST:event_jMenuItem3ActionPerformed

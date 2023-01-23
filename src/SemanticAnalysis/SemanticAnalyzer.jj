@@ -3,12 +3,13 @@ STATIC = false;
 DEBUG_LOOKAHEAD = false;
 }
 PARSER_BEGIN(SemanticAnalizer)
-package JavaCC;
+package SemanticAnalysis;
 import java.io.*;
 import java.util.*;
 import javax.swing.JOptionPane;
 import Utils.SemanticTableObject;
 import Utils.SemanticTable;
+import Utils.GenerateCode;
 
 public class SemanticAnalizer{
 
@@ -19,6 +20,7 @@ ArrayList<String> listaDeclaracoes = new ArrayList<>();
 ArrayList<ArrayList<String>> listaLexemasSemantico = new ArrayList<>();
 SemanticTable table  = new SemanticTable();
 String tipo =  "";
+GenerateCode gerador = new GenerateCode();
 
 public ArrayList <String> getListaErrosSintax(){
     return listaErrosSintax;
@@ -267,15 +269,20 @@ JAVACODE
 
 JAVACODE
     void declaracoesParaSemantica() {
+        gerador.gerar("","INPP",""); //começo de tudo
         String tipo = listaDeclaracoes.get(0);
         String valor = "0";
+        int s = 0;
+
         listaDeclaracoes.remove(0);
         for(String identificador : listaDeclaracoes){
             if(identificador.equals("int") || identificador.equals("boolean")){
                 tipo = identificador;
                 continue;
             }
-            table.insertTableRow(new SemanticTableObject(identificador, "IDENTIFICADOR", "var", tipo, valor, false, -1));
+            table.insertTableRow(new SemanticTableObject(identificador, "IDENTIFICADOR", "var", tipo, valor, false, s));
+            gerador.gerar("","AMEM","1"); // inicio da tristeza
+            s++;
         }
         esvaziarArrayList(listaDeclaracoes);
     }
@@ -285,6 +292,8 @@ JAVACODE
         auxListaLexemasSemantico.remove(0);
         ArrayList<String> linha = auxListaLexemasSemantico.get(0);
         while(verificaFimExpressao(linha.get(1))){
+            gerador.gerar("","LEIT","");
+            gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(linha.get(0),linha.get(1))));
             auxListaLexemasSemantico.remove(0);
             linha = auxListaLexemasSemantico.get(0);
         }
