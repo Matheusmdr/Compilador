@@ -135,22 +135,44 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         esvaziarArrayList(listaDeclaracoes);
   }
 
-  void readParaSemantica(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {auxListaLexemasSemantico.remove(0);
+  void readParaSemantica(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {auxListaLexemasSemantico.remove(0); // Remove READ
         ArrayList<String> linha = auxListaLexemasSemantico.get(0);
+        auxListaLexemasSemantico.remove(0); // Remove PARENTESES_ESQ
+        linha = auxListaLexemasSemantico.get(0);
         while(verificaFimExpressao(linha.get(1))){
             gerador.gerar("","LEIT","");
             gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(linha.get(0),linha.get(1))));
             auxListaLexemasSemantico.remove(0);
             linha = auxListaLexemasSemantico.get(0);
+            auxListaLexemasSemantico.remove(0); // Removendo vírgula ou parenteses_esq
+            linha = auxListaLexemasSemantico.get(0);
         }
         preparaParaProximaExpressao(auxListaLexemasSemantico);
   }
 
-  void writeParaSemantica(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {auxListaLexemasSemantico.remove(0);
-        ArrayList<String> linha = auxListaLexemasSemantico.get(0);
-        while(verificaFimExpressao(linha.get(1))){
+  void writeParaSemantica(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {auxListaLexemasSemantico.remove(0); // Remove WRITE
+        ArrayList<String> linhaAtual = auxListaLexemasSemantico.get(0);
+        auxListaLexemasSemantico.remove(0); // Remove PARENTESES_ESQ
+        linhaAtual = auxListaLexemasSemantico.get(0);
+        ArrayList<String> linhaSeguinte = auxListaLexemasSemantico.get(1);
+        ArrayList<ArrayList<String>> expressao = new ArrayList<>();
+        String valor = "";
+        while(verificaFimExpressao(linhaAtual.get(1))){
+            while((!linhaAtual.get(1).equals("SIMBOLO_VIRGULA")) &&
+                 !( linhaAtual.get(1).equals("PARENTESES_DIR") && (linhaSeguinte.get(1).equals("SIMBOLO_PONTO_E_VIRGULA")
+                 || linhaSeguinte.get(1).equals("RSV_END")
+                 || linhaSeguinte.get(1).equals("RSV_FIM")))){
+                converteTrueEFalse(linhaAtual);
+                expressao.add(linhaAtual);
+                auxListaLexemasSemantico.remove(0);
+                linhaAtual = linhaSeguinte;
+                linhaSeguinte = auxListaLexemasSemantico.get(1);
+            }
             auxListaLexemasSemantico.remove(0);
-            linha = auxListaLexemasSemantico.get(0);
+            linhaAtual = linhaSeguinte;
+            if(auxListaLexemasSemantico.size() > 1)
+                linhaSeguinte = auxListaLexemasSemantico.get(1);
+            valor = valorExpressaoAtribuicao(expressao);
         }
         preparaParaProximaExpressao(auxListaLexemasSemantico);
   }
@@ -267,6 +289,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
                 flag = true;
         }else {
             while(verificaTokenDiferenteRelacoes(linhaAtual.get(1))){
+                converteTrueEFalse(linhaAtual);
                 expressao.add(linhaAtual);
                 auxListaLexemasSemantico.remove(0);
                 linhaAtual = auxListaLexemasSemantico.get(0);
@@ -278,6 +301,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             linhaAtual = auxListaLexemasSemantico.get(0);
             linhaSeguinte = auxListaLexemasSemantico.get(1);
             while(!(linhaAtual.get(1)).equals("PARENTESES_DIR") && !(linhaSeguinte.get(1)).equals("RSV_THEN")){
+                converteTrueEFalse(linhaAtual);
                 expressao.add(linhaAtual);
                 auxListaLexemasSemantico.remove(0);
                 linhaAtual = linhaSeguinte;
@@ -406,6 +430,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
                 flag = true;
         }else {
             while(verificaTokenDiferenteRelacoes(linhaAtual.get(1))){
+                converteTrueEFalse(linhaAtual);
                 expressao.add(linhaAtual);
                 auxListaLexemasSemantico.remove(0);
                 linhaAtual = auxListaLexemasSemantico.get(0);
@@ -417,6 +442,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             linhaAtual = auxListaLexemasSemantico.get(0);
             linhaSeguinte = auxListaLexemasSemantico.get(1);
             while(!(linhaAtual.get(1)).equals("PARENTESES_DIR") && !(linhaSeguinte.get(1)).equals("RSV_DO")){
+                converteTrueEFalse(linhaAtual);
                 expressao.add(linhaAtual);
                 auxListaLexemasSemantico.remove(0);
                 linhaAtual = linhaSeguinte;
@@ -458,6 +484,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
   }
 
   void comandoParaSemantica(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {ArrayList<String> primeiroToken = auxListaLexemasSemantico.get(0);
+        // WHILE DE EMERGÊNCIA ligar apenas se o semântico n funcionar
         /*while(primeiroToken.get(1).equals("RSV_END") ||
               primeiroToken.get(1).equals("SIMBOLO_PONTO_E_VIRGULA") ||
               primeiroToken.get(1).equals("$")){
@@ -951,7 +978,7 @@ t = getToken(0); System.out.println("RSV_WRITE Sintax: "+t.image); listaLexemasS
         throw new ParseException();
       }
       jj_consume_token(PARENTESES_ESQ);
-t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
+t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image); listaLexemasSemantico.add(new ArrayList<>(Arrays.asList(t.image, "PARENTESES_ESQ")));
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case OPERADOR_LOGICO_NOT:
       case OPERADOR_ARITMETICO_ADICAO:
@@ -967,7 +994,7 @@ t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
         ;
       }
       jj_consume_token(PARENTESES_DIR);
-t = getToken(0); System.out.println("PARENTESES_DIR Sintax: "+t.image);
+t = getToken(0); System.out.println("PARENTESES_DIR Sintax: "+t.image); listaLexemasSemantico.add(new ArrayList<>(Arrays.asList(t.image, "PARENTESES_DIR")));
     } catch (ParseException e) {
 //armazenamentoErros(e.toString());
         error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
@@ -1003,7 +1030,7 @@ t = getToken(0); System.out.println("OPERADOR_ARITMETICO_ATRIBUICAO Sintax: "+t.
           break label_6;
         }
         jj_consume_token(SIMBOLO_VIRGULA);
-t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image);
+t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image); listaLexemasSemantico.add(new ArrayList<>(Arrays.asList(t.image, "SIMBOLO_VIRGULA")));
         expressao();
       }
     } catch (ParseException e) {
