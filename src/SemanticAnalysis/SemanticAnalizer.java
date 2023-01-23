@@ -190,13 +190,15 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
 
         String exp = "";
+        ArrayList<String> notacaoPolonesa;
 
         for(ArrayList<String> s : expressao){
-            exp = exp.concat(s.get(0));
+            exp = exp.concat(" "+s.get(0));
         }
 
         System.out.println("Express\u00e3o: " + exp);
-        //PolishNotation.convertToReversePolish();
+        notacaoPolonesa = PolishNotation.convertToReversePolish(exp);
+        System.out.println("Express\u00e3o polonesa: " + notacaoPolonesa.toString());
         //gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(linha.get(0),linha.get(1))));
         return "1";
   }
@@ -213,11 +215,11 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         }
   }
 
-  void converteTrueEFalse(ArrayList<String> linha) throws ParseException {if(linha.get(1) == "IDENTIFICADOR")
-            if(linha.get(0) == "false"){
+  void converteTrueEFalse(ArrayList<String> linha) throws ParseException {if(linha.get(1).equals("IDENTIFICADOR"))
+            if(linha.get(0).equals("false")){
                 linha.set(0, "0");
                 linha.set(1, "RSV_FALSE");
-            }else if(linha.get(0) == "true"){
+            }else if(linha.get(0).equals("true")){
                 linha.set(0, "1");
                 linha.set(1, "RSV_TRUE");
             }
@@ -252,8 +254,6 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
   Boolean verificaRelacaoVddOUFalsa(String Esq, String Dir, String relacao) throws ParseException {int valorEsq = Integer.parseInt(Esq);
         int valorDir = Integer.parseInt(Dir);
-        System.out.println("valorEsq: "+valorEsq);
-        System.out.println("valorDir: "+valorDir);
         Boolean flag = false;
         switch(relacao){
             case "OPERADOR_LOGICO_DIFERENCA":
@@ -290,7 +290,8 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         ArrayList<String> linhaSeguinte = auxListaLexemasSemantico.get(1);
         ArrayList<ArrayList<String>> expressao = new ArrayList<>();
         Boolean flag = false;
-        if(linhaAtual.get(1).equals("IDENTIFICADOR") && linhaSeguinte.get(1).equals("PARENTESES_DIR")){
+        if((linhaAtual.get(1).equals("IDENTIFICADOR") || linhaAtual.get(1).equals("RSV_TRUE") || linhaAtual.get(1).equals("RSV_FALSE"))
+         && linhaSeguinte.get(1).equals("PARENTESES_DIR")){
             converteTrueEFalse(linhaAtual);
             String valor = "";
             if(linhaAtual.get(1).equals("IDENTIFICADOR"))
@@ -345,6 +346,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         System.out.println("AAAAAAAAAAAAAAAA"+tokenElse);
         if(!tokenElse.get(1).equals("RSV_ELSE"))
             tokenElse = new ArrayList<>();
+        System.out.println("FLAG:"+flag);
         if(flag){
             if(tokenElse.isEmpty()){
                 quantCifrao = 1;
@@ -367,7 +369,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
                     auxListaLexemasSemantico.remove(0);
                 int i = auxListaLexemasSemantico.indexOf(tokenElse);
                 System.out.println(auxListaLexemasSemantico.get(i-1));
-                // Removendo Cifrão
+                // Removendo CifrÃ£o
                 auxListaLexemasSemantico.remove(i-1);
                 i--;
                 System.out.println(auxListaLexemasSemantico.get(i));
@@ -386,7 +388,6 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             }
         }else{
             if(tokenElse.isEmpty()){
-                System.out.println("EU TO AQUI AAAAAAAAAAAAAAAAAAAAAAA");
                 quantCifrao = 1;
                 while(quantCifrao > 0){
                     if(linhaAtual.get(1).equals("RSV_IF") || linhaAtual.get(1).equals("RSV_ELSE") || linhaAtual.get(1).equals("RSV_WHILE"))
@@ -428,7 +429,8 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         auxListaLexemasSemantico.remove(0);
         ArrayList<String> linhaAtual = auxListaLexemasSemantico.get(0);
         ArrayList<String> linhaSeguinte = auxListaLexemasSemantico.get(1);
-        ArrayList<ArrayList<String>> expressao = new ArrayList<>();
+        ArrayList<ArrayList<String>> expressaoEsq = new ArrayList<>();
+        ArrayList<ArrayList<String>> expressaoDir = new ArrayList<>();
         Boolean flag = false;
         String relacao = "";
         if(linhaAtual.get(1).equals("IDENTIFICADOR") && linhaSeguinte.get(1).equals("PARENTESES_DIR")){
@@ -446,27 +448,24 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         }else {
             while(verificaTokenDiferenteRelacoes(linhaAtual.get(1))){
                 converteTrueEFalse(linhaAtual);
-                expressao.add(linhaAtual);
+                expressaoEsq.add(linhaAtual);
                 auxListaLexemasSemantico.remove(0);
                 linhaAtual = auxListaLexemasSemantico.get(0);
             }
-            String valorEsq = valorExpressaoAtribuicao(expressao);
-            esvaziarArraysLists(expressao);
+            String valorEsq = valorExpressaoAtribuicao(expressaoEsq);
             relacao = linhaAtual.get(1);
-            System.out.println("rela\u00e7\u00e3o: "+relacao);
             auxListaLexemasSemantico.remove(0);
             linhaAtual = auxListaLexemasSemantico.get(0);
             linhaSeguinte = auxListaLexemasSemantico.get(1);
             while(!(linhaAtual.get(1)).equals("PARENTESES_DIR") && !(linhaSeguinte.get(1)).equals("RSV_DO")){
                 converteTrueEFalse(linhaAtual);
-                expressao.add(linhaAtual);
+                expressaoDir.add(linhaAtual);
                 auxListaLexemasSemantico.remove(0);
                 linhaAtual = linhaSeguinte;
                 linhaSeguinte = auxListaLexemasSemantico.get(1);
             }
-            String valorDir = valorExpressaoAtribuicao(expressao);
+            String valorDir = valorExpressaoAtribuicao(expressaoDir);
             flag = verificaRelacaoVddOUFalsa(valorEsq, valorDir, relacao);
-            System.out.println("flag: "+flag);
         }
         auxListaLexemasSemantico.remove(0);
         auxListaLexemasSemantico.remove(0);
@@ -476,7 +475,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         linhaAtual = auxListaLexemasSemantico.get(0);
         ArrayList<ArrayList<String>> auxListaLexemasSemanticoWhile = new ArrayList<>();
         int quantCifrao = 1;
-        System.out.println(linhaAtual);
+        //System.out.println(linhaAtual);
         while(quantCifrao > 0){
             if(linhaAtual.get(1).equals("RSV_IF") || linhaAtual.get(1).equals("RSV_ELSE") || linhaAtual.get(1).equals("RSV_WHILE"))
                 quantCifrao++;
@@ -488,14 +487,17 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         }
         if(linhaAtual.get(1) == "SIMBOLO_PONTO_E_VIRGULA")
             auxListaLexemasSemantico.remove(0);
-        // Removendo o cifrão
+        // Removendo o cifrÃ£o
         auxListaLexemasSemanticoWhile.remove(auxListaLexemasSemanticoWhile.size() - 1);
         String valorEsq, valorDir;
+        System.out.println("WHILE"+auxListaLexemasSemanticoWhile);
+        ArrayList<ArrayList<String>> copiaAuxListaLexemasSemanticoWhile = new ArrayList<>(auxListaLexemasSemanticoWhile);
         while(flag){
             comandoParaSemantica(auxListaLexemasSemanticoWhile);
-            valorEsq = valorExpressaoAtribuicao(expressao);
-            valorDir = valorExpressaoAtribuicao(expressao);
+            valorEsq = valorExpressaoAtribuicao(expressaoEsq);
+            valorDir = valorExpressaoAtribuicao(expressaoDir);
             flag = verificaRelacaoVddOUFalsa(valorEsq, valorDir, relacao);
+            auxListaLexemasSemanticoWhile = new ArrayList<>(copiaAuxListaLexemasSemanticoWhile);
         }
         comandoParaSemantica(auxListaLexemasSemantico);
   }

@@ -45,6 +45,14 @@ public class SemanticTable {
         return null;
     }
     
+    public SemanticTableObject searchRowByLexemaAndReturnObject (String lexema){
+        ArrayList<SemanticTableObject> table = getTable();
+        for(SemanticTableObject linha : table)
+          if(linha.getLexema().equals(lexema))
+            return linha;
+        return null;
+    }
+    
     public void insertTableRow(SemanticTableObject row){
         table.add(row);
     }

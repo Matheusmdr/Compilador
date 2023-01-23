@@ -63,7 +63,7 @@ public class PolishNotation {
     strTransformada = strTransformada.replaceAll(" ", "");
     //Quebrar a string em várias subsstrings
     String[] split = strTransformada.split("(?<=[-+*/()&|!])|(?=[-+*/()&|!])");
-    System.out.println(Arrays.toString(split));
+    //System.out.println(Arrays.toString(split));
     
     //Notação Polonesa Reversa
     int cont,aux,tamListaSplit;
