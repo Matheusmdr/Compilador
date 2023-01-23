@@ -252,6 +252,8 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
   Boolean verificaRelacaoVddOUFalsa(String Esq, String Dir, String relacao) throws ParseException {int valorEsq = Integer.parseInt(Esq);
         int valorDir = Integer.parseInt(Dir);
+        System.out.println("valorEsq: "+valorEsq);
+        System.out.println("valorDir: "+valorDir);
         Boolean flag = false;
         switch(relacao){
             case "OPERADOR_LOGICO_DIFERENCA":
@@ -451,6 +453,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             String valorEsq = valorExpressaoAtribuicao(expressao);
             esvaziarArraysLists(expressao);
             relacao = linhaAtual.get(1);
+            System.out.println("rela\u00e7\u00e3o: "+relacao);
             auxListaLexemasSemantico.remove(0);
             linhaAtual = auxListaLexemasSemantico.get(0);
             linhaSeguinte = auxListaLexemasSemantico.get(1);
@@ -463,6 +466,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             }
             String valorDir = valorExpressaoAtribuicao(expressao);
             flag = verificaRelacaoVddOUFalsa(valorEsq, valorDir, relacao);
+            System.out.println("flag: "+flag);
         }
         auxListaLexemasSemantico.remove(0);
         auxListaLexemasSemantico.remove(0);

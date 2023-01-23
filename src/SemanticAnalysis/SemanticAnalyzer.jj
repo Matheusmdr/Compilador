@@ -420,6 +420,8 @@ JAVACODE
     Boolean verificaRelacaoVddOUFalsa(String Esq, String Dir, String relacao){
         int valorEsq = Integer.parseInt(Esq);
         int valorDir = Integer.parseInt(Dir);
+        System.out.println("valorEsq: "+valorEsq);
+        System.out.println("valorDir: "+valorDir);
         Boolean flag = false;
         switch(relacao){
             case "OPERADOR_LOGICO_DIFERENCA":
@@ -623,6 +625,7 @@ JAVACODE
             String valorEsq = valorExpressaoAtribuicao(expressao);
             esvaziarArraysLists(expressao);
             relacao = linhaAtual.get(1);
+            System.out.println("relação: "+relacao);
             auxListaLexemasSemantico.remove(0);
             linhaAtual = auxListaLexemasSemantico.get(0);
             linhaSeguinte = auxListaLexemasSemantico.get(1);
@@ -635,6 +638,7 @@ JAVACODE
             }
             String valorDir = valorExpressaoAtribuicao(expressao);
             flag = verificaRelacaoVddOUFalsa(valorEsq, valorDir, relacao);
+            System.out.println("flag: "+flag);
         }
         auxListaLexemasSemantico.remove(0);
         auxListaLexemasSemantico.remove(0);

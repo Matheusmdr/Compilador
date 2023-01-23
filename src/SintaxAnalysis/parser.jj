@@ -1,200 +1,132 @@
+//Opções do JavaCC
 options{
 STATIC = false;
 DEBUG_LOOKAHEAD = false;
 }
-PARSER_BEGIN(Scanner_1)
+
+//Parser
+PARSER_BEGIN(Parser)
+//Imports do Java
+
 package SintaxAnalysis;
 import java.io.*;
 import java.util.*;
-import javax.swing.JOptionPane;
-import Utils.SemanticTableObject;
-import Utils.SemanticTable;
 
-public class Scanner_1{
+//Classe Parser
+public class Parser{
 
-boolean Menosshort = false; //Saida resumida falso
-ArrayList<String> listaErrosSintax = new ArrayList<>();
-SemanticTable table  = new SemanticTable();
-String tipo =  "";
+    boolean Menosshort = false; //Saida resumida falso
+    ArrayList<String> listaErrosSintax = new ArrayList<>();
+    String tipo =  "";
 
-public ArrayList <String> getListaErrosSintax(){
-    return listaErrosSintax;
-}
-
-/*public cadeProgram() {
-    Token t = new Token ();
-    do {
-
-    t = getNextToken(); //Obtém o próximo token
-    String nomeToken = tokenImage[t.kind]; //guarda o nome do token na string
-
-    } while(t.kind!=0); //condicao de parada: final do arquivo (constante eof 0 )
-}
-
-public void processa() throws Exception{
-    Token t = new Token ();
-
-    do {
-
-    t = getNextToken(); //Obtém o próximo token
-    String nomeToken = tokenImage[t.kind]; //guarda o nome do token na string
-
-    } while(t.kind!=0); //condicao de parada: final do arquivo (constante eof 0 )
-}
-
-public void processaSintax(Scanner_1 parser) throws ParseException {
-    System.out.println("comeco");
-    //parser.principal();
-    //cadeProgram();
-    System.out.println("cabo");
-}*/
-
-public static void main(String args[], String x) throws ParseException, FileNotFoundException {
-
-try {
-    
-
-}catch (Error e){
-System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostrando linha e coluna
-}
-
-}
-}
-
-PARSER_END(Scanner_1)
-
-TOKEN_MGR_DECLS :{
-    int countLexError = 0;
-    public int foundLexError () {
-        return countLexError;
+    public ArrayList <String> getListaErrosSintax(){
+        return listaErrosSintax;
     }
+
+
+    //Método main
+    /*public static void main(String args[], String x) throws ParseException, FileNotFoundException {
+        try {
+
+        }catch (Error e){
+            System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostrando linha e coluna
+        }
+    }*/
 }
 
+PARSER_END(Parser)
+
+
+//Declaração de Tokens
 SKIP : // TOKENS IGNORADOS
 {
  " "
 | "\r" 
 | "\t" 
 | "\n"
-//| <COMENTARIO: "//" (<COM>)*>
-//| <COMENTARIOS: "{" ("\n" | "\r" | <COM>)* "}" >
-| <#COM: ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ( ["\n","\r"] | "\r\n")))*>
-
 }
 
 TOKEN : //PALAVRAS RESERVADAS
 {
- 
-    <NOVA: "nova"> { System.out.println("Palavra Reservada: "+image); }
-
-    |<RSV_PROGRAMA: "program"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_PROCEDIMENTO: "procedure"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_BEGIN: "begin"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_END: "end"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_IF: "if"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_THEN: "then"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_ELSE: "else"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_WHILE: "while"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_DO: "do"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_READ: "read"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_WRITE: "write"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_VAR: "var"> { System.out.println("Palavra Reservada: "+image); }
-    |<RSV_FIM: <RSV_END>"."> { System.out.println("Palavra Reservada: "+image); }
-    //|<RSV_TRUE: "true"> { System.out.println("Palavra Reservada: "+image); }
-    //|<RSV_FALSE: "false"> { System.out.println("Palavra Reservada: "+image); }
+    <RSV_PROGRAMA: "program"> 
+    |<RSV_PROCEDIMENTO: "procedure"> 
+    |<RSV_BEGIN: "begin"> 
+    |<RSV_END: "end"> 
+    |<RSV_IF: "if"> 
+    |<RSV_THEN: "then"> 
+    |<RSV_ELSE: "else"> 
+    |<RSV_WHILE: "while"> 
+    |<RSV_DO: "do"> 
+    |<RSV_VAR: "var"> 
+    |<RSV_FIM: <RSV_END>"."> 
 }
 
 TOKEN : //TIPOS
 {
-    //<TIPO: (<TIPO_INT>|<TIPO_BOOLEAN>)> { System.out.println("Palavra Reservada: "+image); }
-    <TIPO_INT: "int"> { System.out.println("Palavra Reservada: "+image); }
-    |<TIPO_BOOLEAN: "boolean"> { System.out.println("Palavra Reservada: "+image); }
+    <TIPO_INT: "int"> 
+    |<TIPO_BOOLEAN: "boolean"> 
 }
 
 TOKEN : //OPERADORES E SÍMBOLOS
 {
-    
-    <OPERADOR_LOGICO_DIFERENCA: "<>"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_IGUAL_IGUAL: "=="> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_MENOR: "<"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_MENOR_IGUAL: "<="> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_MAIOR_IGUAL: ">="> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_MAIOR: ">"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_IGUALDADE: "="> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_AND: "and"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_OR: "or"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_LOGICO_NOT: "not"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_ARITMETICO_ATRIBUICAO: ":="> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_ARITMETICO_ADICAO: "+"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_ARITMETICO_SUBTRACAO: "-"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_ARITMETICO_MULTIPLICACAO: "*"> { System.out.println("Palavra Reservada: "+image); }
-    |<OPERADOR_ARITMETICO_DIVISAO: "div"> { System.out.println("Palavra Reservada: "+image); }
-    |<PARENTESES_ESQ: "("> { System.out.println("Palavra Reservada: "+image); }
-    |<PARENTESES_DIR: ")"> { System.out.println("Palavra Reservada: "+image); }
-    |<SIMBOLO_DOIS_PONTOS: ":"> { System.out.println("Palavra Reservada: "+image); }
-    |<SIMBOLO_VIRGULA:  ","> { System.out.println("Palavra Reservada: "+image); }
-    |<SIMBOLO_PONTO_E_VIRGULA: ";"> { System.out.println("Palavra Reservada: "+image); }
-    |<SIMBOLO_PONTO: "."> { System.out.println("Palavra Reservada: "+image); }
+    <OPERADOR_LOGICO_DIFERENCA: "<>"> 
+    |<OPERADOR_LOGICO_IGUAL_IGUAL: "=="> 
+    |<OPERADOR_LOGICO_MENOR: "<"> 
+    |<OPERADOR_LOGICO_MENOR_IGUAL: "<="> 
+    |<OPERADOR_LOGICO_MAIOR_IGUAL: ">="> 
+    |<OPERADOR_LOGICO_MAIOR: ">"> 
+    |<OPERADOR_LOGICO_IGUALDADE: "="> 
+    |<OPERADOR_LOGICO_AND: "and"> 
+    |<OPERADOR_LOGICO_OR: "or"> 
+    |<OPERADOR_LOGICO_NOT: "not"> 
+    |<OPERADOR_ARITMETICO_ATRIBUICAO: ":="> 
+    |<OPERADOR_ARITMETICO_ADICAO: "+"> 
+    |<OPERADOR_ARITMETICO_SUBTRACAO: "-"> 
+    |<OPERADOR_ARITMETICO_MULTIPLICACAO: "*"> 
+    |<OPERADOR_ARITMETICO_DIVISAO: "div"> 
+    |<PARENTESES_ESQ: "("> 
+    |<PARENTESES_DIR: ")"> 
+    |<SIMBOLO_DOIS_PONTOS: ":"> 
+    |<SIMBOLO_VIRGULA:  ","> 
+    |<SIMBOLO_PONTO_E_VIRGULA: ";"> 
+    |<SIMBOLO_PONTO: "."> 
 
 }
 
 TOKEN : //NÚMEROS E IDENTIFICADORES
 {
 
-    <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){0,14}> { System.out.println("IDENTIFICADOR: "+image); }
-    |<IDENTIFICADOR_CHAMADA_PROCEDIMENTO: <IDENTIFICADOR>> { System.out.println("IDENTIFICADOR_CHAMADA_PROCEDIMENTO: "+image); }
-    |<NUMERO_INTEIRO: (<DIGITO>){1,8}> { System.out.println("NUMERO_INTEIRO: "+image); }
+    <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){0,14}> 
+    |<IDENTIFICADOR_CHAMADA_PROCEDIMENTO: <IDENTIFICADOR>> 
+    |<NUMERO_INTEIRO: (<DIGITO>){1,8}> 
     |<#LETRA: ["_", "a"-"z", "A"-"Z"] >
     |<#DIGITO: ["0" - "9"] >
-
 }
-
-/*TOKEN : //COMENTÁRIOS
+ 
+TOKEN: //CONSTRUTORES COMENTARIOS
 {
-
-}*/
-
-SPECIAL_TOKEN : {
-
-    <COMENTARIO_UMA_LINHA: "//" (<COM>)*> { System.out.println("COMENTARIO_UMA_LINHA: "+image); }
-    |<COMENTARIO_MULT_LINHAS: "{" ("\n" | "\r" | <COM>)* "}" > { System.out.println("COMENTARIO_MULT_LINHAS: "+image); }
-
-    |<ERRO_OVERFLOW_INT: (<DIGITO>){9,} > {
-        countLexError++;
-        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
-        "Máximo de caracteres para NÚMERO INTEIRO (8) ultrapassado: " + image + " "+ "TOTAL ERRO "+countLexError);
-        System.out.println("Erro Lexico --------> "+image);
-    }
-
-    |<ERRO_OVERFLOW_IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){15,} > {
-        countLexError++;
-        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
-        "Máximo de caracteres para IDENTIFICADOR (15) ultrapassado: " + image + " "+ "TOTAL ERRO "+countLexError);
-        System.out.println("Erro Lexico --------> "+image);
-    }
-
-    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR: "{"(<COM>)*> {
-        countLexError++;
-        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
-        " Comentário de múltiplas linhas não foi fechado: " + image + " "+ "TOTAL ERRO "+countLexError);
-        System.out.println("Erro Lexico --------> "+image);
-    }
-
-    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR: (<COM>)*"}"> { 
-        countLexError++;
-        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
-        " Comentário de múltiplas linhas não foi aberto: " + image + " "+ "TOTAL ERRO "+countLexError);
-        System.out.println("Erro Lexico --------> "+image);
-    }
-
-    |<ERRO_SIMBOLO_INVALIDO: ~["_", "a"-"z", "A"-"Z", "0" - "9", ".", ";", ",", ")", "(", "*", "+", ":", "=", ">", "<"]> {
-        countLexError++;
-        System.err.println("Linha "+ input_stream.getEndLine()+" Coluna "+ input_stream.getEndColumn()+
-        " Símbolo inválido foi encontrado: " + image + " "+ "TOTAL ERRO "+countLexError);
-        System.out.println("Erro Lexico --------> "+image);
-    }
-
+    <#COM: ~["\n", "\r", "\t"]>
+    |<#COM_MULT: ~["}"]>
+    |<#COM_MULT_ERRO_ABRIR: ~["{"]>
 }
+
+SPECIAL_TOKEN : { //COMENTARIOS E ERROS
+    <COMENTARIO_UMA_LINHA: "//"(<COM>)*"\n"> 
+    |<COMENTARIO_MULT_LINHAS: "{"(<COM_MULT>)*"}" > 
+    |<ERRO_SIMBOLO_INVALIDO_COMENTARIO: "/"> 
+    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR: "{">  
+    |<ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR: "}" >   //{System.out.println("Não abriu: " + image);}
+    |<ERRO_OVERFLOW_INT: (<DIGITO>){9,} > 
+    |<ERRO_OVERFLOW_IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){15,} > 
+    |<ERRO_SIMBOLO_INVALIDO: ~["_", "a"-"z", "A"-"Z", "0" - "9", ".", ";", ",", ")", "(", "*", "+", ":", "=", ">", "<", "/"]> 
+}
+
+
+
+
+///////////////////////////////////////////
+/////////////Análise Sintática/////////////
+//////////////////////////////////////////
 
 JAVACODE
     void error_skipto(ParseException e, ArrayList<Integer> sincronizadores) {
@@ -262,12 +194,11 @@ void programa(): {Token t = new Token();}
         <RSV_PROGRAMA> { t = getToken(0); System.out.println("RSV_PROGRAMA Sintax: "+t.image); }
         <IDENTIFICADOR> { 
         t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); 
-        table.insertTableRow(new SemanticTableObject(t.image, "IDENTIFICADOR", "program", "", "", ""));
         }
         <SIMBOLO_PONTO_E_VIRGULA> { t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image); }
         [ parteDeclaracaoVariaveis() ]
         [ parteDeclaracaoSubrotinas() ] 
-        auxPrograma();
+        auxPrograma()
     }catch (ParseException e) {
         //armazenamentoErros(e.toString());
         error_skipto(e, new ArrayList<>(Arrays.asList(EOF, SIMBOLO_PONTO_E_VIRGULA)));
@@ -357,7 +288,6 @@ void listaIdentificadores(): {Token t = new Token();}
     try {
         <IDENTIFICADOR> { 
         t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image); 
-        table.insertTableRow(new SemanticTableObject(t.image, "IDENTIFICADOR", "var", "", "", ""));
         }
 
         (
