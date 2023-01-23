@@ -118,6 +118,16 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         return false;
   }
 
+  void analiseSemantica() throws ParseException {comandoParaSemantica(listaLexemasSemantico);
+        // Se imprimir algo é pq tem algo errado na semântica
+        System.out.println("FALTA NA SEMANTICA: \n");
+        for(ArrayList<String> lista : listaLexemasSemantico){
+            System.out.println(lista.get(0));
+        }
+        gerador.gerar("","PARA",""); // fim da tristeza
+
+  }
+
   void declaracoesParaSemantica() throws ParseException {gerador.gerar("","INPP",""); //começo de tudo
         String tipo = listaDeclaracoes.get(0);
         String valor = "0";
@@ -189,16 +199,23 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         // Não se esqueçam que se der real tem q arredondar pra inteiro por favor
 
 
+        //Atribuição
         String exp = "";
         ArrayList<String> notacaoPolonesa;
 
+        //Concatena a expressão de atribuição
         for(ArrayList<String> s : expressao){
             exp = exp.concat(" "+s.get(0));
         }
 
-        System.out.println("Express\u00e3o: " + exp);
+        //Encontra a Notação Polonesa
         notacaoPolonesa = PolishNotation.convertToReversePolish(exp);
-        System.out.println("Express\u00e3o polonesa: " + notacaoPolonesa.toString());
+
+        //int valor = calculaNotacaoPolonesa
+
+        //table.searchRowByLexemaAndReturnObject();
+        //System.out.println("Expressão: " + exp);
+        //System.out.println("Expressão polonesa: " + notacaoPolonesa.toString());
         //gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(linha.get(0),linha.get(1))));
         return "1";
   }
@@ -528,10 +545,6 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
   final public void principal() throws ParseException {Token t = new Token();
     try {
       programa();
-for(SemanticTableObject linha : table.getTable()) System.out.println(linha.getLexema());
-        for(ArrayList<String> lista : listaLexemasSemantico){
-            System.out.println(lista.get(0));
-        }
       jj_consume_token(0);
     } catch (ParseException e) {
 //armazenamentoErros(e.toString());
@@ -599,7 +612,7 @@ t = getToken(0); System.out.println("SIMBOLO_PONTO_E_VIRGULA Sintax: "+t.image);
         comando();
       }
       jj_consume_token(RSV_FIM);
-t = getToken(0); System.out.println("RSV_FIM Sintax: "+t.image); listaLexemasSemantico.add(new ArrayList<>(Arrays.asList(t.image, "RSV_FIM"))); comandoParaSemantica(listaLexemasSemantico);
+t = getToken(0); System.out.println("RSV_FIM Sintax: "+t.image); listaLexemasSemantico.add(new ArrayList<>(Arrays.asList(t.image, "RSV_FIM"))); analiseSemantica();
     } catch (ParseException e) {
 Token token = new Token();
         token = getToken(0);
