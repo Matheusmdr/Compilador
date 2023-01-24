@@ -53,8 +53,12 @@ public class SemanticTable {
         return null;
     }
     
-    public void insertTableRow(SemanticTableObject row){
-        table.add(row);
+    public Boolean insertTableRow(SemanticTableObject row){
+        if(searchRowByLexemaAndReturnObject(row.getLexema()) == null){
+          table.add(row);
+          return true;
+        }
+        return false;
     }
     
     public Boolean updateTableRow(SemanticTableObject row){

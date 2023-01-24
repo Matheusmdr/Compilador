@@ -201,9 +201,10 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
                 tipo = identificador;
                 continue;
             }
-            table.insertTableRow(new SemanticTableObject(identificador, "IDENTIFICADOR", "var", tipo, valor, false, s));
-            gerador.gerar("","AMEM","1"); // inicio da tristeza
-            s++;
+            if(table.insertTableRow(new SemanticTableObject(identificador, "IDENTIFICADOR", "var", tipo, valor, false, s))){
+                gerador.gerar("","AMEM","1"); // inicio da tristeza
+                s++;
+            }else listaErrosSemantica.add("ERRO SEM\u00c2NTICO: Os IDENTIFICADORES declarados N\u00c3O PODEM CONTER O MESMO NOME.\n\tJ\u00e1 existe um IDENTIFICADOR com o nome '"+identificador+"'!");
         }
         esvaziarArrayList(listaDeclaracoes);
   }
@@ -268,7 +269,10 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
                 gerador.gerar("","CRCT",str);
             }
             else if((!PolishNotation.tryParseInt(str) == true) && (!PolishNotation.isOperator(str) == true)){ //Verifica se o elemento é uma variável
-                gerador.gerar("","CRVL",Integer.toString((table.searchRowByLexemaAndReturnObject(str)).getEndRelativo()));
+                SemanticTableObject linhaTabela = table.searchRowByLexemaAndReturnObject(str);
+                if(linhaTabela == null)
+                  gerador.gerar("","CRVL","0");
+                else gerador.gerar("","CRVL",Integer.toString((linhaTabela).getEndRelativo()));
             }
             else if(str.equals("+")){ //Verifica se é uma SOMA
                 gerador.gerar("","SOMA","");
@@ -317,8 +321,11 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
         int count = 0;;
         for (String s : notacaoPolonesa){
-            if((!PolishNotation.tryParseInt(s) == true) && (!PolishNotation.isOperator(s) == true)){ //Verifica se o elemento é uma variável
-                notacaoPolonesa.set(count, ((table.searchRowByLexemaAndReturnObject(s)).getValor()));
+            if((!PolishNotation.tryParseInt(s) == true) && (!PolishNotation.isOperator(s) == true)){//Verifica se o elemento é uma variável
+              SemanticTableObject linhaTabela = table.searchRowByLexemaAndReturnObject(s);
+              if(linhaTabela == null)
+                notacaoPolonesa.set(count, ("1"));
+              else notacaoPolonesa.set(count, ((linhaTabela).getValor()));
             }
             count++;
         }
