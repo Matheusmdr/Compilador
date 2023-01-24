@@ -24,9 +24,13 @@ public class GenerateCode {
     }
     
     public void gerar(String rotulo, String instrucao, String valor){
-        this.codeMEPA += rotulo + " " + instrucao + " " + valor + "\n";
-        //System.out.println(this.codeMEPA);
-    }    
+        if (rotulo.equals("") || rotulo.equals(" ")){
+            this.codeMEPA += instrucao + " " + valor + "\n";
+        }
+        else{
+             this.codeMEPA += rotulo + " " + instrucao + " " + valor + "\n";
+        }
+    }
     
     public void gerarArquivo() throws IOException{
         // parent component of the dialog
