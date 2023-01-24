@@ -57,6 +57,8 @@ TOKEN : //PALAVRAS RESERVADAS
     |<RSV_ELSE: "else"> 
     |<RSV_WHILE: "while"> 
     |<RSV_DO: "do"> 
+    |<RSV_READ: "read">
+    |<RSV_WRITE: "write">
     |<RSV_VAR: "var"> 
     |<RSV_FIM: <RSV_END>"."> 
 }
@@ -97,7 +99,7 @@ TOKEN : //NÚMEROS E IDENTIFICADORES
 {
 
     <IDENTIFICADOR: <LETRA> (<LETRA>|<DIGITO>){0,14}> 
-    |<IDENTIFICADOR_CHAMADA_PROCEDIMENTO: <IDENTIFICADOR>> 
+    //|<IDENTIFICADOR_CHAMADA_PROCEDIMENTO: <IDENTIFICADOR>> 
     |<NUMERO_INTEIRO: (<DIGITO>){1,8}> 
     |<#LETRA: ["_", "a"-"z", "A"-"Z"] >
     |<#DIGITO: ["0" - "9"] >
@@ -445,7 +447,8 @@ void auxComandoCondicional() : {Token t = new Token();}
 void chamadaProcedimento() : {Token t = new Token();}
 {
     try {
-        <IDENTIFICADOR_CHAMADA_PROCEDIMENTO> { t = getToken(0); System.out.println("IDENTIFICADOR_CHAMADA_PROCEDIMENTO Sintax: "+t.image); }
+        ( <RSV_READ> { t = getToken(0); System.out.println("RSV_READ Sintax: "+t.image); }
+          | <RSV_WRITE> { t = getToken(0); System.out.println("RSV_WRITE Sintax: "+t.image); } )
         <PARENTESES_ESQ> { t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image); }
         [ listaExpressoes() ]
         <PARENTESES_DIR> { t = getToken(0); System.out.println("PARENTESES_DIR Sintax: "+t.image); }

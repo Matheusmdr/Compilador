@@ -599,7 +599,7 @@ public class UI extends javax.swing.JFrame {
         Parser parser = new Parser(lector);
         parser.principal();
         var sintaxErrors = parser.getListaErrosSintax();
-        parser.principal();
+        //parser.principal();
         var listaErrosSintax = parser.getListaErrosSintax();
         textAreaSintaxe.append("Análise Sintática feita com sucesso!\n");
         if(listaErrosSintax.size() > 1){

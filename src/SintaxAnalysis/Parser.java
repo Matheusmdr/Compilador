@@ -426,7 +426,8 @@ t = getToken(0); System.out.println("RSV_END Sintax: "+t.image);
         atribuicao();
         break;
         }
-      case IDENTIFICADOR_CHAMADA_PROCEDIMENTO:{
+      case RSV_READ:
+      case RSV_WRITE:{
         chamadaProcedimento();
         break;
         }
@@ -506,8 +507,22 @@ t = getToken(0); System.out.println("RSV_ELSE Sintax: "+t.image);
 
   final public void chamadaProcedimento() throws ParseException {Token t = new Token();
     try {
-      jj_consume_token(IDENTIFICADOR_CHAMADA_PROCEDIMENTO);
-t = getToken(0); System.out.println("IDENTIFICADOR_CHAMADA_PROCEDIMENTO Sintax: "+t.image);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case RSV_READ:{
+        jj_consume_token(RSV_READ);
+t = getToken(0); System.out.println("RSV_READ Sintax: "+t.image);
+        break;
+        }
+      case RSV_WRITE:{
+        jj_consume_token(RSV_WRITE);
+t = getToken(0); System.out.println("RSV_WRITE Sintax: "+t.image);
+        break;
+        }
+      default:
+        jj_la1[16] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
       jj_consume_token(PARENTESES_ESQ);
 t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -521,7 +536,7 @@ t = getToken(0); System.out.println("PARENTESES_ESQ Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[16] = jj_gen;
+        jj_la1[17] = jj_gen;
         ;
       }
       jj_consume_token(PARENTESES_DIR);
@@ -557,7 +572,7 @@ t = getToken(0); System.out.println("OPERADOR_ARITMETICO_ATRIBUICAO Sintax: "+t.
           break;
           }
         default:
-          jj_la1[17] = jj_gen;
+          jj_la1[18] = jj_gen;
           break label_6;
         }
         jj_consume_token(SIMBOLO_VIRGULA);
@@ -595,7 +610,7 @@ t = getToken(0); System.out.println("SIMBOLO_VIRGULA Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[18] = jj_gen;
+        jj_la1[19] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -621,14 +636,14 @@ t = getToken(0); System.out.println("OPERADOR_ARITMETICO_SUBTRACAO Sintax: "+t.i
           break;
           }
         default:
-          jj_la1[19] = jj_gen;
+          jj_la1[20] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
         break;
         }
       default:
-        jj_la1[20] = jj_gen;
+        jj_la1[21] = jj_gen;
         ;
       }
       termo();
@@ -663,7 +678,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_OR Sintax: "+t.image);
           break;
           }
         default:
-          jj_la1[21] = jj_gen;
+          jj_la1[22] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -672,7 +687,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_OR Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[22] = jj_gen;
+        jj_la1[23] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -715,7 +730,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_AND Sintax: "+t.image);
           break;
           }
         default:
-          jj_la1[23] = jj_gen;
+          jj_la1[24] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -724,7 +739,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_AND Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[24] = jj_gen;
+        jj_la1[25] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -761,7 +776,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_NOT Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[25] = jj_gen;
+        jj_la1[26] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -797,7 +812,7 @@ t = getToken(0); System.out.println("IDENTIFICADOR Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[26] = jj_gen;
+        jj_la1[27] = jj_gen;
 
       }
     } catch (ParseException e) {
@@ -840,7 +855,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
         break;
         }
       default:
-        jj_la1[27] = jj_gen;
+        jj_la1[28] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -860,7 +875,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[28];
+  final private int[] jj_la1 = new int[29];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -868,10 +883,10 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x30000,0x40,0x0,0x30000,0x40,0x30000,0x30000,0x0,0x40,0x0,0x0,0x4000,0x30000,0x0,0x1280,0x800,0x68000000,0x0,0xfc0000,0x60000000,0x60000000,0x64000000,0x64000000,0x82000000,0x82000000,0x8000000,0x68000000,0xfc0000,};
+	   jj_la1_0 = new int[] {0xc0000,0x40,0x0,0xc0000,0x40,0xc0000,0xc0000,0x0,0x40,0x0,0x0,0x10000,0xc0000,0x0,0xd280,0x800,0xc000,0xa0000000,0x0,0x3f00000,0x80000000,0x80000000,0x90000000,0x90000000,0x8000000,0x8000000,0x20000000,0xa0000000,0x3f00000,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x0,0x20,0x0,0x0,0x0,0x0,0x10,0x0,0x2,0x20,0x0,0x0,0x20,0x180,0x0,0x282,0x10,0x0,0x0,0x0,0x0,0x0,0x1,0x1,0x282,0x282,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x0,0x80,0x0,0x0,0x0,0x0,0x40,0x0,0x8,0x80,0x0,0x0,0x80,0x200,0x0,0x0,0x609,0x40,0x0,0x1,0x1,0x1,0x1,0x6,0x6,0x608,0x609,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -885,7 +900,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 29; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -899,7 +914,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 29; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -909,7 +924,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 29; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -927,7 +942,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 29; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -936,7 +951,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 29; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -945,7 +960,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 28; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 29; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -996,12 +1011,12 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
   /** Generate ParseException. */
   public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[55];
+	 boolean[] la1tokens = new boolean[56];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 28; i++) {
+	 for (int i = 0; i < 29; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1013,7 +1028,7 @@ t = getToken(0); System.out.println("OPERADOR_LOGICO_MAIOR Sintax: "+t.image);
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 55; i++) {
+	 for (int i = 0; i < 56; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;

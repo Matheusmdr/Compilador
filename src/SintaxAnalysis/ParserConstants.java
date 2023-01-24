@@ -31,87 +31,89 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int RSV_DO = 13;
   /** RegularExpression Id. */
-  int RSV_VAR = 14;
+  int RSV_READ = 14;
   /** RegularExpression Id. */
-  int RSV_FIM = 15;
+  int RSV_WRITE = 15;
   /** RegularExpression Id. */
-  int TIPO_INT = 16;
+  int RSV_VAR = 16;
   /** RegularExpression Id. */
-  int TIPO_BOOLEAN = 17;
+  int RSV_FIM = 17;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_DIFERENCA = 18;
+  int TIPO_INT = 18;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_IGUAL_IGUAL = 19;
+  int TIPO_BOOLEAN = 19;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_MENOR = 20;
+  int OPERADOR_LOGICO_DIFERENCA = 20;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_MENOR_IGUAL = 21;
+  int OPERADOR_LOGICO_IGUAL_IGUAL = 21;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_MAIOR_IGUAL = 22;
+  int OPERADOR_LOGICO_MENOR = 22;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_MAIOR = 23;
+  int OPERADOR_LOGICO_MENOR_IGUAL = 23;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_IGUALDADE = 24;
+  int OPERADOR_LOGICO_MAIOR_IGUAL = 24;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_AND = 25;
+  int OPERADOR_LOGICO_MAIOR = 25;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_OR = 26;
+  int OPERADOR_LOGICO_IGUALDADE = 26;
   /** RegularExpression Id. */
-  int OPERADOR_LOGICO_NOT = 27;
+  int OPERADOR_LOGICO_AND = 27;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_ATRIBUICAO = 28;
+  int OPERADOR_LOGICO_OR = 28;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_ADICAO = 29;
+  int OPERADOR_LOGICO_NOT = 29;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_SUBTRACAO = 30;
+  int OPERADOR_ARITMETICO_ATRIBUICAO = 30;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_MULTIPLICACAO = 31;
+  int OPERADOR_ARITMETICO_ADICAO = 31;
   /** RegularExpression Id. */
-  int OPERADOR_ARITMETICO_DIVISAO = 32;
+  int OPERADOR_ARITMETICO_SUBTRACAO = 32;
   /** RegularExpression Id. */
-  int PARENTESES_ESQ = 33;
+  int OPERADOR_ARITMETICO_MULTIPLICACAO = 33;
   /** RegularExpression Id. */
-  int PARENTESES_DIR = 34;
+  int OPERADOR_ARITMETICO_DIVISAO = 34;
   /** RegularExpression Id. */
-  int SIMBOLO_DOIS_PONTOS = 35;
+  int PARENTESES_ESQ = 35;
   /** RegularExpression Id. */
-  int SIMBOLO_VIRGULA = 36;
+  int PARENTESES_DIR = 36;
   /** RegularExpression Id. */
-  int SIMBOLO_PONTO_E_VIRGULA = 37;
+  int SIMBOLO_DOIS_PONTOS = 37;
   /** RegularExpression Id. */
-  int SIMBOLO_PONTO = 38;
+  int SIMBOLO_VIRGULA = 38;
   /** RegularExpression Id. */
-  int IDENTIFICADOR = 39;
+  int SIMBOLO_PONTO_E_VIRGULA = 39;
   /** RegularExpression Id. */
-  int IDENTIFICADOR_CHAMADA_PROCEDIMENTO = 40;
+  int SIMBOLO_PONTO = 40;
   /** RegularExpression Id. */
-  int NUMERO_INTEIRO = 41;
+  int IDENTIFICADOR = 41;
   /** RegularExpression Id. */
-  int LETRA = 42;
+  int NUMERO_INTEIRO = 42;
   /** RegularExpression Id. */
-  int DIGITO = 43;
+  int LETRA = 43;
   /** RegularExpression Id. */
-  int COM = 44;
+  int DIGITO = 44;
   /** RegularExpression Id. */
-  int COM_MULT = 45;
+  int COM = 45;
   /** RegularExpression Id. */
-  int COM_MULT_ERRO_ABRIR = 46;
+  int COM_MULT = 46;
   /** RegularExpression Id. */
-  int COMENTARIO_UMA_LINHA = 47;
+  int COM_MULT_ERRO_ABRIR = 47;
   /** RegularExpression Id. */
-  int COMENTARIO_MULT_LINHAS = 48;
+  int COMENTARIO_UMA_LINHA = 48;
   /** RegularExpression Id. */
-  int ERRO_SIMBOLO_INVALIDO_COMENTARIO = 49;
+  int COMENTARIO_MULT_LINHAS = 49;
   /** RegularExpression Id. */
-  int ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR = 50;
+  int ERRO_SIMBOLO_INVALIDO_COMENTARIO = 50;
   /** RegularExpression Id. */
-  int ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR = 51;
+  int ERRO_COMENTARIO_MULT_LINHAS_SEM_FECHAR = 51;
   /** RegularExpression Id. */
-  int ERRO_OVERFLOW_INT = 52;
+  int ERRO_COMENTARIO_MULT_LINHAS_SEM_ABRIR = 52;
   /** RegularExpression Id. */
-  int ERRO_OVERFLOW_IDENTIFICADOR = 53;
+  int ERRO_OVERFLOW_INT = 53;
   /** RegularExpression Id. */
-  int ERRO_SIMBOLO_INVALIDO = 54;
+  int ERRO_OVERFLOW_IDENTIFICADOR = 54;
+  /** RegularExpression Id. */
+  int ERRO_SIMBOLO_INVALIDO = 55;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -132,6 +134,8 @@ public interface ParserConstants {
     "\"else\"",
     "\"while\"",
     "\"do\"",
+    "\"read\"",
+    "\"write\"",
     "\"var\"",
     "<RSV_FIM>",
     "\"int\"",
@@ -158,7 +162,6 @@ public interface ParserConstants {
     "\";\"",
     "\".\"",
     "<IDENTIFICADOR>",
-    "<IDENTIFICADOR_CHAMADA_PROCEDIMENTO>",
     "<NUMERO_INTEIRO>",
     "<LETRA>",
     "<DIGITO>",
