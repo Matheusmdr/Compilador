@@ -683,7 +683,11 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
         // Removendo o cifrÃ£o
         auxListaLexemasSemanticoWhile.remove(auxListaLexemasSemanticoWhile.size() - 1);
-        auxListaLexemasSemanticoWhile.add(linhaAtual);
+        int posUltimoElementoWhile = auxListaLexemasSemanticoWhile.size() - 1;
+        if(!auxListaLexemasSemanticoWhile.get(posUltimoElementoWhile).get(1).equals("SIMBOLO_PONTO_E_VIRGULA")
+        && !auxListaLexemasSemanticoWhile.get(posUltimoElementoWhile).get(1).equals("RSV_END")
+        && !auxListaLexemasSemanticoWhile.get(posUltimoElementoWhile).get(1).equals("RSV_FIM"))
+            auxListaLexemasSemanticoWhile.add(linhaAtual);
         if(linhaAtual.get(1) == "SIMBOLO_PONTO_E_VIRGULA")
             auxListaLexemasSemantico.remove(0);
         String valorEsq, valorDir;
