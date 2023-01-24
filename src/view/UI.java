@@ -13,6 +13,7 @@ import java.awt.AWTException;
 import LexicalAnalysis.Lexer;
 import SemanticAnalysis.ParseException;
 import SemanticAnalysis.SemanticAnalizer;
+import SintaxAnalysis.Parser;
 
 import java_cup.runtime.Symbol;
 import java.awt.Color;
@@ -177,14 +178,14 @@ public class UI extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         fonteBox = new javax.swing.JTextPane();
         jTabbedPane3 = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textAreaSintaxe = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        textAreaSintaxe = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         textAreaMEPA = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
@@ -203,8 +204,9 @@ public class UI extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("IDE");
@@ -219,6 +221,12 @@ public class UI extends javax.swing.JFrame {
             }
         });
         jScrollPane3.setViewportView(fonteBox);
+
+        textAreaSintaxe.setColumns(20);
+        textAreaSintaxe.setRows(5);
+        jScrollPane1.setViewportView(textAreaSintaxe);
+
+        jTabbedPane3.addTab("Erros Sintáticos", jScrollPane1);
 
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -296,12 +304,6 @@ public class UI extends javax.swing.JFrame {
 
         jTabbedPane3.addTab("Erros Léxicos", jPanel4);
 
-        textAreaSintaxe.setColumns(20);
-        textAreaSintaxe.setRows(5);
-        jScrollPane1.setViewportView(textAreaSintaxe);
-
-        jTabbedPane3.addTab("Erros Sintáticos", jScrollPane1);
-
         textAreaMEPA.setBackground(new java.awt.Color(0, 0, 0));
         textAreaMEPA.setColumns(20);
         textAreaMEPA.setForeground(new java.awt.Color(255, 255, 255));
@@ -312,7 +314,7 @@ public class UI extends javax.swing.JFrame {
 
         jLabel2.setText("Fonte:");
 
-        jMenu1.setText("File");
+        jMenu1.setText("Arquivo");
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         jMenuItem2.setText("Abrir Arquivo");
@@ -420,17 +422,18 @@ public class UI extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem3);
-        jMenu2.add(jSeparator1);
-
-        jMenuItem11.setText("Interpretador");
-        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem11ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem11);
 
         jMenuBar1.add(jMenu2);
+
+        jMenu5.setText("Compilar");
+
+        jMenuItem12.setText("Compilar");
+        jMenu5.add(jMenuItem12);
+
+        jMenuItem13.setText("Interpretar");
+        jMenu5.add(jMenuItem13);
+
+        jMenuBar1.add(jMenu5);
 
         setJMenuBar(jMenuBar1);
 
@@ -487,8 +490,12 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        jTabbedPane3.setSelectedIndex(0);
         Reader lector = new StringReader(fonteBox.getText());
+        lexicalAnalysis(lector);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    public void lexicalAnalysis(Reader lector) {
+        jTabbedPane3.setSelectedIndex(0);
         Lexer lexer = new Lexer(lector);
 
         DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
@@ -499,60 +506,102 @@ public class UI extends javax.swing.JFrame {
         dtmE.getDataVector().removeAllElements();
         dtmE.fireTableDataChanged();
 
-      LexicalAnalysis.Token t = new LexicalAnalysis.Token();
+        LexicalAnalysis.Token t = new LexicalAnalysis.Token();
         boolean EOF = false;
         int countErrosLexicos = 0;
-        
+
         t = lexer.getNextToken();
-        
+
         do {
             if (t.specialToken != null) { //Exibe os SpecialTokens de cada Token na Tabela
                 Stack pilhaTokens = new Stack(); //Pilha para SpecialTokens
-                LexicalAnalysis.Token aux = t.specialToken; 
-                
-                do{ //Empilha os SpecialTokens encontrados
+                LexicalAnalysis.Token aux = t.specialToken;
+
+                do { //Empilha os SpecialTokens encontrados
                     pilhaTokens.add(aux);
                     aux = aux.specialToken;
-                } while(aux != null);
-                
-                do{ //Joga na Tabela todos os SpecialTokens empilhados
+                } while (aux != null);
+
+                do { //Joga na Tabela todos os SpecialTokens empilhados
                     aux = (LexicalAnalysis.Token) pilhaTokens.pop();
-                            
-                    if (aux.kind == 49 || aux.kind == 50 || aux.kind == 51 || 
-                        aux.kind == 52 || aux.kind == 53 || aux.kind == 54) { //Exibe os Tokens de Erros Léxicos na Tabela
-                        jTabbedPane3.setSelectedIndex(1);
+
+                    if (aux.kind == 49 || aux.kind == 50 || aux.kind == 51
+                            || aux.kind == 52 || aux.kind == 53 || aux.kind == 54) { //Exibe os Tokens de Erros Léxicos na Tabela
                         TokenManager tm = new TokenManager(aux.kind, aux.image, aux.beginLine, aux.endLine, aux.beginColumn, aux.endColumn);
                         String[] linha = tm.getStringRowLexicalErrorTable();
                         dtmE.addRow(linha);
                         jTable2.revalidate();
                         jTable2.repaint();
-                        
+
                         //Aumenta a contagem de erros léxicos
                         countErrosLexicos++;
-                    }
-                    else if(aux.kind == 47 || aux.kind == 48){ //Exibe os Tokens de Comentários na Tabela
-                        jTabbedPane3.setSelectedIndex(0);
-                        TokenManager tm = new TokenManager(aux.kind, aux.image, aux.beginLine, aux.endLine,aux.beginColumn, aux.endColumn);
+                    } else if (aux.kind == 47 || aux.kind == 48) { //Exibe os Tokens de Comentários na Tabela
+                        TokenManager tm = new TokenManager(aux.kind, aux.image, aux.beginLine, aux.endLine, aux.beginColumn, aux.endColumn);
                         String[] linha = tm.getStringRowLexicalTable();
                         dtm.addRow(linha);
                         jTable4.revalidate();
                         jTable4.repaint();
                     }
-                } while(pilhaTokens.isEmpty() != true);
+                } while (pilhaTokens.isEmpty() != true);
             }
-                   
+
             //Exibe os demais Tokens na Tabela
-            jTabbedPane3.setSelectedIndex(0); 
             TokenManager tm = new TokenManager(t.kind, t.image, t.beginLine, t.endLine, t.beginColumn, t.endColumn);
             String[] linha = tm.getStringRowLexicalTable();
             dtm.addRow(linha);
             jTable4.revalidate();
             jTable4.repaint();
-            
-            if(t.kind == 0) EOF = true; //Verifica se o EOF já foi checado
-            else t = lexer.getNextToken(); 
+
+            if (t.kind == 0) {
+                EOF = true; //Verifica se o EOF já foi checado
+            } else {
+                t = lexer.getNextToken();
+            }
         } while (t.kind != 0 || EOF != true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+        
+        
+        textAreaSintaxe.append("Análise Léxica feita com sucesso!\n");
+        if(countErrosLexicos > 1){
+            textAreaSintaxe.append("Encontrados "+ countErrosLexicos + " erros\n\n");
+            textAreaSintaxe.append("Olhar na tabela de Erros Léxicos\n\n");
+        }
+        else if(countErrosLexicos ==  0){
+            textAreaSintaxe.append("Nenhum erro foi encontrado!\n\n");
+        }
+        else{
+            textAreaSintaxe.append("Encontrado "+ countErrosLexicos + " erro\n");
+            textAreaSintaxe.append("Olhar na tabela de Erros Léxicos\n\n");
+        }
+        
+    }
+
+    public void sintaxAnalysis(Reader lector) throws SintaxAnalysis.ParseException {
+       jTabbedPane3.setSelectedIndex(0);
+        Parser parser = new Parser(lector);
+        parser.principal();
+        var sintaxErrors = parser.getListaErrosSintax();
+        parser.principal();
+        var listaErrosSintax = parser.getListaErrosSintax();
+        textAreaSintaxe.append("Análise Sintática feita com sucesso!\n");
+        if(listaErrosSintax.size() > 1){
+            textAreaSintaxe.append("Encontrados "+ listaErrosSintax.size() + " erros\n\n");
+        }
+        else if(listaErrosSintax.size() ==  0){
+            textAreaSintaxe.append("Nenhum erro foi encontrado!\n\n");
+        }
+        else{
+            textAreaSintaxe.append("Encontrado "+ listaErrosSintax.size() + " erro\n");
+        }
+        
+        
+        for (int i = 0; i < listaErrosSintax.size(); i++) {
+            textAreaSintaxe.append("\n"+listaErrosSintax.get(i));
+            textAreaSintaxe.revalidate();
+            textAreaSintaxe.repaint();
+        }
+        
+        
+    }
 
     private void fonteBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fonteBoxKeyTyped
 
@@ -582,67 +631,13 @@ public class UI extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         Reader lector = new StringReader(fonteBox.getText());
-        SemanticAnalizer semanticAnal = new SemanticAnalizer(lector);
+        jTabbedPane3.setSelectedIndex(0);
+        lexicalAnalysis(lector);
         try {
-            semanticAnal.principal();
-            /*jTabbedPane3.setSelectedIndex(0);
-            Reader lector = new StringReader(fonteBox.getText());
-            //Lexer lexer = new Lexer(lector);
-            
-            DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
-            dtm.getDataVector().removeAllElements();
-            dtm.fireTableDataChanged();
-            
-            DefaultTableModel dtmE = (DefaultTableModel) jTable2.getModel();
-            dtmE.getDataVector().removeAllElements();
-            dtmE.fireTableDataChanged();
-            
-            //LexicalAnalysis.Token t = new LexicalAnalysis.Token();
-            t = lexer.getNextToken();
-            do {
-            if (t.specialToken != null) {
-            if (t.specialToken.kind == 49 || t.specialToken.kind == 50
-            || t.specialToken.kind == 51 || t.specialToken.kind == 52 || t.specialToken.kind == 53 || t.specialToken.kind == 54) {
-            jTabbedPane3.setSelectedIndex(1);
-            TokenManager tm = new TokenManager(t.specialToken.kind, t.specialToken.image, t.specialToken.beginLine, t.specialToken.endLine, t.specialToken.beginColumn, t.specialToken.endColumn);
-            String[] linha = tm.getStringRowLexicalErrorTable();
-            dtmE.addRow(linha);
-            jTable2.revalidate();
-            jTable2.repaint();
-            }
-            
-            } else {
-            jTabbedPane3.setSelectedIndex(0);
-            TokenManager tm = new TokenManager(t.kind, t.image, t.beginLine, t.endLine, t.beginColumn, t.endColumn);
-            String[] linha = tm.getStringRowLexicalTable();
-            dtm.addRow(linha);
-            jTable4.revalidate();
-            jTable4.repaint();
-            }
-
-            t = lexer.getNextToken();
-            } while (t.kind != 0);
-            
-            jTabbedPane3.setSelectedIndex(2);
-            
-            Reader lectorParser = new StringReader(fonteBox.getText());
-            Scanner_1 parser = new Scanner_1(lectorParser);
-            try {
-            parser.principal();
-            var listaErrosSintax = parser.getListaErrosSintax();
-            for (int i = 0; i < listaErrosSintax.size(); i++) {
-            textAreaSintaxe.append(listaErrosSintax.get(i));
-            textAreaSintaxe.revalidate();
-            textAreaSintaxe.repaint();
-            }
-            } catch (ParseException ex) {
-            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
-        } catch (ParseException ex) {
+            sintaxAnalysis(lector);
+        } catch (SintaxAnalysis.ParseException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
@@ -715,28 +710,6 @@ public class UI extends javax.swing.JFrame {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
-
-    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        // TODO add your handling code here:
-        jTabbedPane3.setSelectedIndex(3);
-        textAreaMEPA.setText("");
-        JFileChooser abrir = new JFileChooser();
-        abrir.setFileFilter(new FileFilterTXT());
-        int opcao;
-        opcao = abrir.showOpenDialog(null);
-        if (opcao == JFileChooser.APPROVE_OPTION) {
-            String path = abrir.getSelectedFile().getAbsolutePath();
-            MEPA interpretador = new MEPA(path);
-            try {
-                long startTime = System.nanoTime();
-                interpretador.interpretar(textAreaMEPA);
-                long endTime = (System.nanoTime() - startTime)/1000000;
-                textAreaMEPA.setText(textAreaMEPA.getText() + "\nExecution time: "+ Long.toString(endTime)+"ms");
-            }catch (IOException ex) {
-                Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_jMenuItem11ActionPerformed
     public void fillTextAreaSintaxe(ArrayList<String> listadeErros) {
         ArrayList<String> fill = listadeErros;
         String text = "";
@@ -833,10 +806,12 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -852,7 +827,6 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable4;
