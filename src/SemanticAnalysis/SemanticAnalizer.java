@@ -19,9 +19,14 @@ ArrayList<ArrayList<String>> listaLexemasSemantico = new ArrayList<>();
 SemanticTable table  = new SemanticTable();
 String tipo =  "";
 GenerateCode gerador = new GenerateCode();
+int rotulo = -1;
 
 public ArrayList <String> getListaErrosSintax(){
     return listaErrosSintax;
+}
+
+public ArrayList <String> getListaErrosSemantic(){
+    return listaErrosSemantica;
 }
 
 /*public cadeProgram() {
@@ -118,6 +123,20 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         return false;
   }
 
+  Boolean verificaIdentificadorInteiro(ArrayList<String> linha) throws ParseException {/*if(!linha.get(1).equals("IDENTIFICADOR"))
+            listaErrosSemantica.add("ERRO SEMÂNTICO: O procedimento READ pode receber apenas IDENTIFICADORES INTEIROS como parâmetros.\n\tO parâmetro '"+linha.get(0)+"' NÃO É UM IDENTIFICADOR!");*/
+        SemanticTableObject linhaTabela = table.searchRowByLexemaAndReturnObject(linha.get(0));
+        if(linhaTabela == null){
+            addErroSemanticaIdentificadorNaoExiste(linha.get(0));
+            return true;
+        }else if(!linhaTabela.getTipo().equals("int"))
+            return false;
+        return true;
+  }
+
+  void addErroSemanticaIdentificadorNaoExiste(String identificador) throws ParseException {listaErrosSemantica.add("ERRO SEM\u00c2NTICO: Todos os IDENTIFICADORES PRECISAM SER DECLARADOS antes de serem usados.\n\tO seguinte IDENTIFICADOR N\u00c3O FOI DECLARADO: '"+identificador+"'.");
+  }
+
   void analiseSemantica() throws ParseException {comandoParaSemantica(listaLexemasSemantico);
         // Se imprimir algo é pq tem algo errado na semântica
         System.out.println("FALTA NA SEMANTICA: \n");
@@ -126,6 +145,49 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         }
         gerador.gerar("","PARA",""); // fim da tristeza
 
+  }
+
+  String avaliaTipoExpressao(ArrayList<ArrayList<String>> expressao) throws ParseException {String tipo = "";
+        for(ArrayList<String> simbolo : expressao){
+            if(simbolo.get(1).equals("RSV_FALSE") || simbolo.get(1).equals("RSV_TRUE")){
+                tipo = "boolean";
+                break;
+            }
+            else if(simbolo.get(1).equals("NUMERO_INTEIRO")){
+                tipo = "int";
+                break;
+            }
+            else if(simbolo.get(1).equals("IDENTIFICADOR")){
+                SemanticTableObject linhaTabela = table.searchRowByLexemaAndReturnObject(simbolo.get(0));
+                if(linhaTabela == null){
+                    addErroSemanticaIdentificadorNaoExiste(simbolo.get(0));
+                    tipo = "int";
+                }else if(linhaTabela.getTipo().equals("int"))
+                    tipo = "int";
+                else tipo = "boolean";
+                break;
+            }
+        }
+        return tipo;
+  }
+
+  String verificaExpressaoInt(ArrayList<ArrayList<String>> expressao) throws ParseException {String tipo = avaliaTipoExpressao(expressao);
+        for(ArrayList<String> simbolo : expressao){
+            if(simbolo.get(1).equals("RSV_FALSE"))
+                return "false";
+            else if(simbolo.get(1).equals("RSV_TRUE"))
+                return "true";
+            else if(simbolo.get(1).equals("OPERADOR_LOGICO_NOT") || simbolo.get(1).equals("OPERADOR_LOGICO_OR") || simbolo.get(1).equals("OPERADOR_LOGICO_AND"))
+                return simbolo.get(0);
+            else if(simbolo.get(1).equals("IDENTIFICADOR")){
+                SemanticTableObject linhaTabela = table.searchRowByLexemaAndReturnObject(simbolo.get(0));
+                if(linhaTabela == null)
+                    addErroSemanticaIdentificadorNaoExiste(simbolo.get(0));
+                else if(linhaTabela.getTipo().equals("boolean"))
+                    return simbolo.get(0);
+            }
+        }
+        return "";
   }
 
   void declaracoesParaSemantica() throws ParseException {gerador.gerar("","INPP",""); //começo de tudo
@@ -151,6 +213,9 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         auxListaLexemasSemantico.remove(0); // Remove PARENTESES_ESQ
         linha = auxListaLexemasSemantico.get(0);
         while(verificaFimExpressao(linha.get(1))){
+            converteTrueEFalse(linha);
+            if(!verificaIdentificadorInteiro(linha))
+                listaErrosSemantica.add("ERRO SEM\u00c2NTICO: O tipo esperado como par\u00e2metro para uma fun\u00e7\u00e3o READ \u00e9 sempre INT.\n\tTIPO BOOLEAN identificado no par\u00e2metro '"+linha.get(0)+"'.");
             gerador.gerar("","LEIT","");
             gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(linha.get(0),linha.get(1))));
             auxListaLexemasSemantico.remove(0);
@@ -183,10 +248,44 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             linhaAtual = linhaSeguinte;
             if(auxListaLexemasSemantico.size() > 1)
                 linhaSeguinte = auxListaLexemasSemantico.get(1);
-            valor = valorExpressaoAtribuicao(expressao);
+            valor = verificaExpressaoInt(expressao);
+            if(valor.equals(""))
+                valor = valorExpressaoAtribuicao(expressao);
+            else listaErrosSemantica.add("ERRO SEM\u00c2NTICO: O procedimento WRITE pode receber apenas EXPRESS\u00d5ES INTEIRAS como par\u00e2metros.\n\tO s\u00edmbolo '"+valor+"' N\u00c3O PERTENCE A UMA EXPRESS\u00c3O INTEIRA!");
+            gerador.gerar("","IMPR","");
             esvaziarArraysLists(expressao);
         }
         preparaParaProximaExpressao(auxListaLexemasSemantico);
+  }
+
+  void geracaoCodigoAtribuicao(ArrayList<String> expr) throws ParseException {String str;
+
+        do{
+            str = expr.get(0);
+            expr.remove(0);
+
+            if( (PolishNotation.tryParseInt(str) == true) ){ //Verifica se o elemento é um número int
+                gerador.gerar("","CRCT",str);
+            }
+            else if((!PolishNotation.tryParseInt(str) == true) && (!PolishNotation.isOperator(str) == true)){ //Verifica se o elemento é uma variável
+                gerador.gerar("","CRVL",Integer.toString((table.searchRowByLexemaAndReturnObject(str)).getEndRelativo()));
+            }
+            else if(str.equals("+")){ //Verifica se é uma SOMA
+                gerador.gerar("","SOMA","");
+            }else if(str.equals("-")){ //Verifica se é uma SUBTRAÇÃO
+                gerador.gerar("","SUBT","");
+            }else if(str.equals("*")){ //Verifica se é uma MULTIPLICAÇÃO
+                gerador.gerar("","MULT","");
+            }else if(str.equals("/")){ //Verifica se é uma DIVISÃO
+                gerador.gerar("","DIVI","");
+            }else if(str.equals("&")){ //Verifica se é uma operação de AND
+                gerador.gerar("","CONJ","");
+            }else if(str.equals("|")){ //Verifica se é uma operação de OR
+                gerador.gerar("","DISJ","");
+            }else if(str.equals("!")){ //Verifica se é uma operação de NEGAÇÃO
+                gerador.gerar("","NEGA","");
+            }
+        }while(expr.size() > 0);
   }
 
   String valorExpressaoAtribuicao(ArrayList<ArrayList<String>> expressao) throws ParseException {// Aqui é onde a notação polonesa deve ser usada para retornar o novo valor do identificador em String
@@ -200,6 +299,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
 
 
         //Atribuição
+        int valor = 0;
         String exp = "";
         ArrayList<String> notacaoPolonesa;
 
@@ -211,13 +311,25 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         //Encontra a Notação Polonesa
         notacaoPolonesa = PolishNotation.convertToReversePolish(exp);
 
-        //int valor = calculaNotacaoPolonesa
 
-        //table.searchRowByLexemaAndReturnObject();
-        //System.out.println("Expressão: " + exp);
-        //System.out.println("Expressão polonesa: " + notacaoPolonesa.toString());
-        //gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(linha.get(0),linha.get(1))));
-        return "1";
+        //Geração de código
+        geracaoCodigoAtribuicao((ArrayList<String>) notacaoPolonesa.clone());
+
+        int count = 0;;
+        for (String s : notacaoPolonesa){
+            if((!PolishNotation.tryParseInt(s) == true) && (!PolishNotation.isOperator(s) == true)){ //Verifica se o elemento é uma variável
+                notacaoPolonesa.set(count, ((table.searchRowByLexemaAndReturnObject(s)).getValor()));
+            }
+            count++;
+        }
+
+        System.out.println(notacaoPolonesa.toString());
+
+        //Valor de retorno para a tabela
+        valor = PolishNotation.compute(notacaoPolonesa);
+
+        //Retorna o valor para atualizar na tabela
+        return String.valueOf(valor);
   }
 
   void preparaParaProximaExpressao(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {auxListaLexemasSemantico.remove(0);
@@ -242,7 +354,53 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             }
   }
 
+  String verificaExpressaoBoolean(ArrayList<ArrayList<String>> expressao) throws ParseException {String tipo = avaliaTipoExpressao(expressao);
+        for(ArrayList<String> simbolo : expressao){
+            if(simbolo.get(1).equals("NUMERO_INTEIRO") || simbolo.get(1).equals("OPERADOR_ARITMETICO_DIVISAO") || simbolo.get(1).equals("OPERADOR_ARITMETICO_SUBTRACAO") || simbolo.get(1).equals("OPERADOR_ARITMETICO_ADICAO"))
+                return simbolo.get(0);
+            else if(simbolo.get(1).equals("IDENTIFICADOR")){
+                SemanticTableObject linhaTabela = table.searchRowByLexemaAndReturnObject(simbolo.get(0));
+                if(linhaTabela == null)
+                    addErroSemanticaIdentificadorNaoExiste(simbolo.get(0));
+                else if(linhaTabela.getTipo().equals("int"))
+                    return simbolo.get(0);
+            }
+        }
+        return "";
+  }
+
   void atribuicaoParaSemantica(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {ArrayList<String> identificadorEsq = auxListaLexemasSemantico.get(0);
+        String tipoEsq = "";
+        if(verificaIdentificadorInteiro(identificadorEsq))
+            tipoEsq = "int";
+        else tipoEsq = "boolean";
+        auxListaLexemasSemantico.remove(0);
+        ArrayList<String> linha = auxListaLexemasSemantico.get(0);
+        ArrayList<ArrayList<String>> expressao = new ArrayList<>();
+        while(verificaFimExpressao(linha.get(1))){
+            converteTrueEFalse(linha);
+            expressao.add(linha);
+            auxListaLexemasSemantico.remove(0);
+            linha = auxListaLexemasSemantico.get(0);
+        }
+        String tipoDir = "";
+        String resposta = "";
+        if(tipoEsq.equals("int")){
+            resposta = verificaExpressaoInt(expressao);
+            tipoDir = "boolean";
+        }else {
+            resposta = verificaExpressaoBoolean(expressao);
+            tipoDir = "int";
+        }
+        if(!resposta.equals(""))
+            listaErrosSemantica.add("ERRO SEM\u00c2NTICO: Na ATRIBUI\u00c7\u00c3O o lado ESQUERDO deve ser DO MESMO TIPO do lado DIREITO.\n\tO tipo do lado ESQUERDO da ATRIBUI\u00c7\u00c3O \u00c9 '"+tipoEsq+"' enquanto o lado DIREITO \u00c9 '"+tipoDir+"'.");
+        String valor = valorExpressaoAtribuicao(expressao);
+        gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(identificadorEsq.get(0),identificadorEsq.get(1))));
+        table.updateRowByLexemaAndToken(identificadorEsq.get(0), identificadorEsq.get(1), valor);
+        preparaParaProximaExpressao(auxListaLexemasSemantico);
+  }
+
+  void atribuicaoParaGeracaoDeCodigo(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {ArrayList<String> identificadorEsq = auxListaLexemasSemantico.get(0);
         auxListaLexemasSemantico.remove(0);
         ArrayList<String> linha = auxListaLexemasSemantico.get(0);
         ArrayList<ArrayList<String>> expressao = new ArrayList<>();
@@ -253,7 +411,8 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             linha = auxListaLexemasSemantico.get(0);
         }
         String valor = valorExpressaoAtribuicao(expressao);
-        table.updateRowByLexemaAndToken(identificadorEsq.get(0), identificadorEsq.get(1), valor);
+        gerador.gerar("","ARMZ",Integer.toString(table.searchRowByLexemaTokenAndReturnAddress(identificadorEsq.get(0),identificadorEsq.get(1))));
+        //table.updateRowByLexemaAndToken(identificadorEsq.get(0), identificadorEsq.get(1), valor);
         preparaParaProximaExpressao(auxListaLexemasSemantico);
   }
 
@@ -311,15 +470,20 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
          && linhaSeguinte.get(1).equals("PARENTESES_DIR")){
             converteTrueEFalse(linhaAtual);
             String valor = "";
-            if(linhaAtual.get(1).equals("IDENTIFICADOR"))
+            if(linhaAtual.get(1).equals("IDENTIFICADOR")){
                 valor = table.searchRowByLexemaTokenAndReturnValue(linhaAtual.get(0), linhaAtual.get(1));
-            else if(linhaAtual.get(1).equals("RSV_FALSE"))
+                gerador.gerar("","CRVL",String.valueOf(table.searchRowByLexemaTokenAndReturnAddress(linhaAtual.get(0), linhaAtual.get(1))));
+            }else if(linhaAtual.get(1).equals("RSV_FALSE")){
                 valor = "0";
-            else if(linhaAtual.get(1).equals("RSV_TRUE"))
+                gerador.gerar("","CRCT","0");
+            }else if(linhaAtual.get(1).equals("RSV_TRUE")){
                 valor = "1";
-            auxListaLexemasSemantico.remove(0);
-            if(valor.equals("1"))
+                gerador.gerar("","CRCT","1");
+            }auxListaLexemasSemantico.remove(0);
+            if(valor.equals("1")){
                 flag = true;
+            }
+            gerador.gerar("","DSVF",String.valueOf(++rotulo));
         }else {
             while(verificaTokenDiferenteRelacoes(linhaAtual.get(1))){
                 converteTrueEFalse(linhaAtual);
@@ -381,6 +545,7 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
                 if(linhaAtual.get(1) == "RSV_BEGIN")
                     auxListaLexemasSemantico.remove(0);
                 comandoParaSemantica(auxListaLexemasSemantico);
+                gerador.gerar(String.valueOf(rotulo),"NADA","");
             }else {
                 if(linhaAtual.get(1) == "RSV_BEGIN")
                     auxListaLexemasSemantico.remove(0);
@@ -391,6 +556,9 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
                 i--;
                 System.out.println(auxListaLexemasSemantico.get(i));
                 auxListaLexemasSemantico.remove(i);
+                if(linhaAtual.get(1) == "RSV_BEGIN")
+                    auxListaLexemasSemantico.remove(0);
+                ArrayList<ArrayList<String>> expElse = new ArrayList<>();
                 // Removendo caminho else
                 quantCifrao = 1;
                 System.out.println(auxListaLexemasSemantico.get(i));
@@ -399,9 +567,18 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
                         quantCifrao++;
                     else if(auxListaLexemasSemantico.get(i).get(1).equals("$"))
                         quantCifrao--;
+                    expElse.add((ArrayList<String>) (auxListaLexemasSemantico.get(i)).clone());
                     auxListaLexemasSemantico.remove(i);
                 }
+                expElse.remove(i);
+                expElse.add((ArrayList<String>) (auxListaLexemasSemantico.get(i)).clone());
                 comandoParaSemantica(auxListaLexemasSemantico);
+
+                //System.out.println(rotulo);
+                gerador.gerar("","DSVS",String.valueOf(++rotulo));
+                gerador.gerar(String.valueOf(rotulo-1),"NADA","");
+                //comandoParaGeracaoDeCodigo(expElse);
+                gerador.gerar(String.valueOf(rotulo),"NADA","");
             }
         }else{
             if(tokenElse.isEmpty()){
@@ -502,10 +679,13 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
             auxListaLexemasSemantico.remove(0);
             linhaAtual = auxListaLexemasSemantico.get(0);
         }
-        if(linhaAtual.get(1) == "SIMBOLO_PONTO_E_VIRGULA")
-            auxListaLexemasSemantico.remove(0);
+        System.out.println("puta: "+linhaAtual);
+
         // Removendo o cifrÃ£o
         auxListaLexemasSemanticoWhile.remove(auxListaLexemasSemanticoWhile.size() - 1);
+        auxListaLexemasSemanticoWhile.add(linhaAtual);
+        if(linhaAtual.get(1) == "SIMBOLO_PONTO_E_VIRGULA")
+            auxListaLexemasSemantico.remove(0);
         String valorEsq, valorDir;
         System.out.println("WHILE"+auxListaLexemasSemanticoWhile);
         ArrayList<ArrayList<String>> copiaAuxListaLexemasSemanticoWhile = new ArrayList<>(auxListaLexemasSemanticoWhile);
@@ -530,6 +710,32 @@ System.out.println(e.getMessage()); //Mensagem de erro léxico (em ingles) mostr
         switch(primeiroToken.get(1)){
             case "IDENTIFICADOR":
                 atribuicaoParaSemantica(auxListaLexemasSemantico); break;
+            case "RSV_READ":
+                readParaSemantica(auxListaLexemasSemantico); break;
+            case "RSV_WRITE":
+                writeParaSemantica(auxListaLexemasSemantico); break;
+            case "RSV_IF":
+                condicionalParaSemantica(auxListaLexemasSemantico); break;
+            case "RSV_WHILE":
+                repeticaoParaSemantica(auxListaLexemasSemantico); break;
+            default: break;
+        }
+  }
+
+  public void generateCodeFile() throws ParseException, ParseException, IOException {gerador.gerarArquivo();
+  }
+
+  void comandoParaGeracaoDeCodigo(ArrayList<ArrayList<String>> auxListaLexemasSemantico) throws ParseException {ArrayList<String> primeiroToken = auxListaLexemasSemantico.get(0);
+        // WHILE DE EMERGÊNCIA ligar apenas se o semântico n funcionar
+        /*while(primeiroToken.get(1).equals("RSV_END") ||
+              primeiroToken.get(1).equals("SIMBOLO_PONTO_E_VIRGULA") ||
+              primeiroToken.get(1).equals("$")){
+              auxListaLexemasSemantico.remove(0);
+              primeiroToken = auxListaLexemasSemantico.get(0);
+        }*/
+        switch(primeiroToken.get(1)){
+            case "IDENTIFICADOR":
+                atribuicaoParaGeracaoDeCodigo(auxListaLexemasSemantico); break;
             case "RSV_READ":
                 readParaSemantica(auxListaLexemasSemantico); break;
             case "RSV_WRITE":
