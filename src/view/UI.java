@@ -427,10 +427,22 @@ public class UI extends javax.swing.JFrame {
 
         jMenu5.setText("Compilar");
 
+        jMenuItem12.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, 0));
         jMenuItem12.setText("Compilar");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
         jMenu5.add(jMenuItem12);
 
+        jMenuItem13.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
         jMenuItem13.setText("Interpretar");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
         jMenu5.add(jMenuItem13);
 
         jMenuBar1.add(jMenu5);
@@ -491,11 +503,12 @@ public class UI extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         Reader lector = new StringReader(fonteBox.getText());
-        lexicalAnalysis(lector);
+        lexicalAnalysis();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    public void lexicalAnalysis(Reader lector) {
+    public Boolean lexicalAnalysis() {
         jTabbedPane3.setSelectedIndex(0);
+        Reader lector = new StringReader(fonteBox.getText());
         Lexer lexer = new Lexer(lector);
 
         DefaultTableModel dtm = (DefaultTableModel) jTable4.getModel();
@@ -573,10 +586,16 @@ public class UI extends javax.swing.JFrame {
             textAreaSintaxe.append("Olhar na tabela de Erros Léxicos\n\n");
         }
         
+        if(countErrosLexicos ==  0){
+            return true;
+        }
+        else return false;
+        
     }
 
-    public void sintaxAnalysis(Reader lector) throws SintaxAnalysis.ParseException {
+    public Boolean sintaxAnalysis() throws SintaxAnalysis.ParseException {
        jTabbedPane3.setSelectedIndex(0);
+        Reader lector = new StringReader(fonteBox.getText());
         Parser parser = new Parser(lector);
         parser.principal();
         var sintaxErrors = parser.getListaErrosSintax();
@@ -600,6 +619,10 @@ public class UI extends javax.swing.JFrame {
             textAreaSintaxe.repaint();
         }
         
+        if(listaErrosSintax.size() ==  0){
+            return true;
+        }
+        else return false;
         
     }
 
@@ -630,11 +653,10 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        Reader lector = new StringReader(fonteBox.getText());
         jTabbedPane3.setSelectedIndex(0);
-        lexicalAnalysis(lector);
+        lexicalAnalysis();
         try {
-            sintaxAnalysis(lector);
+            sintaxAnalysis();
         } catch (SintaxAnalysis.ParseException ex) {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -710,6 +732,83 @@ public class UI extends javax.swing.JFrame {
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        // TODO add your handling code here:
+         jTabbedPane3.setSelectedIndex(3);
+        textAreaMEPA.setText("");
+        JFileChooser abrir = new JFileChooser();
+        abrir.setFileFilter(new FileFilterTXT());
+        int opcao;
+        opcao = abrir.showOpenDialog(null);
+        if (opcao == JFileChooser.APPROVE_OPTION) {
+            String path = abrir.getSelectedFile().getAbsolutePath();
+            MEPA interpretador = new MEPA(path);
+            try {
+                long startTime = System.nanoTime();
+                interpretador.interpretar(textAreaMEPA);
+                long endTime = (System.nanoTime() - startTime)/1000000;
+                textAreaMEPA.setText(textAreaMEPA.getText() + "\nExecution time: "+ Long.toString(endTime)+"ms");
+            }catch (IOException ex) {
+                Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+        // TODO add your handling code here:
+        
+        textAreaSintaxe.setText("");
+        jTabbedPane3.setSelectedIndex(0);
+        
+        Boolean aux1, aux2 = false;
+        jTabbedPane3.setSelectedIndex(0);
+        aux1 = lexicalAnalysis();
+        try {
+            aux2 = sintaxAnalysis();
+        } catch (SintaxAnalysis.ParseException ex) {
+            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (aux1 && aux2) {
+            Reader lector = new StringReader(fonteBox.getText());
+            SemanticAnalizer semanticAnalizer = new SemanticAnalizer(lector);
+            try {
+                semanticAnalizer.principal();
+            } catch (ParseException ex) {
+                Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            var listaErrosSemantic = semanticAnalizer.getListaErrosSemantic();
+
+            textAreaSintaxe.append("Análise Semântica feita com sucesso!\n");
+            if (listaErrosSemantic.size() > 1) {
+                textAreaSintaxe.append("Encontrados " + listaErrosSemantic.size() + " erros\n\n");
+            } else if (listaErrosSemantic.size() == 0) {
+                textAreaSintaxe.append("Nenhum erro foi encontrado!\n\n");
+            } else {
+                textAreaSintaxe.append("Encontrado " + listaErrosSemantic.size() + " erro\n");
+            }
+
+            for (int i = 0; i < listaErrosSemantic.size(); i++) {
+                textAreaSintaxe.append("\n" + listaErrosSemantic.get(i));
+                textAreaSintaxe.revalidate();
+                textAreaSintaxe.repaint();
+            }
+            
+            
+            if(listaErrosSemantic.size() == 0){
+                try {
+                    semanticAnalizer.generateCodeFile();
+                } catch (ParseException ex) {
+                    Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }
+    }//GEN-LAST:event_jMenuItem12ActionPerformed
     public void fillTextAreaSintaxe(ArrayList<String> listadeErros) {
         ArrayList<String> fill = listadeErros;
         String text = "";
