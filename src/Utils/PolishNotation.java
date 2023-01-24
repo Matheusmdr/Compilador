@@ -225,5 +225,10 @@ public class PolishNotation {
         }
         return Integer.parseInt(andBinaryNumber,2);
     }
+     
+     public static void main(String[] args) {
+         System.out.println(compute(convertToReversePolish("1")));
+         System.out.println(compute(convertToReversePolish("1")));
+    }
 }
     

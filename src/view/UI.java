@@ -226,7 +226,7 @@ public class UI extends javax.swing.JFrame {
         textAreaSintaxe.setRows(5);
         jScrollPane1.setViewportView(textAreaSintaxe);
 
-        jTabbedPane3.addTab("Erros Sintáticos", jScrollPane1);
+        jTabbedPane3.addTab("Logs de Compilação", jScrollPane1);
 
         jTable4.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

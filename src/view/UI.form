@@ -252,8 +252,8 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Erros Sint&#xe1;ticos">
-                <Property name="tabTitle" type="java.lang.String" value="Erros Sint&#xe1;ticos"/>
+              <JTabbedPaneConstraints tabName="Logs de Compila&#xe7;&#xe3;o">
+                <Property name="tabTitle" type="java.lang.String" value="Logs de Compila&#xe7;&#xe3;o"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

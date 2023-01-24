@@ -4,7 +4,13 @@
  */
 package Utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 
 /**
  *
@@ -22,7 +28,18 @@ public class GenerateCode {
         //System.out.println(this.codeMEPA);
     }    
     
-    public void gerarArquivo(){
-        System.out.println("arquivo gerado");
+    public void gerarArquivo() throws IOException{
+        // parent component of the dialog
+        JFrame parentFrame = new JFrame();
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Salvar Arquivo");
+
+        int userSelection = fileChooser.showSaveDialog(parentFrame);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            Files.write(Paths.get(fileToSave.getAbsolutePath()), codeMEPA.getBytes());
+        }
     }
 }
